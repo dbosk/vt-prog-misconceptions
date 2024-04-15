@@ -4,7 +4,11 @@
 % This is a simple template for a LaTeX document using the "article" class.
 % See "book", "report", "letter" for other types of document.
 
-\documentclass[onecolumn]{article}
+\documentclass[a4paper,10pt,article,oneside,oldfontcommands]{memoir}
+\let\subsubsection\subsection
+\let\subsection\section
+\let\section\chapter
+
 \usepackage[hyphens]{url}
 \usepackage[hidelinks]{hyperref}
 
