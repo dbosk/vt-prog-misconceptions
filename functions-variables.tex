@@ -452,25 +452,28 @@ print(msg)
 
 XXX Treat the other aspects related to functions: scope, default values, ...
 
-\subsubsection{Order or arguments}
+\subsubsection{Order of arguments}
 
 \begin{frame}[fragile]\label{vtprogord}
   \begin{example}
-    \lstexample{examples/greet.py}
+    A simple function that greets the user.
+    \lstexample{python}{examples/greet.py}
   \end{example}
 
   \begin{block}{Output}
-    \runexample{examples/greet.py}
+    \runpython{examples/greet.py}
   \end{block}
 \end{frame}
 
 \begin{frame}[fragile]\label{vtprogordcon}
   \begin{example}[Constrast argument order]
-    \lstexample[highlightlines={1,7}]{examples/order-contrast.py}
+    The same function as in \cref{vtprogord}, but with the arguments in the 
+    wrong order.
+    \lstexample[highlightlines={1,7}]{python}{examples/order-contrast.py}
   \end{example}
 
   \begin{block}{Output}
-    \runexample{examples/order-contrast.py}
+    \runpython{examples/order-contrast.py}
   \end{block}
 \end{frame}
 
@@ -487,31 +490,35 @@ XXX Treat the other aspects related to functions: scope, default values, ...
 
 \begin{frame}[fragile]\label{vtprogid}
   \begin{example}
-    \lstexample{examples/greet.py}
+    The same function as in \cref{vtprogord}.
+    \lstexample{python}{examples/greet.py}
   \end{example}
 
   \begin{block}{Output}
-    \runexample{examples/greet.py}
+    \runpython{examples/greet.py}
   \end{block}
 \end{frame}
 
 \begin{frame}[fragile]\label{vtprogidcon}
   \begin{example}[Contrast identifiers in different scopes]
-    \lstexample[highlightlines=5-7]{examples/scope-contrast.py}
+    The same function as in \cref{vtprogid}, but with the variables of the 
+    \mintinline{python}{main} function named differently from the arguments of 
+    the \mintinline{python}{greet} function.
+    \lstexample[highlightlines=5-7]{python}{examples/scope-contrast.py}
   \end{example}
 
   \begin{block}{Output}
-    \runexample{examples/scope-contrast.py}
+    \runpython{examples/scope-contrast.py}
   \end{block}
 \end{frame}
 
 \begin{frame}[fragile]
   \begin{example}[Generalize identifiers in different scopes]
-    \lstexample[highlightlines=5]{examples/scope-contrast-more.py}
+    \lstexample[highlightlines=5]{python}{examples/scope-contrast-more.py}
   \end{example}
 
   \begin{block}{Output}
-    \runexample{examples/scope-contrast-more.py}
+    \runpython{examples/scope-contrast-more.py}
   \end{block}
 \end{frame}
 
