@@ -38,7 +38,7 @@ clean:
 	latexmk -C
 	${RM} article.bbl article.run.xml
 
-INCLUDE_MAKEFILES?=../../makefiles
+INCLUDE_MAKEFILES?=./makefiles
 include ${INCLUDE_MAKEFILES}/tex.mk
-INCLUDE_DIDACTIC=../../beamer-didactic
+INCLUDE_DIDACTIC=./didactic
 include ${INCLUDE_DIDACTIC}/didactic.mk
