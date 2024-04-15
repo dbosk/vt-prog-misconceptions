@@ -24,9 +24,9 @@ SRC+=classes.tex
 SRC+=problem-solving.tex
 SRC+=tools.tex
 
-DEPENDS+=	fig/contrast-color.tikz
-DEPENDS+=	fig/generalization-color.tikz
-DEPENDS+=	fig/fusion-color.tikz
+DEPENDS+=	figs/contrast-color.tikz
+DEPENDS+=	figs/generalization-color.tikz
+DEPENDS+=	figs/fusion-color.tikz
 
 DEPENDS+=	didactic.sty
 
