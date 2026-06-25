@@ -1,12 +1,27 @@
 \mode*
 \section{Method}
 
+This study has two parts. The first is a \emph{literature review} that maps the
+misconceptions novices hold in introductory programming
+(\cref{sec:method-litreview}). The second is an \emph{analysis} of those
+misconceptions through the lens of variation theory
+(\cref{sec:method-vt-analysis}). The misconceptions surfaced by the review are
+the phenomenographic observations on which the variation-theory analysis builds.
+
 \subsection{Literature review}
+\label{sec:method-litreview}
 
-To map misconceptions in introductory programming we used a semi-structured 
-literature review.
+To map misconceptions in introductory programming we conducted the review in two
+phases. The first phase was a manual, semi-structured review carried out by hand
+in a single database. The second phase re-ran the review systematically with a
+tool-supported, multi-database search; we then compared the two so as to
+evaluate what a tool-assisted, partly automated search adds over a careful
+manual one. The full, reproducible protocol for the second phase is given in
+\cref{app:litprotocol}.
 
-A semi-structured literature review is used when the studied area is broad and 
+\subsubsection{Phase one: manual semi-structured review}
+
+A semi-structured literature review is used when the studied area is broad and
 has been conceptualised in many different ways \parencite{Snyder2019}. When 
 conducting a semi-structured literature review the purpose will be to find 
 significant findings in the area, however it is not mandatory, nor perhaps 
@@ -49,18 +64,59 @@ programming \\
 \caption{Databases and search words used in review}
 \label{databasesandwords}
 \end{table}
-When conducting the literature review several databases and search words 
-have 
-been used. In \cref{databasesandwords} each word used in each database is 
-presented.
+In this first phase the search was carried out by hand in a single database,
+Google Scholar. The search words used are presented in \cref{databasesandwords}.
+The misconceptions found in each chosen article are presented in
+\cref{misconceptions}. This manual phase yielded the set of papers that form our
+initial misconception catalogue, and it serves as the \emph{baseline} against
+which we compare the systematic phase below.
 
-The misconceptions found in each chosen article are presented in 
-\cref{misconceptions}. 
+\subsubsection{Phase two: systematic tool-supported review}
 
+To make the review more systematic, transparent, and reproducible, we re-ran it
+with the \texttt{scholar} literature-search tool \parencite{scholar}. Rather than
+a single database queried by hand, \texttt{scholar} issues each query to several
+bibliographic databases at once, records every query verbatim, and supports
+large-language-model (LLM) assisted screening against an explicit set of
+inclusion and exclusion criteria. We searched OpenAlex, arXiv, Web of Science,
+Scopus, and IEEE~Xplore (Semantic Scholar and DBLP were configured but did not
+contribute to the retained set in this run; see \cref{app:litprotocol}). The
+refined criteria relax the manual phase's requirement that \emph{misconceptions}
+appear in the title to title \emph{or} abstract, while keeping the focus on
+concrete misconceptions, errors, and difficulties at the introductory level in
+Python or a language whose constructs transfer to Python.
+
+The search retrieved \num{117} unique papers; LLM-assisted screening against the
+criteria kept \num{24} and discarded \num{93}, the latter most often as
+\emph{not focused on misconceptions} or as \emph{intervention} and
+\emph{AI-tool} studies that do not characterise misconceptions. Every retained
+reference carries a provenance record (how it was found and the verbatim passage
+that supports the misconception it is cited for); the full query set, screening
+counts, and provenance method are documented in \cref{app:litprotocol}.
+
+\subsubsection{Comparing the two phases}
+\label{sec:method-comparison}
+
+Treating the manual phase's papers as a baseline, we compared what each method
+retrieved. The two proved markedly \emph{complementary} rather than redundant:
+of the manual baseline's DOI-identifiable misconception papers, the systematic
+search recovered only the single most-cited survey
+\parencite{MisconceptionsSurvey2017}, while contributing a largely disjoint set
+of additional relevant papers that the manual review had not surfaced. Much of
+this divergence is explained by database coverage: the manual review found
+specific, often older CS-conference papers (a strength of the
+computer-science-specific indexes that were unproductive in our systematic run),
+whereas the systematic search over general-purpose indexes surfaced a broader
+and more recent set. We read this not as one method dominating the other but as
+evidence that a tool-assisted, multi-database search \emph{extends} a manual
+review and should be paired with citation snowballing (deferred here) to recover
+the construct-specific literature. \Cref{app:litprotocol} reports the comparison
+in full.
 
 \subsection{Analysis with variation theory}
+\label{sec:method-vt-analysis}
 
-Each misconception found in earlier research will be analysed through 
+Each misconception found in earlier research will be analysed through
 variation theory. The analysis has the purpose of understanding how one can 
 teach the different aspects revolving around the misconception at hand, in 
 order to avoid this misconception in the future. 

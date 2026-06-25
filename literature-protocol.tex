@@ -1,0 +1,187 @@
+\mode*
+\section{Literature review protocol}
+\label{app:litprotocol}
+
+This appendix documents, in full, the systematic phase of the literature review
+(\cref{sec:method-litreview}). The aim is reproducibility: every database, query,
+screening decision, and per-citation provenance record can be re-run or audited.
+The systematic phase was carried out with the \texttt{scholar} tool
+\parencite{scholar}, which queries several bibliographic databases at once,
+records each query verbatim, and supports large-language-model (LLM) assisted
+screening against an explicit set of criteria.
+
+\subsection{Databases}
+
+We configured seven providers: Semantic Scholar, OpenAlex, DBLP, arXiv, Web of
+Science, Scopus, and IEEE~Xplore. In this run the retained papers came from
+OpenAlex, arXiv, Web of Science, Scopus, and IEEE~Xplore; Semantic Scholar
+returned authorisation errors throughout and DBLP contributed nothing to the
+retained set (see \cref{app:litlimitations}). Because the two
+computer-science-specific indexes were the unproductive ones, the systematic
+phase effectively searched general-purpose indexes only --- a fact that bears
+directly on the comparison in \cref{app:litcomparison}.
+
+\subsection{Search queries}
+
+We combined two search strategies. First, a set of keyword queries broadening the
+three strings of the manual phase (\cref{databasesandwords}) across all
+constructs covered by the catalogue. Second, a research-question driven search in
+which the tool used an LLM to translate one research question into
+provider-specific queries (respecting each provider's syntax, e.g.\ uppercase
+boolean operators for OpenAlex, Web of Science, and Scopus). All queries were
+issued to all seven providers.
+
+\begin{table}[h]
+  \centering
+  \small
+  \begin{tabular}{p{0.92\textwidth}}
+    \toprule
+    Keyword queries \\
+    \midrule
+    programming misconceptions novice \\
+    misconceptions introductory programming \\
+    misconceptions CS1 programming \\
+    Python programming misconceptions students \\
+    novice programmers errors mistakes \\
+    object-oriented programming misconceptions students \\
+    variable assignment misconceptions programming \\
+    loop iteration misconceptions novice programming \\
+    recursion misconceptions novice programming \\
+    conditional if statement misconceptions programming \\
+    data type misconceptions programming students \\
+    parameter passing misconceptions students programming \\
+    variable evaluation novice programmers misconceptions \\
+    avoiding object misconceptions teaching \\
+    tracing quiz novice programming misconceptions \\
+    novice programming mistakes large scale compilation errors \\
+    object oriented programming comprehension novices misconceptions \\
+    programming misconceptions exam assessment students \\
+    students misconceptions loops conditionals variables Python \\
+    \bottomrule
+  \end{tabular}
+  \caption{Keyword queries issued to all providers in the systematic phase.}
+  \label{tab:litqueries}
+\end{table}
+
+The research-question driven search used the question \enquote{What
+misconceptions do novice students have in introductory programming?}, which the
+tool expanded per provider; representatively, for OpenAlex, Web of Science,
+Scopus, IEEE, and arXiv:
+\begin{quote}\small
+  (\enquote{introductory programming} OR \enquote{computer programming}) AND
+  (misconceptions OR \enquote{naive conceptions} OR difficulties) AND
+  (novice students OR beginners)
+\end{quote}
+and for DBLP the simpler \texttt{misconceptions "introductory programming"
+novice students}.
+
+\subsection{Inclusion and exclusion criteria}
+
+The criteria refine those of the manual phase. The most important change is to
+relax the requirement that the word \emph{misconceptions} appear in the
+\emph{title}: a paper qualifies if it identifies concrete misconceptions in the
+title \emph{or} abstract.
+
+\begin{description}
+  \item[Include] a paper that identifies, lists, or characterises concrete
+    misconceptions, errors, or conceptual difficulties that novices hold about
+    introductory programming constructs (variables and assignment, data types,
+    conditionals, loops and iteration, recursion, functions and parameter
+    passing, objects and classes, program tracing, the notional machine), in
+    Python or another imperative/object-oriented language whose constructs
+    transfer to Python, at the introductory level (CS1, high school, or early
+    university).
+  \item[Exclude] papers that merely compare which programming language is most
+    efficient to teach; papers about a tool that only \emph{measures} student
+    knowledge without reporting the misconceptions themselves; papers not about
+    introductory programming; papers about motivation, attitudes, or retention
+    that report no specific misconceptions; and AI/LLM intervention or
+    tool-performance studies that do not characterise misconceptions.
+\end{description}
+
+\subsection{Screening}
+
+The search retrieved \num{117} unique papers after de-duplication. We set the
+inclusion and exclusion criteria above as the research context and screened
+every paper with LLM-assisted classification, using the already-labelled papers
+as worked examples. \Cref{tab:litscreening} summarises the outcome; the most
+common reasons for exclusion are reported alongside.
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{lr}
+    \toprule
+    Stage & Papers \\
+    \midrule
+    Identified (unique, after de-duplication) & 117 \\
+    Screened against criteria                 & 117 \\
+    Excluded                                  & 93 \\
+    \emph{Included (kept)}                     & \emph{24} \\
+    \bottomrule
+  \end{tabular}
+  \quad
+  \begin{tabular}{lr}
+    \toprule
+    Most common exclusion reason & Count \\
+    \midrule
+    Not focused on misconceptions & 49 \\
+    Intervention study            & 44 \\
+    AI-tool study                 & 28 \\
+    Not introductory programming  & 12 \\
+    Motivation / attitudes        & 9 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Screening flow for the systematic phase (a paper may carry more than
+    one exclusion reason).}
+  \label{tab:litscreening}
+\end{table}
+
+\subsection{Comparison with the manual review}
+\label{app:litcomparison}
+
+We treated the manual phase's catalogue as the baseline and asked how much of it
+the systematic search recovered, and how much it added. Of the manual baseline's
+thirteen DOI-identifiable misconception papers, the systematic search recovered
+exactly one --- the most-cited survey \parencite{MisconceptionsSurvey2017} ---
+and twenty-three of the twenty-four kept papers were \emph{new} relative to the
+baseline. The two methods are therefore strongly complementary rather than
+redundant.
+
+The likeliest explanation is database coverage. The manual review, working
+through Google Scholar with title-targeted queries and incidental citation
+following, surfaced specific (and often older) computer-science conference
+papers. Those are precisely the papers a CS-specific index would rank highly ---
+but the two CS-specific indexes were unproductive in our run. The systematic
+search over general-purpose indexes instead surfaced a broader and more recent
+set. We read this as evidence that a tool-assisted multi-database search
+\emph{extends} a manual review, and that the two should be combined ---
+ideally with citation snowballing, which we deferred (\cref{app:litlimitations})
+--- rather than either replacing the other.
+
+\subsection{Verification and provenance}
+
+Following the find--verify--record discipline, every retained reference carries a
+provenance comment block immediately above its entry in \texttt{misconceptions.bib}.
+Each block records the exact claim the reference backs (\textsf{CLAIM}), the
+reproducible query that found it (\textsf{FOUND-VIA}), why it was chosen
+(\textsf{PICKED}), a verbatim passage that entails the claim (\textsf{QUOTE} with
+its location), and what was read to confirm applicability (\textsf{VERIFIED}).
+The tool's currency check (\texttt{scholar verify}) was run over the session to
+flag retracted, corrected, or superseded papers via Crossref. The provenance
+blocks are validated mechanically, so no reference may enter the catalogue
+without a recorded, verbatim justification.
+
+\subsection{Limitations and deferred steps}
+\label{app:litlimitations}
+
+Three limitations of this run should be recorded. First, Semantic Scholar
+returned authorisation errors and DBLP returned nothing to the retained set, so
+the two computer-science-specific indexes did not contribute; the systematic
+phase effectively searched general-purpose indexes, which depresses recall of
+CS-conference papers. Second, results per provider were capped, so the search is
+not exhaustive. Third, we deferred citation \emph{snowballing} (backward and
+forward citation following from a seed set): this is the step most likely to
+recover the construct-specific papers the manual review found, and it is the
+natural next extension of this protocol. The full session --- queries, retrieved
+papers, and screening decisions --- is saved and can be re-exported to reproduce
+the tables above.
