@@ -33,7 +33,7 @@
 \let\email\texttt
 
 \usepackage{listings}
-\usepackage[outputdir=ltxobj]{minted}
+\usepackage{minted}
 \setminted{autogobble,linenos}
 
 \usepackage{pythontex}
@@ -56,4 +56,8 @@
 \usepackage[single]{acro}
 
 \usepackage[capitalize]{cleveref}
+% Beamer frames carry a `framenumber` label type; give cleveref a name for it so
+% \cref to a \label'd frame works (and does not error on a cold first compile).
+\crefname{framenumber}{frame}{frames}
+\Crefname{framenumber}{Frame}{Frames}
 \usepackage{didactic}
