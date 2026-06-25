@@ -14,8 +14,42 @@ example \mintinline{python}{foo("Hello World")}, students instead write
 \mintinline{python}{foo(Hello World)}, where the misconception is about the syntax of 
 declaring a string. 
 
-XXX Add analysis on how to teach how to declare string-variables. Maybe 
-this misconception should be in the section of functions and variables?
+The object of learning is \emph{how a string literal is written}. The critical
+aspect is the quoting: a sequence of characters in quotes is a string value,
+whereas the same characters without quotes are read as a \emph{name} (or other
+expression). We make this discernible by keeping the call invariant and varying
+only the quotes.
+
+\begin{description}
+  \item[Contrast] The same call, varying only whether the argument is quoted.
+    The left passes the string \mintinline{python}{"Hello"}; the right passes the
+    \emph{name} \mintinline{python}{Hello}, which raises
+    \mintinline{python}{NameError: name 'Hello' is not defined} --- revealing
+    that without quotes the token is treated as a variable, not text.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1}]{python}
+        print("Hello")
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1}]{python}
+        print(Hello)
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+\ltnote{%
+  Relevant misconception (cited in the body): omitting the quotes when passing a
+  string, e.g.\ \mintinline{python}{foo(Hello World)}.
+  \textbf{What varies} (contrast): only the quotes around the argument.
+  \textbf{What stays invariant}: the call itself, so the error isolates
+  \enquote{quotes make it a string}. As the prose notes, this misconception is
+  arguably at home in the functions-and-variables chapter; we keep it here
+  because it is first met as a property of the string \emph{type}.%
+}
 
 When using data types in CS1 the students are often required to use some 
 kind of comparison between variables. This creates situations where the 
@@ -34,8 +68,83 @@ Related type confusions surface when students evaluate expressions:
 \textcite{Gobil2009Errors} found that some of the most common novice errors are
 failing to evaluate integer division and type conversion correctly.
 
-XXX Add analysis on how to introduce different data types so that the 
-students understand the difference between them
+The common thread is one object of learning: \emph{a value's type is
+independent of how the value looks}. The character \mintinline{python}{3} on the
+screen may be the integer \mintinline{python}{3} or the string
+\mintinline{python}{"3"}, and the two behave differently under the same
+operator. The critical aspect is the type, so we hold the visible value
+invariant and vary only the type.
+
+\begin{description}
+  \item[Contrast] The same-looking operands, varying only their type. Addition
+    \emph{concatenates} strings but \emph{sums} integers, so the identical
+    surface form produces \mintinline{python}{"34"} on the left and
+    \mintinline{python}{7} on the right.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1}]{python}
+        x, y = "3", "4"
+        print(x + y)
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1}]{python}
+        x, y = 3, 4
+        print(x + y)
+      \end{minted}
+    \end{minipage}
+    \newline
+    The same pattern explains why terminal input must be converted: keeping the
+    program invariant and varying only whether \mintinline{python}{int} is
+    applied shows that \mintinline{python}{input} returns a string.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1}]{python}
+        age = input("Age: ")
+        print(age + 1)
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1}]{python}
+        age = int(input("Age: "))
+        print(age + 1)
+      \end{minted}
+    \end{minipage}
+
+  \item[Generalisation] Keeping the critical aspect invariant --- type governs
+    behaviour, not appearance --- we vary the operator. Integer versus
+    true division on the same operands makes the related conversion
+    misconception visible: \mintinline{python}{7 // 2} is
+    \mintinline{python}{3} while \mintinline{python}{7 / 2} is
+    \mintinline{python}{3.5}.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        print(7 // 2)
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        print(7 / 2)
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+\ltnote{%
+  Relevant misconceptions (cited in the body): comparing values of different
+  types; that terminal input is automatically an integer; and failing to
+  evaluate integer division and type conversion.
+  \textbf{What varies} (contrast): only the type of the operands (or whether
+  \mintinline{python}{int} is applied).
+  \textbf{What stays invariant}: the surface value and the operation, so the
+  difference in result isolates the role of \emph{type}.%
+}
 
 
  \textcite{Kurvinen2016} found in their studies that it is not intuitive 
@@ -48,4 +157,82 @@ index-error when trying to extract an element with an index larger then
 the length of the list. They also saw a tendency to use negative index-
 numbers when unnecessary to extract elements from an array.
 
- XXX Insert analysis on how we can teach indexation of arrays
+The object of learning is \emph{how an index maps to a position in a list}. The
+critical aspect is that indexing starts at \mintinline{python}{0}, so the first
+element is at index \mintinline{python}{0} and the last valid index is
+\mintinline{python}{len(a) - 1}. We keep the same list and vary only the index.
+
+\begin{description}
+  \item[Contrast] The same list \mintinline{python}{a}, varying only the index.
+    Index \mintinline{python}{0} gives the first element
+    (\mintinline{python}{10}); index \mintinline{python}{1} --- which a student
+    expecting 1-based counting reads as \enquote{the first} --- gives the
+    \emph{second} (\mintinline{python}{20}). Contrasting the two separates the
+    position from the index.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        a = [10, 20, 30]
+        print(a[0])
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        a = [10, 20, 30]
+        print(a[1])
+      \end{minted}
+    \end{minipage}
+    \newline
+    The off-by-one error at the upper end follows the same contrast: the last
+    valid index is \mintinline{python}{len(a) - 1}, so \mintinline{python}{a[3]}
+    raises \mintinline{python}{IndexError} while \mintinline{python}{a[2]} gives
+    the last element.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        a = [10, 20, 30]
+        print(a[len(a)])
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        a = [10, 20, 30]
+        print(a[len(a) - 1])
+      \end{minted}
+    \end{minipage}
+
+  \item[Generalisation] Holding the rule invariant --- first element at
+    \mintinline{python}{0}, last at \mintinline{python}{len(a) - 1} --- we vary
+    how the elements are reached: by explicit index and by iterating over the
+    list directly, which sidesteps off-by-one entirely.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        for i in range(len(a)):
+            print(a[i])
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        for item in a:
+            print(item)
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+\ltnote{%
+  Relevant misconceptions (cited in the body): that indexing starts at one, and
+  the resulting off-by-one and unnecessary negative-index errors when looping by
+  index.
+  \textbf{What varies} (contrast): only the index into a fixed list.
+  \textbf{What stays invariant}: the list \mintinline{python}{a}, so the change
+  in result isolates the 0-based mapping. The generalisation contrasts
+  index-based and direct iteration to show the rule, and to offer the
+  off-by-one-free idiom.%
+}

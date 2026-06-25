@@ -19,8 +19,74 @@ the tracing takes. \textcite{Eckert2022Loops} similarly found that loops
 generally, and nested loops in particular, pose difficulties for novices, and
 identified loop misconceptions tied to how the loop is represented.
 
-XXX Add analysis on how we can help students trace loops and understanding 
-how the loop-structure works.
+The object of learning here is \emph{what happens on each iteration of a loop}.
+Two critical aspects are hidden in the misconception above: that the
+\emph{entire} loop body is repeated (not only the string printed in the
+terminal), and that the loop variable is \emph{rebound} to a new element on each
+pass. We make these discernible by keeping the iterable invariant and varying
+only how the body uses the loop variable.
+
+\begin{description}
+  \item[Contrast] The same loop over the same list, varying only whether the
+    body refers to the loop variable. The left program prints the same string
+    three times --- consistent with the misconception --- while the right one
+    prints \mintinline{python}{10}, \mintinline{python}{20},
+    \mintinline{python}{30}, revealing that the body runs afresh each pass with
+    the loop variable rebound.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        for x in [10, 20, 30]:
+            print("Hello")
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        for x in [10, 20, 30]:
+            print(x)
+      \end{minted}
+    \end{minipage}
+
+  \item[Generalisation] Keeping the critical value invariant --- the body
+    repeats and the loop variable takes each element in turn --- we vary the
+    \emph{kind} of iterable (a list, a \mintinline{python}{range}, a string).
+    \citeauthor{Eckert2022Loops}'s finding that misconceptions are tied to the
+    loop's representation motivates exactly this: vary the surface form while
+    holding the meaning constant \parencite{Eckert2022Loops}.
+
+    \hfill
+    \begin{minipage}[t]{0.3\columnwidth}
+      \begin{minted}{python}
+        for x in [1, 2, 3]:
+            print(x)
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\columnwidth}
+      \begin{minted}{python}
+        for x in range(1, 4):
+            print(x)
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\columnwidth}
+      \begin{minted}{python}
+        for c in "abc":
+            print(c)
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+\ltnote{%
+  Relevant misconception (cited in the body): that only the printed string,
+  not the whole body, is repeated.
+  \textbf{What varies} (contrast): only whether the body uses the loop variable.
+  \textbf{What stays invariant}: the loop header and the iterable, so the
+  difference in output isolates \enquote{the body repeats with the variable
+  rebound}. The generalisation then varies the iterable's representation.%
+}
 
 When students define and use loops, \textcite{GuoMarkelZhang2020} found 
 three common misconceptions that the students had about the loop-statement, 
@@ -31,11 +97,62 @@ three common misconceptions that the students had about the loop-statement,
       extract different information.
     \item The misconception that \mintinline{python}{for i in 100} will iterate 
       a hundred times, even though Python require a specified range.
-    \item When defining a while-loop, the misconception is that one can write 
-      \mintinline{python}{while i <= 100} without initialising 
-      \mintinline{python}{i} beforehand, and that \mintinline{python}{i} will 
+    \item When defining a while-loop, the misconception is that one can write
+      \mintinline{python}{while i <= 100} without initialising
+      \mintinline{python}{i} beforehand, and that \mintinline{python}{i} will
       automatically increase with 1 inside the loop.
 \end{enumerate}
+
+The second and third of these share an object of learning: \emph{what a loop
+needs in order to run}. For a \mintinline{python}{for} loop the critical aspect
+is that the value after \mintinline{python}{in} must be an \emph{iterable}; for a
+\mintinline{python}{while} loop it is that the loop variable must be both
+initialised before the loop and updated inside it. A contrast that varies only
+the critical aspect makes each requirement visible, because the misconception
+version fails observably.
+
+\begin{description}
+  \item[Contrast] For the \mintinline{python}{for} loop we vary only what follows
+    \mintinline{python}{in}: an integer (which is not iterable, raising
+    \mintinline{python}{TypeError: 'int' object is not iterable}) versus a
+    \mintinline{python}{range}.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1}]{python}
+        for i in 100:
+            print(i)
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1}]{python}
+        for i in range(100):
+            print(i)
+      \end{minted}
+    \end{minipage}
+    \newline
+    For the \mintinline{python}{while} loop we vary only whether the loop
+    variable is initialised and updated. Without them the loop never starts
+    (a \mintinline{python}{NameError}) or never ends; with them it counts as
+    intended.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1}]{python}
+        while i <= 100:
+            print(i)
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1,3}]{python}
+        i = 0
+        while i <= 100:
+            i = i + 1
+      \end{minted}
+    \end{minipage}
+\end{description}
 
 Another difficult part of the loop technique is to understand how an if-
 statement inside a loop is executed. \textcite{Sekiya2013} found in their 
@@ -46,6 +163,37 @@ output from the loop. The students in the studies often got confused and
 started to misplace the different variables that are defined when writing 
 an if-statement in a for-loop.
 
-XXX Add analysis on how we can teach the combination of loops and 
-conditionals in a way which will avoid misconceptions about the different 
-variables used. 
+When a conditional is placed inside a loop, two critical aspects must be
+discerned \emph{simultaneously}: the loop variable that advances each iteration,
+and any variable used by the conditional to accumulate or decide. This is a
+fusion situation --- the misconception arises precisely because the student
+attends to one role and mistakes it for the other.
+
+\begin{description}
+  \item[Fusion] We keep the earlier counting loop and fuse it with a conditional
+    that maintains a separate variable. The student must track both the loop
+    variable \mintinline{python}{x} (which ranges over the data) and the
+    accumulator \mintinline{python}{total} (which the conditional updates) at the
+    same time to predict the result.
+
+    \hfill
+    \begin{minipage}[t]{0.55\columnwidth}
+      \begin{minted}[highlightlines={2,4}]{python}
+        total = 0
+        for x in [3, 8, 1, 9, 4]:
+            if x > 5:
+                total = total + x
+        print(total)
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+\ltnote{%
+  Relevant misconception (cited in the body): students treat the variables in a
+  conditional inside a loop as control variables or as the loop's output
+  (Sekiya \& Yamaguchi).
+  \textbf{Variation pattern}: fusion --- the loop variable and the accumulator
+  vary together and must be attended to simultaneously.
+  \textbf{What stays invariant}: the counting-loop structure introduced above,
+  so the only new demand is coordinating the two variable roles.%
+}

@@ -14,9 +14,94 @@ Another misconception is that when writing an if and else statement, both
 if and else will be executed, even when the if-statement is true \parencite{
 MisconceptionsSurvey2017}.
 
-XXX Add analysis on how we can teach conditionals in a way which help the 
-students to understand when and how the code below the conditionals will be 
-executed.
+Both misconceptions concern the same object of learning: \emph{how control flows
+through an if--else statement}. The critical aspect that the students have not
+discerned is that the condition merely \emph{selects} which branch runs --- at
+most one branch executes, and the program then continues with whatever follows
+the statement. A false condition neither terminates the program nor causes both
+branches to run. We can make this aspect discernible with variation theory.
+
+\begin{description}
+  \item[Contrast] We keep one program invariant and vary only the truth value of
+    the condition. The same statement after the conditional runs in both cases
+    (so a false \mintinline{python}{if} does not terminate the program), and
+    exactly one of the two branches runs (so the \mintinline{python}{else} does
+    not also run when the \mintinline{python}{if} is true). Only the
+    highlighted value varies.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1}]{python}
+        temperature = 30
+        if temperature > 20:
+            print("It is warm.")
+        else:
+            print("It is cold.")
+        print("Take care!")
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1}]{python}
+        temperature = 10
+        if temperature > 20:
+            print("It is warm.")
+        else:
+            print("It is cold.")
+        print("Take care!")
+      \end{minted}
+    \end{minipage}
+    \newline
+    Tracing the output makes the invariant visible: the left program prints
+    \enquote{It is warm.} and the right prints \enquote{It is cold.}, but
+    \emph{both} print \enquote{Take care!} afterwards.
+
+  \item[Generalisation] We keep the critical value invariant --- exactly one
+    branch runs and execution continues --- while varying the non-critical
+    shape of the conditional. Adding an \mintinline{python}{elif} branch, or
+    nesting, does not change the rule.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        if temperature > 20:
+            print("It is warm.")
+        elif temperature > 0:
+            print("It is chilly.")
+        else:
+            print("It is freezing.")
+        print("Take care!")
+      \end{minted}
+    \end{minipage}
+
+  \item[Fusion] Finally we fuse the two aspects --- which branch runs \emph{and}
+    that execution continues --- by letting each branch assign to the same
+    variable and using it after the conditional. The student must attend to the
+    selection and the continuation simultaneously to predict the output.
+
+    \hfill
+    \begin{minipage}[t]{0.6\columnwidth}
+      \begin{minted}{python}
+        if temperature > 20:
+            advice = "shorts"
+        else:
+            advice = "a jacket"
+        print(f"Wear {advice}.")
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+\ltnote{%
+  Relevant misconceptions (cited in the body): a false \mintinline{python}{if}
+  terminates the programme; both branches run even when the
+  \mintinline{python}{if} is true.
+  \textbf{Variation pattern}: contrast then generalisation then fusion.
+  \textbf{What varies} (contrast): only the value of
+  \mintinline{python}{temperature}.
+  \textbf{What stays invariant}: the conditional and the trailing statement, so
+  the reader's attention falls on branch selection and continuation rather than
+  on incidental code changes.%
+}
 
 A syntax error that is common is when students try to chain conditions in 
 an if-statement, for example \mintinline{python}{if x != a or b}, where the 
@@ -25,5 +110,66 @@ correct statement should be \mintinline{python}{if x != a or x != b}
 from the way the statement is read out loud as \enquote{if x is not equal to a 
 or b}, which in mathematical terms is the right way to state it. 
 
-XXX Add analysis on how we can help students to grasp the way if statements 
-should be stated in code, apposed to how it is stated in mathematics. 
+Here the object of learning is \emph{how a boolean operator combines
+conditions}. The critical aspect is that each operand of
+\mintinline{python}{or} (or \mintinline{python}{and}) must be a
+\emph{complete} comparison: \mintinline{python}{x != a or x != b} is two
+comparisons joined by \mintinline{python}{or}, whereas
+\mintinline{python}{x != a or b} joins the comparison \mintinline{python}{x != a}
+with the bare value \mintinline{python}{b}, whose truthiness is then tested. To
+make this discernible we keep the values invariant and vary only whether the
+right-hand side is a full comparison.
+
+\begin{description}
+  \item[Contrast] The same values \mintinline{python}{x, a, b}, varying only the
+    right operand of \mintinline{python}{or}. The right-hand program prints even
+    though \mintinline{python}{x == a}, because the non-zero \mintinline{python}{b}
+    is truthy --- revealing that the comparison did not distribute.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        x, a, b = 5, 5, 7
+        if x != a or x != b:
+            print("x differs from a or b")
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        x, a, b = 5, 5, 7
+        if x != a or b:
+            print("x differs from a or b")
+      \end{minted}
+    \end{minipage}
+
+  \item[Generalisation] Keeping the rule invariant --- each operand is a complete
+    comparison --- we vary the comparison operator and the operands, so the
+    student sees the rule is not specific to \mintinline{python}{!=}.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        if score == 1 or score == 2:
+            print("low")
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        if 0 < x and x < 10:
+            print("in range")
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+\ltnote{%
+  Relevant misconception (cited in the body): chaining conditions as in
+  mathematics, \mintinline{python}{if x != a or b} read aloud as \enquote{if x
+  is not equal to a or b}.
+  \textbf{What varies} (contrast): only whether the right operand of
+  \mintinline{python}{or} is a complete comparison.
+  \textbf{What stays invariant}: the values of \mintinline{python}{x, a, b} and
+  the surrounding statement, so the differing behaviour isolates the critical
+  aspect.%
+}
