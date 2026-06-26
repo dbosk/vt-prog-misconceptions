@@ -1,4 +1,7 @@
 article.pdf
+didactic.sty
+slides.pdf
+slides.unq
 article.aux
 article.bbl
 article.bcf
@@ -9,4 +12,4 @@ article.log
 article.out
 article.run.xml
 article.toc
-
+ltxobj/
