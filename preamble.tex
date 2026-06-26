@@ -80,6 +80,10 @@
 \usepackage[single]{acro}
 
 \usepackage[capitalize]{cleveref}
+% Beamer frames carry a `framenumber` label type; give cleveref a name for it so
+% \cref to a \label'd frame works (and does not error on a cold first compile).
+\crefname{framenumber}{frame}{frames}
+\Crefname{framenumber}{Frame}{Frames}
 
 % Load didactic LAST: it adapts biblatex/csquotes/cleveref (already loaded
 % above) and auto-detects memoir to apply the modern Tufte layout -- wide outer

@@ -1,3 +1,75 @@
+% === provenance: scholar ===
+% CLAIM: scholar is a structured, multi-database literature-search tool with
+%   LLM-assisted screening, used to conduct the systematic phase of our review.
+% FOUND-VIA: software used directly (on PATH as `scholar`; source at
+%   https://github.com/dbosk/scholar); run `scholar --help`
+% PICKED: the actual tool employed for the systematic search; authored by one of
+%   this paper's authors, so a direct software citation is appropriate.
+% QUOTE (--help): "Structured literature search tool for systematic reviews."
+% VERIFIED: tool run directly; the cited capabilities (multi-provider search,
+%   recorded queries, LLM classification) were exercised in this study.
+% DATE: 2026-06-25
+@software{scholar,
+  author       = {Bosk, Daniel and Glassey, Ric},
+  title        = {scholar: a structured literature-search tool for systematic
+                  reviews},
+  year         = {2026},
+  url          = {https://github.com/dbosk/scholar},
+  note         = {Version with multi-provider search and LLM-assisted screening},
+}
+
+% === provenance: Eckert2022Loops ===
+% CLAIM: Novices hold misconceptions about loops, with nested loops especially
+%   difficult.
+% FOUND-VIA: scholar search "loop iteration misconceptions novice programming"
+%   -p s2 -p openalex -p dblp -p arxiv -p wos -p ieee -p scopus
+%   (session "misconceptions-systematic"); kept by LLM screening
+% PICKED: a primary study that directly identifies loop misconceptions in a CS1
+%   course, complementing the existing loop-misconception sources
+%   (GuoMarkelZhang2020, Sekiya2013); chosen over broader difficulty surveys
+%   because it names loop misconceptions specifically.
+% QUOTE (abstract): "For novice programmers loops generally and nested loops
+%   specifically pose big difficulties. This paper identifies common student
+%   misconceptions about loops in a first-year C++ introductory computer science
+%   course and the relation of these misconceptions to representations."
+% VERIFIED: abstract read; states loop/nested-loop misconceptions in a CS1
+%   (C++, transfers to Python) course -- exactly the claim.
+% DATE: 2026-06-25
+@inproceedings{Eckert2022Loops,
+  author    = {Eckert, Dimitri and Timmermann, Dion and Kautz, Christian},
+  title     = {Student Misconceptions about Loops in Introductory Programming
+               Courses and the Influence of Representations},
+  booktitle = {2022 IEEE Frontiers in Education Conference (FIE)},
+  year      = {2022},
+  doi       = {10.1109/FIE56618.2022.9962545},
+}
+
+% === provenance: Gobil2009Errors ===
+% CLAIM: Novices make systematic errors evaluating arithmetic expressions,
+%   notably integer division and type conversion.
+% FOUND-VIA: scholar search "data type misconceptions programming students"
+%   -p s2 -p openalex -p dblp -p arxiv -p wos -p ieee -p scopus
+%   (session "misconceptions-systematic"); kept by LLM screening
+% PICKED: a primary study cataloguing concrete novice errors; chosen for the
+%   type-related errors (integer division, type conversion) that augment the
+%   data-types chapter. NB: despite its title ("selection structure"), the
+%   reported errors are about arithmetic/type evaluation, so it is cited for
+%   types, not conditionals.
+% QUOTE (abstract): "the most common errors in evaluating arithmetic expression
+%   are failed to evaluate integer division and type conversion."
+% VERIFIED: abstract read; the quoted finding is exactly the type-evaluation
+%   misconception claimed.
+% DATE: 2026-06-25
+@inproceedings{Gobil2009Errors,
+  author    = {Gobil, Abdul Rahman Mohamad and Shukor, Zarina and
+               Mohtar, Itaza Afiani},
+  title     = {Novice Difficulties in Selection Structure},
+  booktitle = {2009 International Conference on Electrical Engineering and
+               Informatics},
+  year      = {2009},
+  doi       = {10.1109/ICEEI.2009.5254715},
+}
+
 @article{MisconceptionsSurvey2017,
   author = {Qian, Yizhou and Lehman, James},
   title = {Students’ Misconceptions and Other Difficulties in Introductory 
