@@ -1559,17 +1559,20 @@ expression invariant and varying only whether the symbol assigns or compares.
       \end{minted}
     \end{minipage}
 
-  \item[Fusion] Finally we fuse the directional reading with the flow of values
-    over time: tracing several reassignments, the student must see each
-    \mintinline{python}{=} act on the value left by the previous line.
+  \item[Fusion] Finally we fuse the two critical aspects --- that
+    \mintinline{python}{=} assigns rather than compares, and that each assignment
+    acts on the value left by the previous line --- in a single trace that uses
+    both \mintinline{python}{=} and \mintinline{python}{==}. To predict the
+    output the student must read lines~1--2 as directional updates (so
+    \mintinline{python}{x} becomes \mintinline{python}{6}) and line~3 as a
+    \emph{test} of the resulting value, which prints \mintinline{python}{True}.
 
     \hfill
-    \begin{minipage}[t]{0.45\columnwidth}
-      \begin{minted}{python}
+    \begin{minipage}[t]{0.5\columnwidth}
+      \begin{minted}[highlightlines={2,3}]{python}
         x = 5
         x = x + 1
-        x = x * 2
-        print(x)
+        print(x == 6)
       \end{minted}
     \end{minipage}
 \end{description}

@@ -21,6 +21,7 @@ SRC+=conditionals.tex
 SRC+=repetitions.tex
 SRC+=types.tex
 SRC+=classes.tex
+SRC+=findings.tex
 SRC+=literature-protocol.tex
 SRC+=problem-solving.tex
 SRC+=tools.tex

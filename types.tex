@@ -191,23 +191,28 @@ element is at index \mintinline{python}{0} and the last valid index is
       \end{minted}
     \end{minipage}
 
-  \item[Generalisation] Holding the rule invariant --- first element at
+  \item[Generalisation] Holding the rule invariant --- first element at index
     \mintinline{python}{0}, last at \mintinline{python}{len(a) - 1} --- we vary
-    how the elements are reached: by explicit index and by iterating over the
-    list directly, which sidesteps off-by-one entirely.
+    the non-critical features of the list itself, its length and the type of its
+    elements, so the student sees that the rule belongs to indexing and not to
+    one particular list.
 
     \hfill
     \begin{minipage}[t]{0.45\columnwidth}
       \begin{minted}{python}
-        for i in range(len(a)):
-            print(a[i])
+        a = [10, 20, 30]
+        print(a[0], a[2])
       \end{minted}
     \end{minipage}
     \hfill
     \begin{minipage}[t]{0.45\columnwidth}
       \begin{minted}{python}
-        for item in a:
-            print(item)
+        a = ["x", "y"]
+        print(a[0], a[1])
       \end{minted}
     \end{minipage}
 \end{description}
+
+Once the 0-based rule is discerned, the off-by-one errors disappear; iterating
+over the list directly with \mintinline{python}{for item in a} avoids explicit
+indices altogether and is the idiom we recommend where the index is not needed.
