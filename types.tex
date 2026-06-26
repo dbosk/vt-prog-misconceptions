@@ -42,13 +42,9 @@ only the quotes.
 \end{description}
 
 \ltnote{%
-  Relevant misconception (cited in the body): omitting the quotes when passing a
-  string, e.g.\ \mintinline{python}{foo(Hello World)}.
-  \textbf{What varies} (contrast): only the quotes around the argument.
-  \textbf{What stays invariant}: the call itself, so the error isolates
-  \enquote{quotes make it a string}. As the prose notes, this misconception is
-  arguably at home in the functions-and-variables chapter; we keep it here
-  because it is first met as a property of the string \emph{type}.%
+  Placement decision: this string-syntax misconception could equally live in the
+  functions-and-variables chapter; we keep it here because students first meet
+  it as a property of the string \emph{type}.%
 }
 
 When using data types in CS1 the students are often required to use some 
@@ -136,16 +132,6 @@ invariant and vary only the type.
     \end{minipage}
 \end{description}
 
-\ltnote{%
-  Relevant misconceptions (cited in the body): comparing values of different
-  types; that terminal input is automatically an integer; and failing to
-  evaluate integer division and type conversion.
-  \textbf{What varies} (contrast): only the type of the operands (or whether
-  \mintinline{python}{int} is applied).
-  \textbf{What stays invariant}: the surface value and the operation, so the
-  difference in result isolates the role of \emph{type}.%
-}
-
 
  \textcite{Kurvinen2016} found in their studies that it is not intuitive 
 for students that the indexation of an array starts at 0 instead of 1. 
@@ -225,14 +211,3 @@ element is at index \mintinline{python}{0} and the last valid index is
       \end{minted}
     \end{minipage}
 \end{description}
-
-\ltnote{%
-  Relevant misconceptions (cited in the body): that indexing starts at one, and
-  the resulting off-by-one and unnecessary negative-index errors when looping by
-  index.
-  \textbf{What varies} (contrast): only the index into a fixed list.
-  \textbf{What stays invariant}: the list \mintinline{python}{a}, so the change
-  in result isolates the 0-based mapping. The generalisation contrasts
-  index-based and direct iteration to show the rule, and to offer the
-  off-by-one-free idiom.%
-}
