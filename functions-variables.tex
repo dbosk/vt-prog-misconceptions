@@ -18,28 +18,30 @@ This will create problems when a student creates a variable in belief that the
 variable will dynamically change its value when the equation would change its 
 value, or be updated when the variable is used in the program.
 
-\begin{frame}<presentation>
-  \begin{block}{Misconception\footcite{%
+\mode<presentation>{%
+\begin{frame}
+  \begin{block}{Misconception\autocite{%
           Kohn2017VariableEvaluation,%
           Plass2015Variables,%
           Doukakis2007%
         }}
     \begin{itemize}
       \item Students believe that variables can hold an entire algorithm.
-      \item They seem to see a variable assignment as a function or a 
+      \item They seem to see a variable assignment as a function or a
         mathematical equation.
     \end{itemize}
   \end{block}
-\end{frame}
+\end{frame}%
+}
 
 Another misconception that goes hand in hand with the assumption that a 
 variable holds an equation and not a single value, is that if in the return 
 statement the student returns an equation, the student believes that the return 
 value will be that equation, not the value that the equation represents 
-\parencite{Kohn2017VariableEvaluation}.
+\autocite{Kohn2017VariableEvaluation}.
 
 \begin{frame}
-  \begin{block}{Misconception\footcite{Kohn2017VariableEvaluation}}
+  \begin{block}{Misconception\autocite{Kohn2017VariableEvaluation}}
     \begin{itemize}
       \item If a return statement contains an expression (\enquote{equation}),
         the student believes that the return value will be that expression 
@@ -53,7 +55,7 @@ From a variation theoretic perspective, we can say two things about this:
 \begin{enumerate}
   \item<+> That variables and functions are interconnected and should be 
     treated simultaneously (not \enquote{one thing at a time}), to be able to 
-    contrast them \parencite[\cf][Ch~6, pp~167--168]{NCOL}.
+    contrast them \autocite[\cf][Ch~6, pp~167--168]{NCOL}.
   \item<+> Unlike in mathematics, every line in a piece of program (in an 
     imperative language) constitutes a new state of the program.
 \end{enumerate}
@@ -280,7 +282,7 @@ We also have that expected behaviour, namely through functions.
 \subsubsection{Variability of functions}
 
 The students' expectation that \(y = kx + m\) is a function 
-\parencite{Kohn2017VariableEvaluation,Plass2015Variables,Doukakis2007} is 
+\autocite{Kohn2017VariableEvaluation,Plass2015Variables,Doukakis2007} is 
 likely due to the mathematical shorthand for \(y(x) = kx + m\), where 
 \enquote{\((x)\)} is dropped (the \enquote{equationification} of functions).
 Above we introduced a series of pattern showing that
@@ -532,7 +534,7 @@ Another misconception that goes hand in hand with the assumption that a
 variable holds an equation and not a single value, is that if in the return 
 statement the student returns an equation, the student believes that the return 
 value will be that equation, not the value that the equation represents 
-\parencite{Kohn2017VariableEvaluation}.
+\autocite{Kohn2017VariableEvaluation}.
 
 
 \subsubsection{Defining variables and functions}
@@ -542,7 +544,7 @@ can
 have misconceptions about. The name of the variable has been misunderstood 
 as 
 having power of the value which it holds 
-\parencite{MisconceptionsSurvey2017,Sleeman1984}. For example, if a student 
+\autocite{MisconceptionsSurvey2017,Sleeman1984}. For example, if a student 
 names one variable \emph{max} and another variable \emph{min}, the student 
 might think that the variables will strictly only hold the maximum value 
 and 
@@ -751,13 +753,13 @@ The pattern ends with a fusion of the two.
 out 
       loud as \enquote{x equals y}.
 
-      Here we propose the pattern where we first \emph{contrast} the two 
-different statements, by printing the output of \mintinline{python}{
-x == y} and \mintinline{python}{x = y} separately. Both
-\mintinline{python}{x} and \mintinline{python}{y} can be pre-defined, to avoid
-the programme throwing an error. However, in the contrast we could 
-also include the example where an error is thrown, this to \emph{
-contrast} even further. 
+      Here we propose the pattern where we first \emph{contrast} the two
+different statements, by printing the output of
+\mintinline{python}{x == y} and \mintinline{python}{x = y} separately.
+Both \mintinline{python}{x} and \mintinline{python}{y} can be pre-defined,
+to avoid the programme throwing an error. However, in the contrast we could
+also include the example where an error is thrown, this to
+\emph{contrast} even further.
 
       \hfill
      \begin{minipage}[t]{0.3\columnwidth}
@@ -951,17 +953,17 @@ If we move on to the relationship between variables and functions we can
 see 
 more misconceptions that students have; for example where input and output 
 arguments 
-come from and go to \parencite{Ragonis2005OOP}.
+come from and go to \autocite{Ragonis2005OOP}.
 The first difficulty is how students understand and treat return-values, 
 where these student misconceptions have been found: 
 
 \begin{enumerate}
     \item Missing to return the variable when a function is supposed to, 
-expecting the function to return it by default \parencite{
+expecting the function to return it by default \autocite{
 Kurvinen2016,KumarVeerasamy2016}.
 
     \item Believe that a print-statement at the end of a function will act 
-as a return statement \parencite{MisconceptionsSurvey2017}.
+as a return statement \autocite{MisconceptionsSurvey2017}.
 
 \end{enumerate}
  
@@ -1134,7 +1136,7 @@ correct value and only printing it.
 
 A student might also write a function which returns a value, but that 
 value is not stored nor being used later in the program 
-\parencite{AltadmriBrown2015}.
+\autocite{AltadmriBrown2015}.
 
 
 We draw the conclusion that this misconception can be the product of 
@@ -1490,7 +1492,7 @@ definition uses, on the right side of the equal symbol, a variable that is
 not 
 defined, but the variable on the left side is already defined, they think 
 that 
-the computer will solve this as an equation \parencite{Plass2015Variables}. 
+the computer will solve this as an equation \autocite{Plass2015Variables}. 
 This assumption made by the students was also discovered by 
 \textcite{Kohn2017VariableEvaluation} when giving the students the 
 definition 
