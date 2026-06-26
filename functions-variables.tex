@@ -594,9 +594,11 @@ still works.
     \end{minipage}
 \newline
     
-    \item [Generalisation] We can then \emph{generalise} this by showing 
-that we can rename the other variables too. We can even show other 
-examples where the variable names are disconnected from the purpose.
+    \item [Generalisation] We can then \emph{generalise} this by showing
+that we can rename the other variables too. We can even show other
+examples where the variable names are disconnected from the purpose --- here a
+variable named \mintinline{python}{maximum} that in fact computes the
+\emph{minimum}.
 
     
     \hfill
@@ -615,7 +617,7 @@ examples where the variable names are disconnected from the purpose.
     \begin{minipage}[t]{0.45\columnwidth}
         \begin{minted}[highlightcolor=light-green, highlightlines={2,7}]{python}
              def example(values):
-                maximum = 0
+                maximum = values[0]
                 for value in values:
                     if value < maximum:
                         maximum = value
