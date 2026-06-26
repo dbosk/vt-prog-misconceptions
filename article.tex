@@ -89,36 +89,22 @@
 \input{problem-solving.tex}
 \input{tools.tex}
 
-\section{Misconceptions I have noticed that is not mentioned}
+\section{Further misconceptions from the literature}
+
+The following misconceptions are documented in the literature but not yet given a
+full variation-theory treatment in the catalogue; we record them here as
+candidates for future inclusion.
 
 \begin{itemize}
-    \item When returning a value from a function, students misses to 
-capture it into a variable, not understanding why they cannot use the 
-returned value later in the programme. 
-    \item A local list in a function will be changed when passed to a 
-function and then changed in that function. This because it is a 
-reference to the list that is sent to the new function, not a copy of 
-the list. 
-\end{itemize}
-
-\section{Random stuff removed from the article}
-
-\begin{itemize}
-    \item There is also a misconception that variables can hold more than 
-one value at a time \autocite{Doukakis2007}. This misconception can 
-relate to several things:
-    \begin{enumerate*}
-      \item the type system, confusing lists with non-container types, not 
-        seeing a list as a type itself;
-      \item the scope of variables, that the same variable identifier can be 
-    used 
-        for different things in different scopes.
-    \end{enumerate*}
-
-    \item Students that know that a return-statement is needed have 
-difficulties returning the right value or variable from a function 
-\autocite{KumarVeerasamy2016}. 
-
+    \item That a variable can hold more than one value at a time
+      \autocite{Doukakis2007}. This relates both to the type system (confusing a
+      list with a non-container type, not seeing a list as a type in its own
+      right) and to scope (expecting the same identifier to mean different things
+      in different scopes).
+    \item That, even once students know a \mintinline{python}{return} statement
+      is needed, they have difficulty returning the \emph{right} value or
+      variable from a function \autocite{KumarVeerasamy2016} --- a refinement of
+      the return-boundary misconceptions in \cref{misconceptions}.
 \end{itemize}
 
 \end{document}

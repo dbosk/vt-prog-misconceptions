@@ -20,19 +20,19 @@ generally, and nested loops in particular, pose difficulties for novices, and
 identified loop misconceptions tied to how the loop is represented.
 
 The object of learning here is \emph{what happens on each iteration of a loop}.
-Two critical aspects are hidden in the misconception above: that the
-\emph{entire} loop body is repeated (not only the string printed in the
-terminal), and that the loop variable is \emph{rebound} to a new element on each
-pass. We make these discernible by keeping the iterable invariant and varying
-only how the body uses the loop variable.
+The critical aspect hidden in the misconception above is that the loop body is
+re-executed on each pass with the loop variable \emph{rebound} to a new element
+--- so what repeats is the body, not merely the fixed string that happened to be
+printed. We make this discernible by keeping the iterable invariant and varying
+only whether the body refers to the loop variable.
 
 \begin{description}
   \item[Contrast] The same loop over the same list, varying only whether the
     body refers to the loop variable. The left program prints the same string
-    three times --- consistent with the misconception --- while the right one
-    prints \mintinline{python}{10}, \mintinline{python}{20},
-    \mintinline{python}{30}, revealing that the body runs afresh each pass with
-    the loop variable rebound.
+    three times --- consistent with the misconception that a fixed string is
+    what repeats --- while the right one prints \mintinline{python}{10},
+    \mintinline{python}{20}, \mintinline{python}{30}, showing that the body is
+    re-executed each pass with the loop variable rebound.
 
     \hfill
     \begin{minipage}[t]{0.45\columnwidth}
