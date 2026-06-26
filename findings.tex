@@ -1,113 +1,192 @@
+\mode*
 \section{Misconceptions we have found}
 
-\subsection{Misconceptions not in articles}
+While tutoring students on labs and assignments, we have repeatedly met
+misconceptions that the literature does not document, or documents only in
+passing. We treat them as we treated the misconceptions drawn from the
+literature: as phenomenographic observations to be analysed through variation
+theory. Because we observed them directly rather than through a published study,
+they should be read as hypotheses for teaching designs rather than as
+established findings.
 
-    \begin{itemize}
-        \item That in order to return a the value of a variable from a 
-function that variable must be an input argument to the function.
-    
-        Example:
-            \hfill
-            \begin{minted}{python}
-            def foo(x):
-                x = 3
-                return x
-        
-            x = 0
-            x = foo(x)
-            \end{minted}
-            \hfill
+\subsection{The boundary between a function and the rest of the program}
 
-        \item That the built-in function \mintinline{python}{input()} 
-translates the given value. For example, if the user writes a 
-number, \mintinline{python}{input()} will return an integer. 
+Several of our observations share a single object of learning: \emph{how a
+function communicates with the rest of the program}. The critical aspects are
+that a function is invoked explicitly; that values enter it only through the
+arguments actually passed; that a value leaves it only through
+\mintinline{python}{return}, as a value rather than as a name; and that the
+names used inside it are local. Students who have not discerned this boundary
+produce a family of related errors, which a contrast on each aspect can separate.
 
-        \item That functions will be automatically called in the correct 
-order, without the functions being invoked in the programme. 
+\subsubsection{A function must be invoked}
 
-        \item That in order to invoke a function several times if a 
-condition is true, the function need to call itself instead of 
-having a loop-structure that repeatedly invokes the function. 
+Some students believe that a defined function will be called \enquote{by itself},
+in the right order, without ever being invoked. The critical aspect --- that
+definition and invocation are distinct --- becomes visible if we hold the
+definition invariant and vary only whether the call is present.
 
-        Example:
-            \hfill
-            \begin{minipage}[t]{0.45\columnwidth}
-            \begin{minted}{python}
-                def foo():
-                    try:
-                        x = int(input("Integer:"))
-                        return x
-                    except ValueError:
-                        foo()
-            \end{minted}
-            \end{minipage}
-            \hfill
-            \begin{minipage}[t]{0.45\columnwidth}
-            \begin{minted}{python}
-                def foo():
-                    while True:
-                        try:
-                            x = int(input("Integer:"))
-                            return x
-                        except ValueError:
-                            continue
-            \end{minted}
-            \end{minipage}
-        \item That even though several arguments are stated in a function 
-definition, when invoking the function the parameters does not have 
-to be passed to the function if the arguments' names are global 
-variables in the programme.
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}{python}
+    def greet():
+        print("Hi!")
+    # nothing is printed
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={3}]{python}
+    def greet():
+        print("Hi!")
+    greet()
+  \end{minted}
+\end{minipage}
 
-        Example:
+\subsubsection{Arguments must be passed}
 
-        \begin{minted}{python}
+A related belief is that, if a parameter shares its name with a global variable,
+the argument need not be passed at the call. Holding the function invariant and
+varying only whether the arguments are supplied makes the rule discernible: the
+left call raises \mintinline{python}{TypeError}, because the parameters are bound
+from the arguments at the call, not from globals that happen to share their
+names.
 
-            def foo(x,y):
-                print(x+y)
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={5}]{python}
+    def foo(x, y):
+        print(x + y)
+    x = 3
+    y = 4
+    foo()
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={5}]{python}
+    def foo(x, y):
+        print(x + y)
+    x = 3
+    y = 4
+    foo(x, y)
+  \end{minted}
+\end{minipage}
 
-            x = 3
-            y = 4
+\subsubsection{A value leaves only through \texttt{return}, as a value}
 
-            foo()
-            
-        \end{minted}
+The most tangled observations concern \mintinline{python}{return}. Some students
+think that, to return a variable's value, that variable must have been an input
+argument; others think that \mintinline{python}{return} \enquote{sends} the
+variable's \emph{name} to the call site, so that the name can be used there
+afterwards. Both miss that \mintinline{python}{return} hands back a \emph{value},
+which the caller must capture in a name of its own. We contrast relying on the
+name appearing at the call site with capturing the returned value.
 
-        \item That a return-statement in a function will "send" the 
-variable name and value to the place the function was invoked in, 
-and that the variable name then later can be used by the programme.
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={4}]{python}
+    def foo():
+        x = 3
+        return x
+    foo()
+    print(x)   # NameError
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={4}]{python}
+    def foo():
+        x = 3
+        return x
+    x = foo()
+    print(x)   # 3
+  \end{minted}
+\end{minipage}
 
-        Example:
-        \hfill
-        \begin{minted}{python}
-            def foo():
-                x = 3
-    
-                return x
-    
-            foo()
-            print(x)
-        \end{minted}
-    \end{itemize}
+\subsubsection{A mutable argument is shared, not copied}
 
-\subsection{Misconceptions already mentioned}
+A subtler boundary misconception runs the other way: that a list passed to a
+function is copied, so that changing it inside the function leaves the caller's
+list untouched. In fact the function receives a reference to the \emph{same}
+list, so a mutation is visible outside. Holding the call invariant and varying
+only whether the function \emph{mutates} the list or \emph{rebinds} the name
+separates the two: mutation reaches the caller, rebinding does not. This is the
+same reference behaviour behind the mutable-default-argument example of
+\cref{debugging}.
 
-    \begin{itemize}
-        \item That a variable name controls what value that can be assigned 
-to it. For example that a programme will throw an error if an 
-integer is assigned to a variable called \mintinline{python}{my_
-string}.
-        \item That a local variable is reachable outside the function it is 
-defined in.
-        \item That a while-loop without a condition will terminate without 
-a \mintinline{python}{break}-statement.
-        
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={2}]{python}
+    def f(xs):
+        xs.append(4)
+    a = [1, 2, 3]
+    f(a)
+    print(a)   # [1, 2, 3, 4]
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={2}]{python}
+    def f(xs):
+        xs = [4]
+    a = [1, 2, 3]
+    f(a)
+    print(a)   # [1, 2, 3]
+  \end{minted}
+\end{minipage}
 
-        
-    \end{itemize}
+\subsection{Observations related to the catalogue}
 
-\subsection{Difficulties that can not be translated to a misconception}
+Three further observations restate, from our own teaching, misconceptions
+already analysed above, and are best taught alongside them.
 
 \begin{itemize}
-    \item The word "iterate" need to be explained more clearly, not a word 
-all students have heard before. 
+  \item That the built-in \mintinline{python}{input()} converts what the user
+    types, returning an integer when a number is entered. This is the same
+    type misconception we discuss for data types --- \mintinline{python}{input()}
+    always returns a string --- and the same contrast (\mintinline{python}{int}
+    applied or not) applies.
+  \item That a variable's name constrains the type of value it may hold (for
+    example, that assigning an integer to a variable named
+    \mintinline{python}{my_string} is an error). This is the
+    name-has-power-over-value misconception from the functions-and-variables
+    chapter.
+  \item That a local variable is reachable outside the function in which it is
+    defined --- the same scope boundary treated above.
 \end{itemize}
+
+A fourth observation concerns repetition: to run a function several times while a
+condition holds, some students have the function call \emph{itself} rather than
+placing the call in a loop. The contrast between the two is instructive, and
+belongs with the treatment of loops and recursion.
+
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}{python}
+    def foo():
+        try:
+            x = int(input("Integer:"))
+            return x
+        except ValueError:
+            foo()
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}{python}
+    def foo():
+        while True:
+            try:
+                return int(input("Integer:"))
+            except ValueError:
+                continue
+  \end{minted}
+\end{minipage}
+
+\subsection{Difficulties that are not misconceptions}
+
+Not every difficulty is a misconception. For instance, the word \emph{iterate}
+is not one all students have met before, and needs to be explained in plain
+terms; this is a matter of vocabulary rather than a mistaken conception of how
+the code behaves.
