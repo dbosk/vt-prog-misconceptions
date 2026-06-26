@@ -450,7 +450,11 @@ print(msg)
 
 \end{description}
 
-XXX Treat the other aspects related to functions: scope, default values, ...
+The remaining aspects of functions follow the same approach. We treat the order
+of arguments and the scope of identifiers below, since both are tied to
+documented misconceptions; further aspects, such as default and keyword
+arguments, can be taught with the same contrast--generalisation--fusion patterns
+once these are in place.
 
 \subsubsection{Order of arguments}
 
@@ -819,17 +823,21 @@ simultaneously.
 \hfill
      
       
-      The last pattern, \emph{Fusion} should consist of both variable-
-definitions, and where the variables also are used in comparison-
-statements. 
+      The last pattern, \emph{Fusion}, should consist of both
+variable-definitions and a place where the variables are then used in a
+comparison-statement, so that the student must tell assignment
+(\mintinline{python}{=}) from comparison (\mintinline{python}{==}) within a
+single program.
 
-      \begin{lstlisting}[language=Python]
-
-        def example1():
-            XXX Not really sure of a good example for this... 
-            maybe an absolut-value example?
-                
-    \end{lstlisting}
+      \hfill
+      \begin{minipage}[t]{0.45\columnwidth}
+        \begin{minted}[highlightlines={2,4}]{python}
+            def example():
+                a = 3
+                b = a + 1
+                return a == b
+        \end{minted}
+      \end{minipage}
     \item Writing definitions of variables from left-to-right 
       (\mintinline{python}{a+b = c}) instead of right-to-left 
       (\mintinline{python}{c = a+b}). The same can be seen when using 
@@ -897,23 +905,45 @@ function calls which will not throw errors.
         \end{minted}
 \hfill
       
-      In this pattern it will however not be possible to \emph{fuse} the 
-invariant and variant with each other, since the latter will throw 
-an error for the programme. XXX Or can you think of a fusion Daniel?
+      In this pattern it will however not be possible to \emph{fuse} the
+invariant and variant with each other, since the contrasting case throws an
+error: there is no running program in which both readings coexist, so fusion
+does not apply here.
 \end{enumerate}
 
 
-Since Python is an interpreted language, the placement of the definition of 
-a function is important, something that differs from a compiled language. 
-This gives 
-room for a misconception for students that have learned to code in for 
-example Java, where the definition of a function can be below a call of the 
-function. 
+Since Python is an interpreted language, the placement of the definition of
+a function matters, something that differs from a compiled language. This gives
+room for a misconception among students who have learned to code in, for
+example, Java, where the definition of a function can be placed below a call of
+the function. We include this misconception with a caveat: it concerns students
+transferring from another language rather than complete novices, and so sits at
+the edge of our scope; we keep it because students who met programming in high
+school commonly carry it.
 
-XXX Add analysis \textbf{IF} we want to include this misconception. However 
-it can be seen as out of the scope of our article, since we focus on novice 
-programmers. But we still have students that might have been exposed to 
-Java in high-school, so it might still be interesting to include?
+The object of learning is that, in Python, a function must be defined before the
+line that calls it. The critical aspect is the top-to-bottom execution order, so
+a single contrast suffices: holding the function and the call invariant, we vary
+only their order. With the definition first the program runs; with the call
+first it raises a \mintinline{python}{NameError}, because the name does not yet
+exist when the call is reached.
+
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={1}]{python}
+    def greet():
+        print("Hi!")
+    greet()
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={1}]{python}
+    greet()
+    def greet():
+        print("Hi!")
+  \end{minted}
+\end{minipage}
 
 \subsubsection{Arguments and return values of functions}
 
@@ -1478,13 +1508,70 @@ easier to understand for a novice programmer, according to
 definition as 
 \mintinline{python}{x += 1}. 
 
-XXX Add analysis on how to help students understand the difference between 
-variable definitions in programming and equations in mathematics
+The object of learning is that the \mintinline{python}{=} of programming is
+\emph{assignment}, not mathematical equality. The critical aspect is that
+assignment is directional and time-ordered: it computes the right-hand side from
+the \emph{current} values and stores the result in the name on the left. Read
+that way, \mintinline{python}{x = x + 1} is unremarkable, whereas read as an
+equation it is unsolvable. We make this aspect discernible by holding the
+expression invariant and varying only whether the symbol assigns or compares.
 
 \begin{description}
-    \item[Contrast]
-    \item[Generalisation]
-    \item[Fusion]
+  \item[Contrast] The same expression \mintinline{python}{x + 1}, varying only
+    the operator. On the left \mintinline{python}{=} recomputes and rebinds, so
+    \mintinline{python}{x} becomes \mintinline{python}{6}; on the right
+    \mintinline{python}{==} tests equality and is always
+    \mintinline{python}{False} --- which is exactly the contradiction a student
+    sees when reading the assignment as an equation.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        x = 5
+        x = x + 1
+        print(x)
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        x = 5
+        print(x == x + 1)
+      \end{minted}
+    \end{minipage}
+
+  \item[Generalisation] Holding the rule invariant --- the right-hand side is
+    computed from the current value and stored back --- we vary the operation,
+    including the augmented form \mintinline{python}{x += 1} that
+    \textcite{Kohn2017VariableEvaluation} found easier for novices, since it does
+    not repeat the name and so does not invite the equation reading.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        x = x * 2
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        x += 1
+      \end{minted}
+    \end{minipage}
+
+  \item[Fusion] Finally we fuse the directional reading with the flow of values
+    over time: tracing several reassignments, the student must see each
+    \mintinline{python}{=} act on the value left by the previous line.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        x = 5
+        x = x + 1
+        x = x * 2
+        print(x)
+      \end{minted}
+    \end{minipage}
 \end{description}
 
 \endinput
