@@ -1,15 +1,29 @@
 \mode*
 \subsection{Tools}
 
-The choice of development tool shapes which errors students encounter and how
-they recover from them. Whether a particular IDE is best for CS1, and whether
-one should be recommended, is beyond our scope; the literature does note,
-however, that tooling can surface the syntactic errors that novices make most
-often:
-\blockcquote{MisconceptionsSurvey2017}{Although many other syntactic-level errors
-are reported in previous research (see Altadmri and Brown (2015), Hristova et
-al.\ (2003), and Sorva (2012)), we do not discuss them in depth here, because
-problems in syntactic knowledge are often easy to detect and fix. Perhaps that
-is why they are often noted as the most frequent mistakes novices make. A
-compiler or a modern integrated development environment (IDE) may be able to
-find them and then provide error messages or hints for correction.}
+The development tool a student uses shapes which errors they meet and how they
+recover from them. The most visible channel is the error message. Compiler and
+interpreter messages are a well-documented obstacle for novices:
+\textcite{Prather2017CEM} describe them as
+\blockcquote{Prather2017CEM}{a major impediment to novice student
+learning}
+and a sizeable body of work has tried to rewrite them into something novices can
+act on. Their human-factors study is cautiously encouraging --- after enhancing
+the messages,
+\blockcquote{Prather2017CEM}{most students are reading enhanced compiler error
+messages and generally make effective changes after encountering them.}
+
+This is the redeeming feature of the syntactic errors that dominate novices'
+early mistakes: a modern IDE or compiler can catch them and point the student at
+a fix, which is why \textcite{MisconceptionsSurvey2017} set them aside in favour
+of conceptual difficulties:
+\blockcquote{MisconceptionsSurvey2017}{problems in syntactic knowledge are often
+easy to detect and fix. Perhaps that is why they are often noted as the most
+frequent mistakes novices make [\ldots] A compiler or a modern integrated
+development environment (IDE) may be able to find them and then provide error
+messages or hints for correction.}
+
+Whether a particular IDE should be recommended for CS1 is beyond our scope; the
+point for us is that tooling can absorb much of the syntactic load, leaving the
+conceptual misconceptions this paper addresses as the harder, more interesting
+target.

@@ -3,15 +3,32 @@
 
 \subsubsection{Role in the syllabus}
 
-Translating a problem --- often a mathematical one --- into working code is a
-central activity of CS1, and one where novices frequently struggle independently
-of their grasp of the individual language constructs.
+Problem solving is, in a sense, the apex skill of CS1: taking a problem
+description, decomposing it into sub-problems, implementing each, and assembling
+the pieces into a working program. It is also where many students fall short.
+The ITiCSE working group led by \textcite{Lister2004Tracing} established that, at
+the end of an introductory course, a large fraction of students still cannot
+program. A natural explanation is a missing problem-solving ability; but the
+working group's evidence points one level lower, to the more basic skills that
+problem solving rests on:
+\blockcquote{Lister2004Tracing}{many students do not know how to program at the
+conclusion of their introductory courses. A popular explanation for this
+incapacity is lack of the ability to problem-solve [\ldots] An alternative
+explanation is that many students have a fragile grasp of both basic programming
+principles and the ability to systematically carry out routine programming
+tasks, such as tracing [\ldots] suggesting that these skills are a prerequisite
+for problem-solving.}
+
+This matters for our analysis: if tracing and a firm grasp of individual
+constructs are prerequisites for problem solving, then teaching against the
+construct-level misconceptions catalogued above is also groundwork for problem
+solving.
 
 \subsubsection{Difficulties that can occur}
 
-Mathematical problems are particularly demanding for novices.
+Two difficulties recur. The first is mathematical content.
 \textcite{KumarVeerasamy2016} found that students did markedly worse on
-math-related tasks:
+math-related tasks than on others:
 \blockcquote{KumarVeerasamy2016}{This study analysis also explored that novices
 of programming struggled in writing code for math-related Questions 6 and 7.
 Nearly 66\% of students did not do well in the mathematical problem-based
@@ -21,9 +38,9 @@ stated that students who are at the concrete operational stage struggle to write
 large programs with partial specifications, although they can write small
 programs from well-defined specifications.}
 
-A related difficulty is debugging: students struggle to trace code and locate
-errors, and in particular to reason about the order in which a program will
-execute \parencite[p.~20]{Sleeman1984}. The same order-of-execution difficulty
-is reported by \textcite{Kurvinen2016}. How lab instructions should be framed so
-that students take the intended knowledge from an exercise is a further question
-we leave open here.
+The second is tracing and execution order. Students struggle to follow code
+step by step and to reason about the order in which a program will execute
+\parencite[p.~20]{Sleeman1984}, a difficulty also documented by
+\textcite{Kurvinen2016}. Both feed directly into the problem-solving gap that
+\textcite{Lister2004Tracing} identified, since a student who cannot trace a short
+program reliably has little hope of assembling a larger one.
