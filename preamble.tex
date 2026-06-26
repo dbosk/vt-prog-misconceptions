@@ -9,12 +9,32 @@
 
 \usepackage{multirow}%for tables
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+% Font/encoding setup, guarded by engine: under pdfLaTeX [T1]{fontenc} is
+% required or monospace silently falls back to a proportional font.  didactic's
+% memoir branch overrides the main fonts (Palatino/Helvetica/Bera); lmodern is
+% the fallback for the beamer build.
+\usepackage{iftex}
+\ifpdftex
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage{lmodern}
+\fi
 \usepackage[british]{babel}
 \usepackage{booktabs}
 
-\usepackage[natbib,backend=biber,style=authoryear-comp,maxbibnames=99]{biblatex}
+% Verbose citation style (full reference on first use, short form on repeats):
+% \autocite produces a footnote citation, which didactic places in the margin in
+% the memoir article and at the foot of the slide in beamer -- "verbose
+% references in the margin".  Use \autocite for all citations so they adapt to
+% the build; keep \parencite/\textcite out of the document.
+\usepackage[
+  natbib,
+  backend=biber,
+  style=verbose,
+  citestyle=verbose,
+  singletitle=false,
+  maxbibnames=99,
+]{biblatex}
 \addbibresource{misconceptions.bib}
 \addbibresource{theory.bib}
 
@@ -32,13 +52,18 @@
 
 \let\email\texttt
 
-\usepackage{listings}
+% minted v3+ (TeX Live 2024+) auto-detects the output directory; the old
+% [outputdir=ltxobj] option is now an error.
 \usepackage{minted}
 \setminted{autogobble,linenos}
 
 \usepackage{pythontex}
+% The build runs pythontex from the project root (latexmk's mylatex fudge), so
+% paths are relative to the project root: keep outputs here and run Python code
+% from the project root.  (Previously workingdir was \enquote{..}, which wrote
+% PythonTeX/didactic temp files into the parent directory, outside the repo.)
 \setpythontexoutputdir{.}
-\setpythontexworkingdir{..}
+\setpythontexworkingdir{.}
 \setpythontexfv{numbers=left}
 
 \usepackage{amsmath}
@@ -52,7 +77,6 @@
 \usepackage[binary-units]{siunitx}
 
 \usepackage[strict]{csquotes}
-\SetCiteCommand{\parencite}
 \usepackage[single]{acro}
 
 \usepackage[capitalize]{cleveref}
@@ -60,4 +84,9 @@
 % \cref to a \label'd frame works (and does not error on a cold first compile).
 \crefname{framenumber}{frame}{frames}
 \Crefname{framenumber}{Frame}{Frames}
-\usepackage{didactic}
+
+% Load didactic LAST: it adapts biblatex/csquotes/cleveref (already loaded
+% above) and auto-detects memoir to apply the modern Tufte layout -- wide outer
+% margin, Palatino fonts, footnotes-in-margin, side-captions, \ltnote margin
+% notes -- and footnote citations.
+\usepackage[marginparmargin=right]{didactic}
