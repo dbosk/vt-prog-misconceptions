@@ -13,3 +13,16 @@ article.out
 article.run.xml
 article.toc
 ltxobj/
+
+# latexmk config symlink (created by `make latexmkrc`)
+latexmkrc
+
+# PythonTeX build artifacts (created in the project root by the latexmk
+# pythontex custom dependency)
+*.pytxcode
+*.pytxmcr
+*.pytxpyg
+pythontex_data.pkl
+pythontex-files-*
+py_*.stdout
+didactic_output_*.txt
