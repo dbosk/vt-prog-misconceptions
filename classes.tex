@@ -14,7 +14,40 @@ presented below.
 class' attributes
 \end{enumerate}
 
-XXX Add analysis from variation theory
+Both points concern one object of learning: \emph{what a method is}. The
+critical aspect is that a method is simply a function bound to the class; it may
+or may not use the instance's attributes, and it may create further instances.
+Students who have only seen methods that read and write \mintinline{python}{self}
+over-generalise and assume every method must. We separate \enquote{being a
+method} from \enquote{using the attributes} by holding the class invariant and
+varying only whether the method touches \mintinline{python}{self}.
+
+\begin{description}
+  \item[Contrast] The same class, with two equally valid methods: one uses the
+    instance's attribute, the other does not. Both are methods; only the use of
+    \mintinline{python}{self.name} varies.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={5}]{python}
+        class Dog:
+            def __init__(self, name):
+                self.name = name
+            def greet(self):
+                return f"Woof, I am {self.name}"
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={5}]{python}
+        class Dog:
+            def __init__(self, name):
+                self.name = name
+            def sound(self):
+                return "Woof"
+      \end{minted}
+    \end{minipage}
+\end{description}
 
 
 \autocite{Ragonis2005OOP} also found that students have a hard time 
@@ -33,11 +66,67 @@ first classes the students write, which are often good substitutes to data
 bases 
 and therefor shapes these student misconceptions. 
 
-XXX Add analysis one how we can teach classes with easy examples and still 
-manage to avoid the misconception that a class is equal to a data base. Maybe 
-we can 
-contrast it with the already existing objects in python (Strings, lists, 
-integers etc).
+The object of learning is \emph{what a class is}. The critical aspect is that a
+class is a \emph{template} (a type) from which independent objects are made ---
+not a container that holds its instances, and not a database. A productive
+contrast, as the misconception itself suggests, sets a user-defined class against
+the built-in types the students already use: \mintinline{python}{str} and
+\mintinline{python}{list} are templates, and \mintinline{python}{"hi"} and
+\mintinline{python}{[1, 2]} are objects made from them, exactly as
+\mintinline{python}{Dog} is a template and \mintinline{python}{Dog("Rex")} is an
+object made from it.
+
+\begin{description}
+  \item[Contrast] We vary only whether the type is built-in or user-defined,
+    holding invariant the relationship \enquote{call the type to make an
+    object}. This shows the class is the same kind of thing as the familiar
+    built-in types --- a template --- rather than a store of data.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        # str is a template
+        s = str("hi")
+        t = str("bye")
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        # Dog is a template
+        a = Dog("Rex")
+        b = Dog("Fido")
+      \end{minted}
+    \end{minipage}
+    \newline
+    The class itself does not hold \mintinline{python}{a} and
+    \mintinline{python}{b}: nothing in \mintinline{python}{Dog} records the dogs
+    that have been made, just as \mintinline{python}{str} keeps no list of the
+    strings in the program. That is what separates a template from a database.
+
+  \item[Generalisation] Keeping the critical value invariant --- a type is a
+    template for making objects --- we vary the type across several built-ins
+    and the user class, so the principle is seen to hold generally.
+
+    \hfill
+    \begin{minipage}[t]{0.3\columnwidth}
+      \begin{minted}{python}
+        xs = list()
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\columnwidth}
+      \begin{minted}{python}
+        n = int("7")
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\columnwidth}
+      \begin{minted}{python}
+        d = Dog("Rex")
+      \end{minted}
+    \end{minipage}
+\end{description}
 
 The last concept that \textcite{Holland1997} discuss is the concept of 
 storing the objects in the programme. Some students believe that the 
@@ -51,6 +140,43 @@ are
 stored separately is hard to grasp for some students \autocite{
 Holland1997,Ragonis2005OOP}. 
 
-XXX Add analysis in how we can teach how objects are stored with the help of 
-variation theory.
+The object of learning is \emph{object identity and storage}. The critical
+aspect is that each object has its own identity and its own memory: two objects
+may carry equal attribute values and still be distinct, so an attribute is not an
+object's identifier. We hold the attribute values invariant and vary only
+whether we have one object or two.
+
+\begin{description}
+  \item[Contrast] Two objects with \emph{identical} attributes versus two names
+    for the \emph{same} object. On the left \mintinline{python}{a is b} is
+    \mintinline{python}{False} and changing one leaves the other untouched ---
+    equal attributes do not make one object. On the right both names refer to one
+    object, so the change is seen through either.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        a = Dog("Rex")
+        b = Dog("Rex")
+        a.name = "Max"
+        print(a.name, b.name)
+        # Max Rex
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        a = Dog("Rex")
+        b = a
+        a.name = "Max"
+        print(a.name, b.name)
+        # Max Max
+      \end{minted}
+    \end{minipage}
+    \newline
+    The two same-named dogs are stored separately and have different identities,
+    which is why a program can hold many objects whose attributes coincide ---
+    refuting the belief that one attribute of every object must be unique for it
+    to be stored.
+\end{description}
 
