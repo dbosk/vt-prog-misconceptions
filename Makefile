@@ -35,17 +35,11 @@ DEPENDS+=	didactic.sty
 article.pdf: article.tex ${SRC} ${DEPENDS}
 slides.pdf: slides.tex ${SRC} ${DEPENDS}
 
-# PythonTeX needs latexmk to load `latexmkrc` (a symlink to makefiles/latexmkrc),
-# which provides the pytxcode->pytxmcr cus_dep.  Without it pythontex never runs
-# and the PDF shows "?? PythonTeX ??".  makefiles/latexmkrc is committed in the
-# submodule, but as a fallback we tangle it if a checkout lacks it -- existence
-# only (no .nw prerequisite), so a committed copy is never re-tangled.  Depending
-# on the symlink makes tex.mk create it on a fresh clone.
-makefiles/latexmkrc:
-	notangle -R'[[latexmkrc]]' makefiles/tex.mk.nw > $@
-
+# PythonTeX's cus_dep lives in makefiles/latexmkrc (committed in the submodule);
+# latexmk loads it via the root `latexmkrc` symlink.  Depend on it so tex.mk
+# creates that symlink on a fresh clone -- without it pythontex never runs and the
+# PDF shows "?? PythonTeX ??".
 article.pdf slides.pdf: latexmkrc
-latexmkrc: | makefiles/latexmkrc
 
 .PHONY: clean
 clean:
