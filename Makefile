@@ -21,6 +21,7 @@ SRC+=conditionals.tex
 SRC+=repetitions.tex
 SRC+=types.tex
 SRC+=classes.tex
+SRC+=findings.tex
 SRC+=literature-protocol.tex
 SRC+=problem-solving.tex
 SRC+=tools.tex
@@ -33,6 +34,12 @@ DEPENDS+=	didactic.sty
 
 article.pdf: article.tex ${SRC} ${DEPENDS}
 slides.pdf: slides.tex ${SRC} ${DEPENDS}
+
+# PythonTeX's cus_dep lives in makefiles/latexmkrc (committed in the submodule);
+# latexmk loads it via the root `latexmkrc` symlink.  Depend on it so tex.mk
+# creates that symlink on a fresh clone -- without it pythontex never runs and the
+# PDF shows "?? PythonTeX ??".
+article.pdf slides.pdf: latexmkrc
 
 .PHONY: clean
 clean:
