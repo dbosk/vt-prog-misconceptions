@@ -123,6 +123,26 @@
   doi       = {10.1145/3105726.3106169},
 }
 
+% === provenance: MisconceptionsSurvey2017 ===
+% CLAIM: A literature review establishing that introductory-programming students
+%   exhibit misconceptions and difficulties across syntactic, conceptual, and
+%   strategic knowledge (used for the definition/classification of misconceptions
+%   at background.tex).
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); entry
+%   re-located via DOI 10.1145/3077618 and abstract read
+% PICKED: a survey/literature review (ACM TOCE), the right source for the
+%   established-consensus framing of misconception categories; item-level
+%   misconceptions cross-cited to it (conditionals.tex "both if and else
+%   execute"; functions-variables.tex "print at end acts as return"; the
+%   syntactic-knowledge blockcquote in tools.tex) are carried as cross-cites.
+% QUOTE (abstract): "we found that students exhibit various misconceptions and
+%   other difficulties in syntactic knowledge, conceptual knowledge, and
+%   strategic knowledge."
+% VERIFIED: abstract only (ACM full text Cloudflare-gated, KTH curl 403); the
+%   survey-level categorisation claim is stated verbatim in the abstract. FLAG:
+%   the tools.tex blockcquote and the two item-level misconceptions need a
+%   full-text pass to confirm verbatim wording/locators.
+% DATE: 2026-06-29
 @article{MisconceptionsSurvey2017,
   author = {Qian, Yizhou and Lehman, James},
   title = {Students’ Misconceptions and Other Difficulties in Introductory 
@@ -180,6 +200,25 @@
               constructivism, Misconceptions}
 }
 
+% === provenance: Plass2015Variables ===
+% CLAIM: When an assignment's left-hand variable is already defined and the
+%   right-hand side contains an undefined variable, students think the computer
+%   will solve the statement as an equation for the unknown (and more generally
+%   that a variable can hold an expression/equation).
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); full
+%   text read at the University of Twente repository (essay.utwente.nl/70455)
+% PICKED: primary empirical source (41 participants) coding this exact
+%   misconception (M2 "equation to be solved for the uninitialized variable";
+%   M2c "Variables can contain expressions"); co-cited with Kohn2017 for the
+%   "holds an entire algorithm/equation" claim.
+% QUOTE (Background, "Math", p.18): "the statement describes an equation to be
+%   solved by the computer (var a = 6; var b; a = b + 4; This is then expected
+%   to solve the equation for b: b = 2.)"
+% VERIFIED: full-text PDF read; a is already defined, b undefined, a = b + 4 is
+%   solved for b -- exactly the claim. FLAG: the conditionals.tex co-citation is
+%   mis-scoped -- Plass's matching finding (S1b) is an assignment read as an
+%   equality test, not an if-statement; prose rescope deferred to follow-up.
+% DATE: 2026-06-29
 @mastersthesis{Plass2015Variables,
   title={Identifying and addressing common programming misconceptions with 
          variables (part 1)},
@@ -187,6 +226,23 @@
   year={2015},
   school={University of Twente}
 }
+% === provenance: Kohn2017VariableEvaluation ===
+% CLAIM: Novice students believe a variable holds the entire calculation/
+%   expression rather than a single value and evaluate it lazily; the increment
+%   pattern x = x + 1 is even believed impossible.
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); entry
+%   re-located via DOI 10.1145/3017680.3017724 and abstract read
+% PICKED: primary source naming this exact misconception; co-cited with Plass2015
+%   and Doukakis2007 for "holds an entire algorithm" and cited alone for x = x+1.
+% QUOTE (abstract): "many students initially think that such statements store the
+%   entire calculation in variable x, evaluating the result lazily when actually
+%   needed. The common increment pattern x = x + 1 is even believed to be
+%   outright impossible."
+% VERIFIED: abstract only (ACM full text Cloudflare-gated); the abstract states
+%   the misconception verbatim at the claim's scope. FLAG: two sub-claims in
+%   functions-variables.tex (a return statement returning an equation; x += 1
+%   easier than x = x + 1) are not in the abstract and need the full text.
+% DATE: 2026-06-29
 @inproceedings{Kohn2017VariableEvaluation,
   author = {Kohn, Tobias},
   title = {Variable Evaluation: An Exploration of Novice Programmers' 
@@ -223,6 +279,29 @@
   location = {Seattle, Washington, USA},
   series = {SIGCSE '17}
 }
+% === provenance: Sleeman1984 ===
+% CLAIM: Novice Pascal students hold systematic misconceptions -- they read a
+%   value into a variable on the basis of the variable's name, they mis-scope
+%   loop bodies, and at least half cannot trace a program's execution order
+%   systematically.
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); full
+%   text read from ERIC ED258552
+% PICKED: original empirical interview study of high-school Pascal novices;
+%   source for three cited claims -- variable-name "power" (functions-variables
+%   .tex:547, with MisconceptionsSurvey2017), loop writing/debugging
+%   (repetitions.tex:10), and tracing/execution-order (problem-solving.tex,
+%   locator refined to pp.20--21).
+% QUOTE (p.11): "Eleven students believed that a READLN statement used with a
+%   me[a]ningful variable name causes the program to select a va[l]ue based on
+%   the name's me[a]ning." [OCR-garbled in the 1984 scan]
+% QUOTE (p.15): "WRITELN adjacent to the loop is included in it ... This error
+%   occurred frequently and was noted with near[l]y half the students
+%   interviewed."
+% QUOTE (pp.20--21): "All statements including those in procedure bodies were
+%   executed in the order they appeared. This was a frequent error." ... "at
+%   least half of the students could not trace through programs systematically."
+% VERIFIED: full-text; each cited claim is backed by its own quoted passage.
+% DATE: 2026-06-29
 @techreport{Sleeman1984,
   author={Sleeman, D and Putnam, R T and Baxter, J A and Kuspa, L K},
   title={Pascal and High-School Students: A Study of Misconceptions},
@@ -234,6 +313,27 @@
   url={https://files.eric.ed.gov/fulltext/ED258552.pdf}
 }
 
+% === provenance: Ragonis2005OOP ===
+% CLAIM: Novices have difficulty seeing a class as a template for creating
+%   objects, instead holding the misconception that a class is a collection of
+%   objects; they also struggle with where parameter values come from and where
+%   a method's return value goes.
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); full
+%   text re-located via DOI 10.1080/08993400500224310 and read
+% PICKED: primary qualitative study (58 conceptions/difficulties in 4 categories)
+%   whose catalogue states the class-as-template-vs-collection misconception
+%   verbatim; backs classes.tex:53-57 and functions-variables.tex:958.
+% QUOTE (Findings, 1.2.1): "A class is a collection of objects, rather than a
+%   template for creating objects."
+% QUOTE (Findings, Cat.1): "A class is a template from which objects can be
+%   created, but to find the fields and methods of an object you must look at the
+%   text of the class."
+% QUOTE (Findings, 4.2): "Where do the values of the parameters come from? ... To
+%   where does the return value of a method go?"
+% VERIFIED: full-text (re-confirmed verbatim against the source); 1.2.1 is the
+%   class-as-collection-vs-template misconception, 4.2 backs the input/output
+%   argument claim.
+% DATE: 2026-06-29
 @article{Ragonis2005OOP,
   author = { Noa   Ragonis  and  Mordechai   Ben-Ari },
   title = {A long-term investigation of the comprehension of OOP concepts by 
@@ -246,6 +346,25 @@ novices},
   publisher = {Routledge},
   doi = {10.1080/08993400500224310},
 }
+% === provenance: hatala2003practice ===
+% CLAIM: Practising on contrasting examples mixed across categories (rather than
+%   blocking each category) improves learners' diagnostic accuracy on novel cases
+%   -- cross-domain support for variation theory's contrast/transfer pattern (ECG
+%   interpretation; not generalised to programming).
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); abstract
+%   re-located via PubMed PMID 12652166 (efetch) and read
+% PICKED: its experiment 2 is an explicit contrast-vs-blocked-practice
+%   manipulation tested on novel items, mirroring variation theory's contrast
+%   pattern; strongest direct demonstration of contrast aiding transfer the manual
+%   review surfaced.
+% QUOTE (abstract, Results): "students exposed to the contrastive approach in the
+%   practice phase had superior diagnostic accuracy (46%) compared to 30% accuracy
+%   for the non-contrastive session, p < 0.05"
+% VERIFIED: abstract only (PubMed PMID 12652166); "contrastive" = examples from
+%   various categories mixed vs a single-category block, measured on novel ECGs --
+%   exactly contrast-for-transfer. Scoped to the medical domain; not over-
+%   generalised to programming.
+% DATE: 2026-06-29
 @article{hatala2003practice,
   title={Practice makes perfect: the critical role of mixed practice in the 
          acquisition of ECG interpretation skills},
@@ -257,6 +376,26 @@ novices},
   year={2003},
   publisher={Springer}
 }
+% === provenance: KumarVeerasamy2016 ===
+% CLAIM: Analysing novices' answers in an introductory-programming summative
+%   e-exam surfaced misconceptions and knowledge-based errors -- including that
+%   only a few students could write code for math-related problems, off-by-one
+%   array-index errors, and a working definition of "misconception".
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); full
+%   text read from the University of Turku repository (utupub.fi/10024/165245)
+% PICKED: empirical summative-assessment study of Python novices; backs the math-
+%   struggle claim (problem-solving.tex:32), the misconception definition
+%   (background.tex:162, p.1), off-by-one array indexing (types.tex:140), and the
+%   missing-return item (functions-variables.tex:965).
+% QUOTE (p.1): "A misconception is an erroneous belief, which is not true or
+%   valid."
+% QUOTE (Findings): "This study analysis also explored that novices of programming
+%   struggled in writing code for math related Questions 6 and 7"
+% QUOTE (Findings): "reference to arrays versus array elements, identifying off by
+%   one index errors"
+% VERIFIED: full-text PDF read (Turku OA copy); all three cited passages confirmed
+%   verbatim.
+% DATE: 2026-06-29
 @article{KumarVeerasamy2016,
   author = {Ashok Kumar Veerasamy and Daryl D'Souza and Mikko-Jussi Laakso},
   title ={Identifying Novice Student Programming Misconceptions and Errors From 
@@ -287,6 +426,26 @@ Summative Assessments},
               coincidentally, it was identified that only a few students were 
               able to write code related to mathematical problems.}
 }
+% === provenance: Kurvinen2016 ===
+% CLAIM: Analysis of students' iterative answers to coding exercises in an
+%   introductory-programming final exam identified typical programming
+%   misconceptions.
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); entry
+%   re-located via DOI 10.1145/2899415.2899447 and abstract read
+% PICKED: an exam-data misconception study; cited for specific items -- data-type
+%   misconceptions (types.tex:55), array indexation from 0 not 1 (types.tex:136),
+%   tracing/execution-order (problem-solving.tex:44), missing-return
+%   (functions-variables.tex:965).
+% QUOTE (abstract): "The data is analyzed to identify typical misconceptions in
+%   programming exercises ... Finally, we discuss how the results of the analysis
+%   can be utilized to tackle these misconceptions during the course."
+% VERIFIED: abstract only (ACM full text Cloudflare-gated, no OA copy); supports
+%   ONLY the general "exam analysis identified typical misconceptions" claim. FLAG:
+%   the abstract does NOT mention data types or array indexing -- the specific
+%   types.tex:55/:136 items are unconfirmed against reachable text; prose rescope/
+%   re-attribution (array-from-0 is independently supported by KumarVeerasamy2016
+%   and GuoMarkelZhang2020) deferred to follow-up.
+% DATE: 2026-06-29
 @inproceedings{Kurvinen2016,
   author = {Kurvinen, Einari and Hellgren, Niko and Kaila, Erkki and Laakso, 
             Mikko-Jussi and Salakoski, Tapio},
@@ -326,6 +485,24 @@ Summative Assessments},
   location = {Arequipa, Peru},
   series = {ITiCSE '16}
 }
+% === provenance: AltadmriBrown2015 ===
+% CLAIM: Among common novice mistakes, students call a function/method that
+%   returns a value but ignore/discard the return value, and students invoke a
+%   function with the wrong argument (e.g. an argument of the wrong type).
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); full
+%   text re-located via DOI 10.1145/2676723.2677258 and read (Kent repository,
+%   kar.kent.ac.uk/46742)
+% PICKED: primary large-scale Blackbox study (250k+ students); its mistake
+%   catalogue names both behaviours explicitly (mistakes N and I), backing both
+%   citing sentences at their exact scope (common novice mistakes).
+% QUOTE (mistake N): "A method that has a non-void return type is called and its
+%   return value ignored/discarded. For example: myObject.toString();"
+% QUOTE (mistake I): "Invoking methods with wrong arguments (e.g. wrong types).
+%   For example: list.get(\"abc\")"
+% VERIFIED: full-text read (Kent OA copy; re-confirmed verbatim); mistake N backs
+%   functions-variables.tex:1141 (unused return value), mistake I backs :1240
+%   (wrong argument at a call).
+% DATE: 2026-06-29
 @inproceedings{AltadmriBrown2015,
   author = {Altadmri, Amjad and Brown, Neil C.C.},
   title = {37 Million Compilations: Investigating Novice Programming Mistakes 
@@ -355,6 +532,21 @@ Summative Assessments},
   series = {SIGCSE '15}
 }
 
+% === provenance: Doukakis2007 ===
+% CLAIM: A variable can hold more than one value at a time (article.tex appendix);
+%   co-cited for "a variable can hold an entire algorithm/equation".
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar)
+% PICKED: cited in the original manual review for the multi-value / algebra-
+%   transfer variable misconception.
+% QUOTE: TODO -- UNVERIFIED. The cited HERCMA'07 paper has no reachable full text;
+%   the same authors' readable sibling paper (IEEII 2007) never states the
+%   "variable holds more than one value" misconception. No verbatim passage
+%   entailing the cited claim has been located.
+% VERIFIED: NOT verified -- kept as a TODO pending a decision to obtain the HERCMA
+%   full text, re-attribute the claim (e.g. to MisconceptionsSurvey2017 /
+%   progmiscon MultiValueVariable), or drop the citation. The "holds an entire
+%   algorithm" co-citation is already carried by the verified Kohn2017 + Plass2015.
+% DATE: 2026-06-29
 @article{Doukakis2007,
 author = {Doukakis, Dimitrios and Tsaganou, Grammatiki and Grigoriadou, Maria},
 year = {2007},
@@ -368,6 +560,22 @@ Mathematics \& Its Applications Conference (HERCMA’07)}
 
 
 
+% === provenance: Brown2014 ===
+% CLAIM: Educators' personal beliefs about which novice programming mistakes are
+%   most frequent are an unreliable guide: they reach only weak consensus, match
+%   large-scale student data only moderately, and more experience does not help.
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); entry
+%   re-located via DOI 10.1145/2632320.2632343 and abstract read
+% PICKED: direct primary source for the educator-intuition-vs-data claim; pairs
+%   with AltadmriBrown2015 (same Blackbox programme), motivating a literature-
+%   grounded catalogue over personal impression. Newly wired into introduction.tex.
+% QUOTE (abstract): "We found that educators formed only a weak consensus about
+%   which mistakes are most frequent, that their rankings bore only a moderate
+%   correspondence to the students in the Blackbox data, and that educators'
+%   experience had no effect on this level of agreement."
+% VERIFIED: abstract only (ICER'14); directly states educator beliefs about
+%   mistake frequency are weakly held and only moderately match data.
+% DATE: 2026-06-29
 @inproceedings{Brown2014,
 author = {Brown, Neil C.C. and Altadmri, Amjad},
 title = {Investigating Novice Programming Mistakes: Educator Beliefs vs. 
@@ -399,6 +607,24 @@ keywords = {educators, programming mistakes},
 location = {Glasgow, Scotland, United Kingdom},
 series = {ICER '14}
 }
+% === provenance: Kaczmarczyk2010 ===
+% CLAIM: Among four themes of CS1 misconceptions, students lack a basic
+%   understanding of the Object concept (classes.tex:6) and misunderstand while-
+%   loop operation / cannot trace code linearly (repetitions.tex:9).
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); full
+%   text re-located via DOI 10.1145/1734263.1734299 and read (G. Herman's hosted
+%   copy, publish.illinois.edu)
+% PICKED: the bib abstract details only Theme-1 (memory-model) misconceptions, so
+%   it does not on its face support the "objects" or "loops" claims; the full
+%   text's Table 1 names all four themes, which do -- resolving the abstract/claim
+%   mismatch.
+% QUOTE (Table 1): "T2: Students misunderstand the process of while loop
+%   operation. T3: Students lack a basic understanding of the Object concept. T4:
+%   Students cannot trace code linearly."
+% VERIFIED: full-text (re-confirmed verbatim against Herman's copy); the cited
+%   objects and loop-tracing claims map onto Themes 3 and 2/4, even though the
+%   abstract foregrounds only the Theme-1 memory misconceptions.
+% DATE: 2026-06-29
 @inproceedings{Kaczmarczyk2010,
 author = {Kaczmarczyk, Lisa C. and Petrick, Elizabeth R. and East, J. Philip 
 and Herman, Geoffrey L.},
@@ -432,6 +658,24 @@ location = {Milwaukee, Wisconsin, USA},
 series = {SIGCSE '10}
 }
 
+% === provenance: Holland1997 ===
+% CLAIM: A study of novices learning object technology identifies and
+%   characterises a number of object misconceptions and concrete measures to avoid
+%   them (used at classes.tex for object-identity/storage difficulties).
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); entry
+%   re-located via DOI 10.1145/268084.268132 and abstract read
+% PICKED: primary source explicitly about avoiding novice object misconceptions;
+%   the right backing for the classes.tex discussion of object misconceptions.
+% QUOTE (abstract): "This paper identifies and describes a number of misconceptions
+%   observed in students learning about object technology. It identifies simple,
+%   concrete, measures course designers and teachers can take to avoid these
+%   misconceptions arising."
+% VERIFIED: abstract only (ACM/ORO full text not independently reachable -- not OA,
+%   no Wayback copy); supports the general "characterises object misconceptions"
+%   claim. FLAG: the specific items (object identity/attribute confusion; objects
+%   stored separately; object-as-variable/record at classes.tex:60-62,131,141)
+%   need a full-text pass to quote verbatim.
+% DATE: 2026-06-29
 @inproceedings{Holland1997,
 author = {Holland, Simon and Griffiths, Robert and Woodman, Mark},
 title = {Avoiding Object Misconceptions},
@@ -464,6 +708,20 @@ location = {San Jose, California, USA},
 series = {SIGCSE '97}
 }
 
+% === provenance: Fleury1991 ===
+% CLAIM: Fleury studied novices' parameter-passing knowledge and found that
+%   students construct their own (incorrect) rules for parameter passing.
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); abstract
+%   re-located via OpenAlex (DOI 10.1145/107004.107066) and read
+% PICKED: canonical primary source for student-constructed parameter-passing
+%   rules; backs functions-variables.tex:1378.
+% QUOTE (abstract): "it will examine the most pervasive false assumptions or
+%   \"student-constructed rules\" exposed by the interviews."
+% VERIFIED: abstract only (ACM full text Cloudflare-gated; no OA copy; bib had no
+%   abstract -- recovered via OpenAlex); the abstract states students construct
+%   their own rules for parameter passing -- exactly the claim. The global-vs-
+%   local-variable detail would need the full text.
+% DATE: 2026-06-29
 @inproceedings{Fleury1991,
 author = {Fleury, Ann E.},
 title = {Parameter Passing: The Rules the Students Construct},
@@ -481,6 +739,25 @@ location = {San Antonio, Texas, USA},
 series = {SIGCSE '91}
 }
 
+% === provenance: Sekiya2013 ===
+% CLAIM: Novices' understanding of loop and conditional constructs is often
+%   incomplete -- they handle a single loop or conditional but fail on the
+%   combination, e.g. an if-statement inside a loop.
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); abstract
+%   re-located via OpenAlex (DOI 10.1145/2526968.2526978) and read
+% PICKED: of the loop co-citations this is the one whose thesis is the combination/
+%   nesting difficulty (repetitions.tex:149) and the general "loops hard to trace/
+%   understand" claim (repetitions.tex:9); the tracing-quiz method is itself a
+%   tracing-difficulty instrument.
+% QUOTE (abstract): "Novice programmers' understanding of conditional and loop
+%   constructs are often incomplete. They seem to understand a single conditional
+%   or single loop, but fail to understand the combination of them."
+% VERIFIED: abstract only (ACM full text Cloudflare-blocked, no OA copy); the
+%   abstract states both the loop-understanding difficulty and the conditional+loop
+%   combination failure verbatim. FLAG: the finer "when a loop starts/ends, what
+%   is/isn't repeated" phrasing (repetitions.tex:9) is more specific than the
+%   abstract proves; rely on the loop-specific co-citations for that detail.
+% DATE: 2026-06-29
 @inproceedings{Sekiya2013,
   author = {Sekiya, Takayuki and Yamaguchi, Kazunori},
   title = {Tracing Quiz Set to Identify Novices' Programming Misconceptions},
@@ -499,6 +776,26 @@ Computing Education Research},
   series = {Koli Calling '13}
 }
 
+% === provenance: Snyder2019 ===
+% CLAIM: A semi-systematic (semi-structured) literature review is appropriate when
+%   the studied area is broad and has been conceptualised differently across many
+%   disciplines, where a full systematic review is not feasible.
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); entry
+%   re-located via DOI 10.1016/j.jbusres.2019.07.039
+% PICKED: Snyder's typology (systematic / semi-systematic / integrative) is the
+%   canonical methodological citation; method.tex:25 invokes the semi-structured
+%   type for a broad, diversely-conceptualised field, and method.tex:31 invokes her
+%   transparency guidance.
+% QUOTE (Semi-systematic review subsection): "A semi-systematic or narrative review
+%   approach is designed for topics that have been conceptualized differently and
+%   studied by various groups of researchers within diverse disciplines and that
+%   hinder a full systematic review process."
+% VERIFIED: abstract/secondary-source only (ScienceDirect full text 403; OA
+%   repository copy 500-errored); the quoted sentence (reconstructed from multiple
+%   concurring secondary sources) entails the method.tex:25 claim. FLAG: confirm the
+%   exact wording/page against the primary PDF; the method.tex:31 transparency claim
+%   has no pinned verbatim sentence yet.
+% DATE: 2026-06-29
 @article{Snyder2019,
 title = {Literature review as a research methodology: An overview and 
 guidelines},
@@ -527,31 +824,35 @@ both conduct and evaluate a literature review paper. It also discusses common
 pitfalls and how to get literature reviews published.}
 }
 
-%Har hopp om att få citera från artikeln nedan
+% Sleeman1986 (Journal of Educational Computing Research, "...A Study of Errors")
+% removed: it is the peer-reviewed version of the SAME 35-interview Pascal study
+% already cited as Sleeman1984 (the ERIC report "...A Study of Misconceptions"),
+% with no distinct citable finding, and it was cited nowhere in the text.
 
-@article{Sleeman1986,
-author = {D. Sleeman and Ralph T. Putnam and Juliet Baxter and Laiani Kuspa},
-title ={Pascal and High School Students: A Study of Errors},
-journal = {Journal of Educational Computing Research},
-volume = {2},
-number = {1},
-pages = {5-23},
-year = {1986},
-doi = {10.2190/2XPP-LTYH-98NQ-BU77},
-URL = {https://doi.org/10.2190/2XPP-LTYH-98NQ-BU77},
-eprint = {https://doi.org/10.2190/2XPP-LTYH-98NQ-BU77},
-abstract = { A screening test was given to three classes of high school 
-students, who were just completing introductory semester-long courses in 
-Pascal. These tests were graded, and subsequently thirty-five students were 
-given detailed clinical interviews. These interviews showed that errors were 
-made with essentially every Pascal construct. Over half the students were 
-classified as having major difficulties—fewer than 10 percent had no 
-difficulties. The errors noted are discussed in detail in this article. A major 
-finding is that the students attribute to the computer the reasoning power of 
-an average person. The article also speculates about how difficult it might be 
-to remediate the errors found, and concludes with an outline of future work. }
-}
-
+% === provenance: GuoMarkelZhang2020 ===
+% CLAIM: Learners hold a compound-boolean-condition misconception, writing a
+%   chained condition like `if x != a or b` (read in English as "if x is not equal
+%   to a or b") instead of comparing each operand; and they assume numeric input
+%   read from files/terminal is already numeric when it is still a string.
+% FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); full text
+%   re-located via DOI 10.1145/3386527.3406733 and read (P. Guo's hosted copy,
+%   pg.ucsd.edu)
+% PICKED: most specific, verbatim-named learner errors in Guo et al.'s 16,791-
+%   explanation learnersourced corpus; the same catalogue backs the co-cited uses
+%   in types.tex, repetitions.tex:82, and functions-variables.tex:672.
+% QUOTE (Findings, Linguistic Misconceptions): "Incorrectly chaining conditions,
+%   like 'if x != a or b' which reads naturally in English as 'if x is not equal to
+%   a or b.'"
+% QUOTE (Findings, Mathematical Misconceptions): "When numerical data is read from
+%   files or terminal input, they often start as strings. If they are not properly
+%   converted to numbers, it is still possible to use math operators like + and >
+%   on them, which will perform string concatenation and comparison."
+% VERIFIED: full-text (re-confirmed verbatim against Guo's copy); the corpus lists
+%   each cited misconception as a learner-explanation pattern. NB types.tex:59 says
+%   input is "automatically converted to integers" -- Guo's point is it stays a
+%   string unless converted; the misconception is the students' assumption it is
+%   already numeric (prose nuance flagged for follow-up).
+% DATE: 2026-06-29
 @inproceedings{GuoMarkelZhang2020,
 author = {Guo, Philip J. and Markel, Julia M. and Zhang, Xiong},
 title = {Learnersourcing at Scale to Overcome Expert Blind Spots for 
