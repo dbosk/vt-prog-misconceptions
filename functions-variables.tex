@@ -949,6 +949,33 @@ exist when the call is reached.
   \end{minted}
 \end{minipage}
 
+A related misconception concerns the call itself: students may define a function
+and then never call it, expecting the definition alone to run its body.
+\textcite{Bosse2021Antipatterns} catalogue this \emph{function created but not
+called} antipattern: \textcquote{Bosse2021Antipatterns}{Creating it but not
+calling it will cause that any task that the program needs to perform will not be
+executed}. The object of learning is that \emph{defining} a function and
+\emph{invoking} it are two separate acts --- the body runs only at the call. A
+single contrast, holding the function invariant and varying only whether the call
+is present, makes this discernible: on the left nothing is printed, because the
+body is never reached; on the right the call runs it.
+
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}{python}
+    def greet():
+        print("Hi!")
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={3}]{python}
+    def greet():
+        print("Hi!")
+    greet()
+  \end{minted}
+\end{minipage}
+
 \subsubsection{Arguments and return values of functions}
 
 If we move on to the relationship between variables and functions we can 

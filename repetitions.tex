@@ -145,6 +145,14 @@ version fails observably.
     \end{minipage}
 \end{description}
 
+The third case above is the \emph{control variable is not changed} antipattern
+that \textcite{Bosse2021Antipatterns} catalogued in CS1 code:
+\textcquote{Bosse2021Antipatterns}{The program will go into an infinite loop
+because, since the control variable is never changed, the result of the condition
+that controls the repetition will not change either}. It is the same critical
+aspect --- the loop variable must be updated inside the loop --- seen through the
+failure it produces.
+
 Another difficult part of the loop technique is to understand how an if-
 statement inside a loop is executed. \textcite{Sekiya2013} found in their 
 studies that the combination of the two control structures created 
@@ -175,6 +183,44 @@ attends to one role and mistakes it for the other.
             if x > 5:
                 total = total + x
         print(total)
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+Before any of the loop mechanics, students must also discern \emph{whether a task
+calls for repetition at all}. \textcite{Bosse2021Antipatterns} record students
+reaching for a loop where a single test would do, the \emph{use of a repetition
+structure where a selection should be} antipattern:
+\textcquote{Bosse2021Antipatterns}{Using repetition where only selection would be
+required will cause wrong results}. The object of learning is prior to the
+mechanics of any one loop; the critical aspect is whether the action must be
+applied to \emph{each} of several items (repetition) or taken \emph{once}
+depending on a condition (selection). Holding the task invariant and varying only
+the construct makes the distinction discernible: the same decision written as a
+loop never terminates, because the condition it tests is not changed by repeating
+the body, whereas the selection takes it exactly once.
+
+\begin{description}
+  \item[Contrast] The same one-off decision, varying only whether it is written as
+    a repetition or a selection. On the left the condition stays true forever ---
+    an infinite loop --- because nothing in the body changes
+    \mintinline{python}{age}; on the right the \mintinline{python}{if} takes the
+    decision once and execution continues.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        age = 20
+        while age >= 18:
+            print("Welcome!")
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        age = 20
+        if age >= 18:
+            print("Welcome!")
       \end{minted}
     \end{minipage}
 \end{description}

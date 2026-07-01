@@ -70,6 +70,47 @@
   doi       = {10.1109/ICEEI.2009.5254715},
 }
 
+% === provenance: Bosse2021Antipatterns ===
+% CLAIM: A catalogue of CS1 antipatterns derived from student code documents
+%   concrete, recurring programming misconceptions in Python (and C) --- among
+%   them missing type conversion, using repetition where a selection is needed,
+%   a control variable that is never changed (infinite loop), "=" where "==" is
+%   meant, omitting "else" for mutually exclusive cases, and defining a function
+%   but never calling it.
+% FOUND-VIA: scholar systematic review, provider arxiv (session
+%   "misconceptions-systematic"); research-question search "What misconceptions
+%   do novice students have in introductory programming?"; kept by LLM screening
+%   (confidence 0.99). Full query set in literature-protocol.tex.
+% PICKED: a primary technical report cataloguing 41 antipatterns from 95
+%   misconceptions in real CS1 submissions (N=166); its Python and both-language
+%   catalogues supply several construct-level misconceptions cited across the
+%   types, conditionals, repetitions, and functions chapters. The purely
+%   syntactic antipatterns were deliberately not used --- the paper, like ours,
+%   foregrounds conceptual misconceptions over syntax.
+% QUOTE (abstract): "we catalog 41 CS1 antipatterns from 95 cataloged
+%   misconceptions in C and Python."
+% QUOTE (P_SRS1): "Using repetition where only selection would be required will
+%   cause wrong results."
+% QUOTE (RS2): "The program will go into an infinite loop because, since the
+%   control variable is never changed, the result of the condition that controls
+%   the repetition will not change either."
+% VERIFIED: full-text (arXiv 2104.12542 read); each cited antipattern's PROBLEM
+%   statement entails the misconception it backs in the catalogue chapters.
+% DATE: 2026-07-01
+@techreport{Bosse2021Antipatterns,
+  author      = {Bosse, Yorah and Wiese, Igor Scaliante and
+                 Silva, Marco Aur{\'e}lio Graciotto and Lago, Nelson and
+                 Brand{\~a}o, Le{\^o}nidas de Oliveira and Redmiles, David and
+                 Kon, Fabio and Gerosa, Marco A.},
+  title       = {Catalogs of {C} and {Python} Antipatterns by {CS1} Students},
+  year        = {2021},
+  institution = {arXiv},
+  number      = {arXiv:2104.12542},
+  type        = {Technical report},
+  doi         = {10.48550/arXiv.2104.12542},
+  url         = {https://arxiv.org/abs/2104.12542},
+}
+
 % === provenance: Lister2004Tracing ===
 % CLAIM: Many novices cannot program at the end of CS1, and basic skills such as
 %   tracing code are a prerequisite for problem-solving.
