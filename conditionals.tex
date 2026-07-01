@@ -91,6 +91,28 @@ branches to run. We can make this aspect discernible with variation theory.
     \end{minipage}
 \end{description}
 
+The same critical aspect --- that exactly one branch runs --- also underlies a
+related antipattern. When two cases are mutually exclusive, students sometimes
+write them as two separate \mintinline{python}{if} statements rather than an
+\mintinline{python}{if}--\mintinline{python}{else}. \textcite{Bosse2021Antipatterns}
+catalogue this as \emph{not using \enquote{else} where it would be appropriate}:
+\textcquote{Bosse2021Antipatterns}{The structure can give the expected result, but
+since only one of the selections can be true, the second would only need to be
+checked if the first were false}. Expressing the exclusivity with an
+\mintinline{python}{else} both states that intent and avoids re-testing.
+
+A further confusion concerns the operator inside the condition itself.
+\textcite{Bosse2021Antipatterns} found students writing \mintinline{python}{=}
+where \mintinline{python}{==} is meant, since
+\textcquote{Bosse2021Antipatterns}{using only an equals sign \enquote{=} is
+attribution and not a comparison}. This is the mirror image of the misconception
+\textcite{Plass2015Variables} reports: there an assignment is \emph{read} as a
+test of equality, whereas here a test of equality is \emph{written} as an
+assignment. The object of learning is the distinction between the two operators
+--- \mintinline{python}{=} binds a name to a value, while \mintinline{python}{==}
+asks whether two values are equal --- which in Python surfaces at once, as
+\mintinline{python}{if x = 5:} is a syntax error.
+
 A syntax error that is common is when students try to chain conditions in
 an if-statement, for example \mintinline{python}{if x != a or b}, where the 
 correct statement should be \mintinline{python}{if x != a or x != b} 
