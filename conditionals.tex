@@ -110,14 +110,17 @@ right-hand side is a full comparison.
 
 \begin{description}
   \item[Contrast] The same values \mintinline{python}{x, a, b}, varying only the
-    right operand of \mintinline{python}{or}. The right-hand program prints even
-    though \mintinline{python}{x == a}, because the non-zero \mintinline{python}{b}
-    is truthy --- revealing that the comparison did not distribute.
+    right operand of \mintinline{python}{or}. With all three equal, the left
+    program prints nothing --- correctly, since \mintinline{python}{x} differs
+    from neither --- while the right program still prints, because the truthy
+    \mintinline{python}{b} makes its condition true regardless of
+    \mintinline{python}{x}. The misconception version thus reports a difference
+    that is not there, revealing that the comparison did not distribute.
 
     \hfill
     \begin{minipage}[t]{0.45\columnwidth}
       \begin{minted}[highlightlines={2}]{python}
-        x, a, b = 5, 5, 7
+        x, a, b = 5, 5, 5
         if x != a or x != b:
             print("x differs from a or b")
       \end{minted}
@@ -125,7 +128,7 @@ right-hand side is a full comparison.
     \hfill
     \begin{minipage}[t]{0.45\columnwidth}
       \begin{minted}[highlightlines={2}]{python}
-        x, a, b = 5, 5, 7
+        x, a, b = 5, 5, 5
         if x != a or b:
             print("x differs from a or b")
       \end{minted}
