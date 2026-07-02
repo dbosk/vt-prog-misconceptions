@@ -217,6 +217,26 @@ element is at index \mintinline{python}{0} and the last valid index is
     \end{minipage}
 \end{description}
 
+The chapter's two critical aspects meet as soon as an indexed element is
+operated on, which gives a natural fusion.
+
+\begin{description}
+  \item[Fusion] We vary the two aspects together --- the type of the elements
+    and the mapping from index to position. To predict the output the student
+    must both map the indices to the second and third positions and honour the
+    elements' type: the result is the string \mintinline{python}{"2030"}, not
+    the integer \mintinline{python}{50}.
+
+    \hfill
+    \begin{minipage}[t]{0.5\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        a = ["10", "20", "30"]
+        print(a[1] + a[2])
+        # 2030
+      \end{minted}
+    \end{minipage}
+\end{description}
+
 Once the 0-based rule is discerned, the off-by-one errors disappear; iterating
 over the list directly with \mintinline{python}{for item in a} avoids explicit
 indices altogether and is the idiom we recommend where the index is not needed.

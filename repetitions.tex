@@ -193,34 +193,43 @@ reaching for a loop where a single test would do, the \emph{use of a repetition
 structure where a selection should be} antipattern:
 \textcquote{Bosse2021Antipatterns}{Using repetition where only selection would be
 required will cause wrong results}. The object of learning is prior to the
-mechanics of any one loop; the critical aspect is whether the action must be
-applied to \emph{each} of several items (repetition) or taken \emph{once}
-depending on a condition (selection). Holding the task invariant and varying only
-the construct makes the distinction discernible: the same decision written as a
-loop never terminates, because the condition it tests is not changed by repeating
-the body, whereas the selection takes it exactly once.
+mechanics of any one loop; the critical aspect is whether the action is taken
+\emph{once} if a condition holds (selection) or is \emph{repeated for as long
+as} the condition keeps holding (repetition). Holding the task invariant and
+varying only the construct makes the distinction discernible: both programs
+terminate --- unlike the runaway loop above, the body here does change the
+variable the condition tests --- but the loop re-applies the action until the
+condition turns false, producing exactly the wrong result the antipattern warns
+about, whereas the selection applies it once.
 
 \begin{description}
-  \item[Contrast] The same one-off decision, varying only whether it is written as
-    a repetition or a selection. On the left the condition stays true forever ---
-    an infinite loop --- because nothing in the body changes
-    \mintinline{python}{age}; on the right the \mintinline{python}{if} takes the
-    decision once and execution continues.
+  \item[Contrast] The same one-off decision --- a discount for prices of at
+    least \mintinline{python}{50} --- varying only whether it is written as a
+    repetition or a selection. On the left the \mintinline{python}{while}
+    re-applies the discount as long as the price stays at or above
+    \mintinline{python}{50}, ending at \mintinline{python}{40}; on the right
+    the \mintinline{python}{if} applies it once, giving the intended
+    \mintinline{python}{80}. What the loop gets wrong is not ending --- it is
+    the result.
 
     \hfill
     \begin{minipage}[t]{0.45\columnwidth}
       \begin{minted}[highlightlines={2}]{python}
-        age = 20
-        while age >= 18:
-            print("Welcome!")
+        price = 100
+        while price >= 50:
+            price = price - 20
+        print(price)
+        # 40
       \end{minted}
     \end{minipage}
     \hfill
     \begin{minipage}[t]{0.45\columnwidth}
       \begin{minted}[highlightlines={2}]{python}
-        age = 20
-        if age >= 18:
-            print("Welcome!")
+        price = 100
+        if price >= 50:
+            price = price - 20
+        print(price)
+        # 80
       \end{minted}
     \end{minipage}
 \end{description}
