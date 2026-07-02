@@ -584,9 +584,9 @@ still works.
             def example(values):
                 x = 0
                 for value in values:
-                    if i > x:
-                        x = i
-    
+                    if value > x:
+                        x = value
+
                 return x
       \end{minted}
     \end{minipage}
@@ -654,9 +654,8 @@ example with unrelated variable names and trying to read it.
                     y.append(object)
                     
                 for i in y:
-                    if y.property2 > 18:
-                        print(f"Hi {y.property1}! 
-                        You are an adult.")
+                    if i.property2 > 18:
+                        print(f"Hi {i.property1}! You are an adult.")
         \end{minted}
     \end{minipage}
 \hfill
