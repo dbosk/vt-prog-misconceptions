@@ -69,6 +69,8 @@
 
 \appendix
 
+% The appendix is article-only; this commented block mirrors the appendix
+% structure in article.tex (where the full prose lives).
 %\input{literature-protocol.tex}
 %
 %\section{Misconceptions not yet included}
@@ -76,37 +78,10 @@
 %\input{problem-solving.tex}
 %\input{tools.tex}
 %
-%\section{Misconceptions I have noticed that is not mentioned}
+%\section{Further misconceptions from the literature}
 %
-%\begin{itemize}
-%    \item When returning a value from a function, students misses to 
-%capture it into a variable, not understanding why they cannot use the 
-%returned value later in the programme. 
-%    \item A local list in a function will be changed when passed to a 
-%function and then changed in that function. This because it is a 
-%reference to the list that is sent to the new function, not a copy of 
-%the list. 
-%\end{itemize}
-%
-%\section{Random stuff removed from the article}
-%
-%\begin{itemize}
-%    \item There is also a misconception that variables can hold more than 
-%one value at a time \autocite{Doukakis2007}. This misconception can 
-%relate to several things:
-%    \begin{enumerate*}
-%      \item the type system, confusing lists with non-container types, not 
-%        seeing a list as a type itself;
-%      \item the scope of variables, that the same variable identifier can be 
-%    used 
-%        for different things in different scopes.
-%    \end{enumerate*}
-%
-%    \item Students that know that a return-statement is needed have 
-%difficulties returning the right value or variable from a function 
-%\autocite{KumarVeerasamy2016}. 
-%
-%\end{itemize}
+% (Item list in article.tex: Doukakis2007 variable-holds-multiple-values;
+% KumarVeerasamy2016 returning the right value.)
 %
 \end{document}
 

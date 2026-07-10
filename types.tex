@@ -60,6 +60,10 @@ integers \autocite{GuoMarkelZhang2020}. This misconception will
 unfortunately not always raise an error, since many mathematical operators 
 work for both strings and integers, and the misconception will instead lead
 to subtle errors later on in the programme.
+\textcite{Bosse2021Antipatterns} catalogue the same failure as the
+\emph{missing type conversion} antipattern in CS1 Python submissions:
+\textcquote{Bosse2021Antipatterns}{Failure to convert, when necessary, will make
+the data not be in the proper format so that the program can work}.
 Related type confusions surface when students evaluate expressions:
 \textcite{Gobil2009Errors} found that some of the most common novice errors are
 failing to evaluate integer division and type conversion correctly.
@@ -209,6 +213,26 @@ element is at index \mintinline{python}{0} and the last valid index is
       \begin{minted}{python}
         a = ["x", "y"]
         print(a[0], a[1])
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+The chapter's two critical aspects meet as soon as an indexed element is
+operated on, which gives a natural fusion.
+
+\begin{description}
+  \item[Fusion] We vary the two aspects together --- the type of the elements
+    and the mapping from index to position. To predict the output the student
+    must both map the indices to the second and third positions and honour the
+    elements' type: the result is the string \mintinline{python}{"2030"}, not
+    the integer \mintinline{python}{50}.
+
+    \hfill
+    \begin{minipage}[t]{0.5\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        a = ["10", "20", "30"]
+        print(a[1] + a[2])
+        # 2030
       \end{minted}
     \end{minipage}
 \end{description}

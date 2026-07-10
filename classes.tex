@@ -180,3 +180,35 @@ whether we have one object or two.
     to be stored.
 \end{description}
 
+The three analyses come together in a single fusion: a method is defined once,
+in the template, yet acts on the instance it is called on. Predicting the output
+requires attending simultaneously to what a method is (a function bound to the
+class, reaching the object through \mintinline{python}{self}), to the class as a
+template (one definition, many objects), and to identity (the call changes one
+dog, not the other).
+
+\begin{description}
+  \item[Fusion] We vary the aspects together: \mintinline{python}{rename} is
+    shared by all \mintinline{python}{Dog}s, but the call
+    \mintinline{python}{a.rename("Max")} reaches only the object
+    \mintinline{python}{a} --- while \mintinline{python}{b}, made from the same
+    template with the same attribute value, is untouched.
+
+    \hfill
+    \begin{minipage}[t]{0.55\columnwidth}
+      \begin{minted}[highlightlines={4,5,9}]{python}
+        class Dog:
+            def __init__(self, name):
+                self.name = name
+            def rename(self, new_name):
+                self.name = new_name
+
+        a = Dog("Rex")
+        b = Dog("Rex")
+        a.rename("Max")
+        print(a.name, b.name)
+        # Max Rex
+      \end{minted}
+    \end{minipage}
+\end{description}
+

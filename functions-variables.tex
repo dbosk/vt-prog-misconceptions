@@ -40,15 +40,17 @@ statement the student returns an equation, the student believes that the return
 value will be that equation, not the value that the equation represents 
 \autocite{Kohn2017VariableEvaluation}.
 
+\mode<presentation>{%
 \begin{frame}
   \begin{block}{Misconception\autocite{Kohn2017VariableEvaluation}}
     \begin{itemize}
       \item If a return statement contains an expression (\enquote{equation}),
-        the student believes that the return value will be that expression 
+        the student believes that the return value will be that expression
         (function), not the value that it results in.
     \end{itemize}
   \end{block}
-\end{frame}
+\end{frame}%
+}
 
 \begin{frame}
 From a variation theoretic perspective, we can say two things about this:
@@ -90,6 +92,7 @@ learn to discern\footnote{%
 Another critical aspect (dimension of variation) contains the features 
 statefulness (of an algorithm) and statelessness (of equations).
 
+\mode<presentation>{%
 \begin{frame}
   \begin{block}{Critical aspect (dimension of variation): type}<1>
     \begin{description}
@@ -106,7 +109,8 @@ statefulness (of an algorithm) and statelessness (of equations).
       \item[Features] Stateful, stateless
     \end{description}
   \end{block}
-\end{frame}
+\end{frame}%
+}
 
 \subsubsection{Statefulness of variable assignments}
 
@@ -261,6 +265,7 @@ variables can hold an entire algorithm and therefore see a variable as a
 function (or a mathematical equation).
 We also have that expected behaviour, namely through functions.
 
+\mode<presentation>{%
 \begin{frame}
   \begin{block}{Critical aspect (dimension of variation): type}<2>
     \begin{description}
@@ -277,7 +282,8 @@ We also have that expected behaviour, namely through functions.
       \item[Features] Stateful, stateless
     \end{description}
   \end{block}
-\end{frame}
+\end{frame}%
+}
 
 \subsubsection{Variability of functions}
 
@@ -483,14 +489,19 @@ once these are in place.
   \end{block}
 \end{frame}
 
-\begin{frame}[fragile]
+For generalisation we can return to the earlier examples: the order of the
+arguments was correct in each of them.
+
+\mode<presentation>{%
+\begin{frame}
   \begin{remark}
     \begin{itemize}
       \item We can return to previous examples for generalization.
       \item The order of arguments were all correct in those.
     \end{itemize}
   \end{remark}
-\end{frame}
+\end{frame}%
+}
 
 \subsubsection{Scope of identifiers}
 
@@ -946,6 +957,34 @@ exist when the call is reached.
     greet()
     def greet():
         print("Hi!")
+  \end{minted}
+\end{minipage}
+
+A related misconception concerns the call itself: students may define a function
+and then never call it, expecting the definition alone to run its
+body.\label{defined-not-called}
+\textcite{Bosse2021Antipatterns} catalogue this \emph{function created but not
+called} antipattern: \textcquote{Bosse2021Antipatterns}{Creating it but not
+calling it will cause that any task that the program needs to perform will not be
+executed}. The object of learning is that \emph{defining} a function and
+\emph{invoking} it are two separate acts --- the body runs only at the call. A
+single contrast, holding the function invariant and varying only whether the call
+is present, makes this discernible: on the left nothing is printed, because the
+body is never reached; on the right the call runs it.
+
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}{python}
+    def greet():
+        print("Hi!")
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={3}]{python}
+    def greet():
+        print("Hi!")
+    greet()
   \end{minted}
 \end{minipage}
 
@@ -1505,12 +1544,10 @@ the
 students saw. They did not see that the \mintinline{python}{x} to the left 
 is the 
 variable, 
-and that the \mintinline{python}{x} to the right only holds a value. This 
-definition is  
-easier to understand for a novice programmer, according to 
-\textcite{Kohn2017VariableEvaluation}, when we instead write this 
-definition as 
-\mintinline{python}{x += 1}. 
+and that the \mintinline{python}{x} to the right only holds a value. The
+augmented form \mintinline{python}{x += 1} avoids inviting this reading
+altogether, since it does not repeat the name and so cannot be mistaken for
+an equation.
 
 The object of learning is that the \mintinline{python}{=} of programming is
 \emph{assignment}, not mathematical equality. The critical aspect is that
@@ -1546,9 +1583,8 @@ expression invariant and varying only whether the symbol assigns or compares.
 
   \item[Generalisation] Holding the rule invariant --- the right-hand side is
     computed from the current value and stored back --- we vary the operation,
-    including the augmented form \mintinline{python}{x += 1} that
-    \textcite{Kohn2017VariableEvaluation} found easier for novices, since it does
-    not repeat the name and so does not invite the equation reading.
+    including the augmented form \mintinline{python}{x += 1}, which does not
+    repeat the name and so does not invite the equation reading.
 
     \hfill
     \begin{minipage}[t]{0.45\columnwidth}

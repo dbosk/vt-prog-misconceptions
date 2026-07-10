@@ -22,26 +22,13 @@ produce a family of related errors, which a contrast on each aspect can separate
 \subsubsection{A function must be invoked}
 
 Some students believe that a defined function will be called \enquote{by itself},
-in the right order, without ever being invoked. The critical aspect --- that
-definition and invocation are distinct --- becomes visible if we hold the
-definition invariant and vary only whether the call is present.
-
-\hfill
-\begin{minipage}[t]{0.45\columnwidth}
-  \begin{minted}{python}
-    def greet():
-        print("Hi!")
-    # nothing is printed
-  \end{minted}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.45\columnwidth}
-  \begin{minted}[highlightlines={3}]{python}
-    def greet():
-        print("Hi!")
-    greet()
-  \end{minted}
-\end{minipage}
+in the right order, without ever being invoked. This is the \emph{function
+created but not called} antipattern that \textcite{Bosse2021Antipatterns} also
+catalogue, so our observation corroborates the literature here. The critical
+aspect --- that definition and invocation are distinct --- and the contrast that
+makes it discernible, holding the definition invariant and varying only whether
+the call is present, are given with the catalogue's treatment in
+\cref{defined-not-called}.
 
 \subsubsection{Arguments must be passed}
 

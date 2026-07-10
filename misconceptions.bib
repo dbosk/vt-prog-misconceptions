@@ -70,6 +70,59 @@
   doi       = {10.1109/ICEEI.2009.5254715},
 }
 
+% === provenance: Bosse2021Antipatterns ===
+% CLAIM: A catalogue of CS1 antipatterns derived from student code documents
+%   concrete, recurring programming misconceptions in Python (and C) --- among
+%   them missing type conversion, using repetition where a selection is needed,
+%   a control variable that is never changed (infinite loop), "=" where "==" is
+%   meant, omitting "else" for mutually exclusive cases, and defining a function
+%   but never calling it.
+% FOUND-VIA: scholar systematic review, provider arxiv (session
+%   "misconceptions-systematic"); research-question search "What misconceptions
+%   do novice students have in introductory programming?"; kept by LLM screening
+%   (confidence 0.99). Full query set in literature-protocol.tex.
+% PICKED: a primary technical report cataloguing 41 antipatterns from 95
+%   misconceptions in real CS1 submissions (N=166); its Python and both-language
+%   catalogues supply several construct-level misconceptions cited across the
+%   types, conditionals, repetitions, and functions chapters. The purely
+%   syntactic antipatterns were deliberately not used --- the paper, like ours,
+%   foregrounds conceptual misconceptions over syntax.
+% QUOTE (abstract): "we catalog 41 CS1 antipatterns from 95 cataloged
+%   misconceptions in C and Python."
+% QUOTE (P_SRS1): "Using repetition where only selection would be required will
+%   cause wrong results."
+% QUOTE (RS2): "The program will go into an infinite loop because, since the
+%   control variable is never changed, the result of the condition that controls
+%   the repetition will not change either."
+% QUOTE (P_V5): "Failure to convert, when necessary, will make the data not be
+%   in the proper format so that the program can work."
+% QUOTE (SS2): "The structure can give the expected result, but since only one
+%   of the selections can be true, the second would only need to be checked if
+%   the first were false."
+% QUOTE (RE1): "using only an equals sign '=' is attribution and not a
+%   comparison" ("attribution" is the source's rendering of Portuguese
+%   "atribuicao", i.e. assignment; glossed in the prose).
+% QUOTE (P_F8): "Creating it but not calling it will cause that any task that
+%   the program needs to perform will not be executed."
+% VERIFIED: full-text (arXiv 2104.12542 read); each cited antipattern's PROBLEM
+%   statement entails the misconception it backs in the catalogue chapters. All
+%   six quoted PROBLEM passages re-confirmed verbatim against the arXiv PDF
+%   text (pdftotext) 2026-07-02.
+% DATE: 2026-07-01
+@techreport{Bosse2021Antipatterns,
+  author      = {Bosse, Yorah and Wiese, Igor Scaliante and
+                 Silva, Marco Aur{\'e}lio Graciotto and Lago, Nelson and
+                 Brand{\~a}o, Le{\^o}nidas de Oliveira and Redmiles, David and
+                 Kon, Fabio and Gerosa, Marco A.},
+  title       = {Catalogs of {C} and {Python} Antipatterns by {CS1} Students},
+  year        = {2021},
+  institution = {arXiv},
+  number      = {arXiv:2104.12542},
+  type        = {Technical report},
+  doi         = {10.48550/arXiv.2104.12542},
+  url         = {https://arxiv.org/abs/2104.12542},
+}
+
 % === provenance: Lister2004Tracing ===
 % CLAIM: Many novices cannot program at the end of CS1, and basic skills such as
 %   tracing code are a prerequisite for problem-solving.
@@ -239,9 +292,11 @@
 %   needed. The common increment pattern x = x + 1 is even believed to be
 %   outright impossible."
 % VERIFIED: abstract only (ACM full text Cloudflare-gated); the abstract states
-%   the misconception verbatim at the claim's scope. FLAG: two sub-claims in
-%   functions-variables.tex (a return statement returning an equation; x += 1
-%   easier than x = x + 1) are not in the abstract and need the full text.
+%   the misconception verbatim at the claim's scope. FLAG: one sub-claim in
+%   functions-variables.tex (a return statement returning an equation) is not
+%   in the abstract and needs the full text. The former "x += 1 easier than
+%   x = x + 1" attribution was softened to an unattributed design rationale
+%   (2026-07-02; no OA copy via Unpaywall to verify it against).
 % DATE: 2026-06-29
 @inproceedings{Kohn2017VariableEvaluation,
   author = {Kohn, Tobias},
@@ -390,7 +445,8 @@ novices},
 % QUOTE (p.1): "A misconception is an erroneous belief, which is not true or
 %   valid."
 % QUOTE (Findings): "This study analysis also explored that novices of programming
-%   struggled in writing code for math related Questions 6 and 7"
+%   struggled in writing code for math related questions 6 and 7 (refer
+%   Appendix)."
 % QUOTE (Findings): "reference to arrays versus array elements, identifying off by
 %   one index errors"
 % VERIFIED: full-text PDF read (Turku OA copy); all three cited passages confirmed
