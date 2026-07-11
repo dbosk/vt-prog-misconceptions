@@ -22,6 +22,11 @@
 \usepackage[british]{babel}
 \usepackage{booktabs}
 
+% The verbose margin citations are deferred like floats; a citation-dense
+% chapter (e.g. related work) otherwise exhausts the default float registers
+% with "! LaTeX Error: Too many unprocessed floats."
+\extrafloats{100}
+
 % Verbose citation style (full reference on first use, short form on repeats):
 % \autocite produces a footnote citation, which didactic places in the margin in
 % the memoir article and at the foot of the slide in beamer -- "verbose
