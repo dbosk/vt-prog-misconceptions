@@ -23,6 +23,7 @@ SRC+=types.tex
 SRC+=classes.tex
 SRC+=findings.tex
 SRC+=related-work.tex
+SRC+=conclusions.tex
 SRC+=literature-protocol.tex
 SRC+=problem-solving.tex
 SRC+=tools.tex
