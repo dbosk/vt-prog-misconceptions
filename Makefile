@@ -10,6 +10,7 @@ SRC+=preamble.tex
 
 SRC+=introduction.tex
 SRC+=background.tex
+SRC+=related-work.tex
 SRC+=method.tex
 
 SRC+=results-overview.tex

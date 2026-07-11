@@ -1,0 +1,89 @@
+\mode*
+\section{Related work}
+\label{relatedwork}
+
+Our work sits at the intersection of three strands of literature: applications
+of variation theory outside introductory programming, teaching informed by
+students' misconceptions but without variation theory, and concrete proposals
+for how to teach introductory programming.
+
+\subsection{Variation theory beyond programming}
+
+Variation theory has a long tradition as a design theory for teaching in other
+subjects \autocite{MartonPang2006Conditions}. In the \emph{learning-study}
+tradition --- lesson study with
+variation theory as its explicit learning theory --- the theory serves as a
+source of guiding principles for teachers' pedagogical design, lesson analysis
+and evaluation \autocite{PangLing2011LearningStudy}. Mathematics education is
+the most developed case: using variation and invariance within and between
+instructional examples helps learners engage with mathematical structure
+\autocite{Kullberg2017VTMathematics}. In science education,
+\textcite{Preston2022ElectricityVT} combine variation theory with multimodal
+representations to design a teaching sequence on electric circuits for primary
+school, and \textcite{Kullberg2024PlanningTeaching} collect case studies of
+teaching informed by variation theory.
+
+Within computing education, the phenomenographic tradition that our method
+builds on goes back to \textcite{Booth1992Phenomenographic}, who studied how
+students experience learning to program. Closest to our work,
+\textcite{EckerdalThune2005ObjectsVT} study first-year students' understandings
+of \emph{object} and \emph{class} phenomenographically and connect them to
+variation theory, and \textcite{ThuneEckerdal2009ConceptionsVT} apply
+phenomenography and variation theory to students' conceptions of computer
+programming as such, identifying dimensions of variation to use in teaching.
+These works apply variation theory to a single concept pair or to programming
+as a whole; we instead start from the misconceptions documented in the
+literature and derive, for each, the critical aspects and a pattern of
+variation to teach against it.
+
+\subsection{Teaching from misconceptions, without variation theory}
+
+Using students' conceptions as the starting point for instruction is the core
+of the \emph{conceptual change} tradition in science education, going back to
+\textcite{Posner1982ConceptualChange}; contemporary models emphasise that
+conceptual change is dynamic and iterative, with regressions and multiple entry
+points \autocite{Nadelson2018ConceptualChange}. The conceptions themselves are
+elicited with diagnostic instruments --- most commonly interviews, open-ended
+tests, multiple-choice tests and multiple-tier tests
+\autocite{KaltakciGurel2015Diagnostics} --- of which concept inventories are
+the best-known form. \Textcite{Julie2020ConceptInventory} develop such an
+inventory for programming, covering variables, conditionals and functions,
+explicitly to show teachers their students' mental models.
+
+In computing education, \textcite{Ma2011MentalModels} investigate and improve
+novices' non-viable mental models of value and reference assignment;
+\textcite{Sorva2013NotionalMachines} reviews the misconception, mental-model
+and threshold-concept literatures and argues that an explicitly taught
+\emph{notional machine} addresses novices' difficulties with the runtime
+dynamics of programs; and \textcite{Gusukuma2018MDF} generate feedback from
+detected misconceptions rather than from output checks alone.
+\Textcite{MisconceptionsSurvey2017} survey this literature. These approaches
+share our premise that misconceptions should drive teaching, but they derive
+different things from it: diagnosis, feedback, or an explicit model of the
+machine. Variation theory adds a prescription for the \emph{content} of
+instruction: which aspect must vary, against which invariant background, for
+the critical aspect to become discernible.
+
+\subsection{Concrete approaches to teaching introductory programming}
+
+A third strand proposes concrete teaching designs for introductory programming
+without deriving them from specific misconceptions. At course level,
+\textcite{Medeiros2018SLR} review the challenges of teaching and learning
+introductory programming and categorise them, \textcite{Schulte2006TeachersTeach}
+chart what teachers actually teach and what their students find difficult, and
+\textcite{Miliszewska2007Befriending} propose a balanced course design in
+response to novice difficulties. At the level of classroom activities,
+well-evaluated designs include subgoal-labelled worked examples, which reduced
+withdrawal and failure in introductory programming
+\autocite{Margulieux2020Subgoals}; Parsons problems, which practise basic
+programming constructs in a puzzle-like format
+\autocite{Parsons2006Puzzles}; peer instruction, which halved fail
+rates in computing courses \autocite{Porter2013PeerInstruction}; and PRIMM,
+which structures lessons as predict--run--investigate--modify--make
+\autocite{Sentance2019PRIMM}.
+
+These designs specify the \emph{activity structure} --- what students do ---
+whereas our analyses specify the \emph{example content}: which examples to
+juxtapose so that the critical aspect of a documented misconception comes into
+focus. The two are complementary; the predict step of PRIMM and the questions
+of peer instruction are natural carriers for the contrast patterns we derive.
