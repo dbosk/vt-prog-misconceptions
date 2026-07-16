@@ -8,18 +8,19 @@ It implements the diagnostic instruments for the learning-study
 evaluation motivated in \cref{conclusions}: pre- and post-tests at the
 level of the whole course, and pre- and post-tests around each taught
 topic.
-Four files are tangled from this section so far:
-[[quiz-course-start.json]] and [[quiz-course-end.json]], the
-course-level pair, and [[quiz-funcvars-start.json]] and
-[[quiz-funcvars-end.json]], the pair for the functions-and-variables
-topic.
+Fourteen files are tangled from this section: the course-level pair
+[[quiz-course-start.json]] and [[quiz-course-end.json]], and a
+start--end pair per topic
+([[quiz-funcvars-start.json]]/[[quiz-funcvars-end.json]] and
+correspondingly for [[conditionals]], [[repetitions]], [[types]],
+[[classes]] and [[debugging]]).
 The learning platform of the course is Canvas, and the [[canvaslms]]
-command-line tool creates the quizzes from their JSON descriptions:
+command-line tool creates the quizzes from their JSON descriptions,
+for example:
 \begin{minted}{bash}
-canvaslms quizzes create -c prgi26 -f quiz-course-start.json
-canvaslms quizzes create -c prgi26 -f quiz-course-end.json
-canvaslms quizzes create -c prgi26 -f quiz-funcvars-start.json
-canvaslms quizzes create -c prgi26 -f quiz-funcvars-end.json
+for f in quiz-*.json; do
+  canvaslms quizzes create -c prgi26 -f "$f"
+done
 \end{minted}
 
 The items are where the catalogue pays off.
@@ -33,11 +34,32 @@ This is the construction principle of concept inventories
 here with the distractors grounded in the catalogue rather than
 collected anew.
 
-The same items appear in the start and end quiz of each pair, so that
-the difference measures the gain; and the topic items \emph{are} the
-course items, reused by reference, so the two levels cannot drift
-apart: an item improved for the topic quiz is improved for the course
-quiz, automatically.
+\subsection{Parallel forms and counterbalancing}
+
+Measuring the same student twice with the same question risks
+measuring recognition of the question rather than understanding of the
+aspect.
+Every aspect therefore has \emph{two} parallel items, A and B: the
+critical aspect and the encoded misconceptions are invariant, and only
+the surface varies --- names, values, and which choice is correct.
+The pre-test uses form A for the odd-numbered aspects and form B for
+the even-numbered; the post-test uses the complement.
+Both forms thus appear in both administrations, so a difficulty
+difference between the forms affects the pre- and post-scores
+symmetrically and cancels in the gain.
+
+The design we would prefer is for Canvas to draw one of the two forms
+at random \emph{per student} at each administration, which controls
+form effects per item rather than per test.
+That is not yet automatable: New Quizzes item banks cannot be created
+through the Canvas API, and Classic Quizzes' question groups (which do
+support a random draw) are not yet supported by [[canvaslms]].
+The counterbalanced fixed forms below are the strongest design the
+current tooling allows; because each form is its own chunk, switching
+to a random draw later only changes the quiz descriptions, not the
+items.
+% TODO(#29): upgrade to per-student random draw when canvaslms
+% supports Classic question groups (upstream feature request filed).
 
 \subsection{The course-level quizzes}
 
@@ -48,6 +70,9 @@ prepared for the quiz.
 We ask because preparation would confound the gain measure --- a
 student who reviews the material the night before measures
 preparation, not what the course left behind.
+Each item's position encodes its topic (tens digit) and aspect (ones
+digit), so positions are unique and stable across all fourteen
+quizzes; Canvas tolerates the gaps.
 
 <<[[quiz-course-start.json]]>>=
 {
@@ -55,7 +80,7 @@ preparation, not what the course left behind.
   "settings": {
     "title": "Concept quiz: what you know already",
     "instructions": "<p>This quiz checks which programming concepts you already know, so that we can adapt the course. You will see your score afterwards, but not the correct answers&mdash;the course will teach you those. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
-    "points_possible": 7,
+    "points_possible": 22,
     <<scheduling settings>>
     "quiz_settings": {
       <<interaction settings>>
@@ -63,7 +88,7 @@ preparation, not what the course left behind.
     }
   },
   "items": [
-    <<course knowledge items>>
+    <<pre items>>
   ]
 }
 @
@@ -73,8 +98,8 @@ preparation, not what the course left behind.
   "quiz_type": "new",
   "settings": {
     "title": "Concept quiz: what you know now",
-    "instructions": "<p>This quiz repeats the concept questions from the start-of-course quiz, so that we can see what you have learned during the course. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
-    "points_possible": 7,
+    "instructions": "<p>This quiz mirrors the concept quiz from the start of the course, so that we can see what you have learned during the course. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+    "points_possible": 22,
     <<scheduling settings>>
     "quiz_settings": {
       <<interaction settings>>
@@ -83,19 +108,29 @@ preparation, not what the course left behind.
   },
   "items": [
     <<preparation item>>,
-    <<course knowledge items>>
+    <<post items>>
   ]
 }
 @
 
-The course items are the union of the topic item banks.
-For now that is the functions-and-variables bank; each further topic
-adds its bank here, separated by a comma.
-% TODO(#29): add the item banks for conditionals, repetitions, types,
-% classes and debugging, one per catalogue chapter.
+The course items are the union of the topic banks, in each form.
 
-<<course knowledge items>>=
-<<functions-variables items>>
+<<pre items>>=
+<<funcvars pre items>>,
+<<conditionals pre items>>,
+<<repetitions pre items>>,
+<<types pre items>>,
+<<classes pre items>>,
+<<debugging pre items>>
+@
+
+<<post items>>=
+<<funcvars post items>>,
+<<conditionals post items>>,
+<<repetitions post items>>,
+<<types post items>>,
+<<classes post items>>,
+<<debugging post items>>
 @
 
 All quizzes are diagnostics: there is no time limit, a single attempt
@@ -103,7 +138,7 @@ suffices, and answers are never shuffled, since the order of the
 choices is meaningful in several items (the misconception-encoding
 distractor should not accidentally move next to the correct answer).
 Students see their score but never the correct answers --- the items
-must stay reusable for the post-test.
+must stay reusable for the later administrations.
 
 <<scheduling settings>>=
 "time_limit": null,
@@ -148,21 +183,23 @@ The preparation item is ungraded and sits first in every end quiz.
 }
 @
 
-\subsection{The topic quizzes: functions and variables}
+\subsection{The topic quizzes}
 
-The topic pair brackets one teaching unit in the learning study: the
+Each topic pair brackets one teaching unit in the learning study: the
 start quiz runs immediately before the unit, the end quiz immediately
 after.
-Because the items are shared with the course quizzes by reference, a
-student's trajectory on one and the same item can be followed through
-all four administrations.
+The topic banks \emph{are} the course items, reused by reference, so
+the two levels cannot drift apart: an item improved for a topic quiz
+is improved for the course quiz, automatically.
+The six pairs are identical in structure, so we define them together;
+only the bank and the points differ.
 
 <<[[quiz-funcvars-start.json]]>>=
 {
   "quiz_type": "new",
   "settings": {
     "title": "Topic quiz: functions and variables (before)",
-    "instructions": "<p>This quiz checks what you already know about functions and variables, before we work on them. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
+    <<start-quiz boilerplate>>
     "points_possible": 7,
     <<scheduling settings>>
     "quiz_settings": {
@@ -171,7 +208,7 @@ all four administrations.
     }
   },
   "items": [
-    <<functions-variables items>>
+    <<funcvars pre items>>
   ]
 }
 @
@@ -181,7 +218,7 @@ all four administrations.
   "quiz_type": "new",
   "settings": {
     "title": "Topic quiz: functions and variables (after)",
-    "instructions": "<p>This quiz repeats the questions from before the functions-and-variables unit, so that we can see what the unit taught you. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+    <<end-quiz boilerplate>>
     "points_possible": 7,
     <<scheduling settings>>
     "quiz_settings": {
@@ -191,45 +228,263 @@ all four administrations.
   },
   "items": [
     <<preparation item>>,
-    <<functions-variables items>>
+    <<funcvars post items>>
   ]
 }
 @
 
-\subsection{The functions-and-variables item bank}
-
-Seven items, one per critical aspect of the functions-and-variables
-analyses in \cref{misconceptions}.
-The preparation item holds position~1, so the bank starts at
-position~2 in every quiz.
-
-<<functions-variables items>>=
-<<item: adding one to a variable>>,
-<<item: a sum computed earlier>>,
-<<item: a function is defined>>,
-<<item: calling with no arguments>>,
-<<item: where the returned value goes>>,
-<<item: a list passed to a function>>,
-<<item: calling before defining>>
+<<[[quiz-conditionals-start.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Topic quiz: conditionals (before)",
+    <<start-quiz boilerplate>>
+    "points_possible": 3,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<conditionals pre items>>
+  ]
+}
 @
 
-\paragraph{Adding one to a variable.}
+<<[[quiz-conditionals-end.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Topic quiz: conditionals (after)",
+    <<end-quiz boilerplate>>
+    "points_possible": 3,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<preparation item>>,
+    <<conditionals post items>>
+  ]
+}
+@
+
+<<[[quiz-repetitions-start.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Topic quiz: repetitions (before)",
+    <<start-quiz boilerplate>>
+    "points_possible": 3,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<repetitions pre items>>
+  ]
+}
+@
+
+<<[[quiz-repetitions-end.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Topic quiz: repetitions (after)",
+    <<end-quiz boilerplate>>
+    "points_possible": 3,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<preparation item>>,
+    <<repetitions post items>>
+  ]
+}
+@
+
+<<[[quiz-types-start.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Topic quiz: data types (before)",
+    <<start-quiz boilerplate>>
+    "points_possible": 4,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<types pre items>>
+  ]
+}
+@
+
+<<[[quiz-types-end.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Topic quiz: data types (after)",
+    <<end-quiz boilerplate>>
+    "points_possible": 4,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<preparation item>>,
+    <<types post items>>
+  ]
+}
+@
+
+<<[[quiz-classes-start.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Topic quiz: classes and objects (before)",
+    <<start-quiz boilerplate>>
+    "points_possible": 3,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<classes pre items>>
+  ]
+}
+@
+
+<<[[quiz-classes-end.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Topic quiz: classes and objects (after)",
+    <<end-quiz boilerplate>>
+    "points_possible": 3,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<preparation item>>,
+    <<classes post items>>
+  ]
+}
+@
+
+<<[[quiz-debugging-start.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Topic quiz: functions and lists, revisited (before)",
+    <<start-quiz boilerplate>>
+    "points_possible": 2,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<debugging pre items>>
+  ]
+}
+@
+
+<<[[quiz-debugging-end.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Topic quiz: functions and lists, revisited (after)",
+    <<end-quiz boilerplate>>
+    "points_possible": 2,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<preparation item>>,
+    <<debugging post items>>
+  ]
+}
+@
+
+The instructions differ only in tense between the before- and
+after-quiz of every topic, so they are shared.
+
+<<start-quiz boilerplate>>=
+"instructions": "<p>This quiz checks what you already know about this topic, before we work on it. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
+@
+
+<<end-quiz boilerplate>>=
+"instructions": "<p>This quiz mirrors the questions from before this topic's unit, so that we can see what the unit taught you. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+@
+
+\subsection{Functions and variables (positions 11--17)}
+
+Seven aspects from the functions-and-variables analyses.
+Pre-test forms: A for the odd aspects, B for the even; post-test the
+complement.
+
+<<funcvars pre items>>=
+<<item 11A: adding one to a variable>>,
+<<item 12B: a sum computed earlier>>,
+<<item 13A: a function is defined>>,
+<<item 14B: calling with no arguments>>,
+<<item 15A: where the returned value goes>>,
+<<item 16B: a list passed to a function>>,
+<<item 17A: calling before defining>>
+@
+
+<<funcvars post items>>=
+<<item 11B: adding two to a variable>>,
+<<item 12A: a sum computed earlier>>,
+<<item 13B: a function is defined>>,
+<<item 14A: calling with no arguments>>,
+<<item 15B: where the returned value goes>>,
+<<item 16A: a list passed to a function>>,
+<<item 17B: calling before defining>>
+@
+
+\paragraph{Aspect 11: assignment is not an equation.}
 The critical aspect is that \mintinline{python}{=} assigns --- computes
 the right-hand side from the current values and stores the result ---
 rather than states an equation
 \autocite{Kohn2017VariableEvaluation,Plass2015Variables}.
-Choice~3 encodes the equation reading (\enquote{no solution}), which
-the abstract of \textcite{Kohn2017VariableEvaluation} reports verbatim
-as \enquote{believed to be outright impossible}; choice~4 encodes
-storing the calculation instead of its value; choice~1 encodes reading
-the second assignment as inert.
+The \enquote{no solution} distractor encodes the equation reading,
+which the abstract of \textcite{Kohn2017VariableEvaluation} reports
+verbatim as \enquote{believed to be outright impossible}; the
+expression distractor encodes storing the calculation instead of its
+value; the unchanged-value distractor encodes reading the second
+assignment as inert.
+Form B varies the name, the values and the correct position; the three
+encoded misconceptions are the same.
 
-<<item: adding one to a variable>>=
+<<item 11A: adding one to a variable>>=
 {
-  "position": 2,
+  "position": 11,
   "points_possible": 1,
   "entry": {
-    "title": "Adding one to a variable",
+    "title": "Adding one to a variable (A)",
     "item_body": "<p>What does the following program print?</p><pre>x = 5\nx = x + 1\nprint(x)</pre>",
     "interaction_type_slug": "choice",
     "interaction_data": {
@@ -244,22 +499,41 @@ the second assignment as inert.
     "scoring_algorithm": "Equivalence"
   }
 }
-@
-
-\paragraph{A sum computed earlier.}
-The critical aspect is statefulness: an assignment happens at its line,
-using the values current at that moment.
-Choice~2 encodes the lazy reading --- the variable holds the
-calculation [[a + b]] and re-evaluates it when printed
-\autocite{Kohn2017VariableEvaluation} --- which yields 3 after
-[[a]] changes.
-
-<<item: a sum computed earlier>>=
+<<item 11B: adding two to a variable>>=
 {
-  "position": 3,
+  "position": 11,
   "points_possible": 1,
   "entry": {
-    "title": "A sum computed earlier",
+    "title": "Adding two to a variable (B)",
+    "item_body": "<p>What does the following program print?</p><pre>n = 8\nn = n + 2\nprint(n)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>10</p>"},
+        {"position": 2, "item_body": "<p>n + 2</p>"},
+        {"position": 3, "item_body": "<p>8</p>"},
+        {"position": 4, "item_body": "<p>The program reports an error: n = n + 2 has no solution</p>"}
+      ]
+    },
+    "scoring_data": {"value": 1},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 12: assignments are not re-evaluated.}
+The critical aspect is statefulness: an assignment happens at its
+line, using the values current at that moment.
+The lazy distractor encodes the belief that the variable holds the
+calculation and re-evaluates it when printed
+\autocite{Kohn2017VariableEvaluation}.
+
+<<item 12A: a sum computed earlier>>=
+{
+  "position": 12,
+  "points_possible": 1,
+  "entry": {
+    "title": "A sum computed earlier (A)",
     "item_body": "<p>What does the following program print?</p><pre>a = 3\nb = 2\nc = a + b\na = 1\nprint(c)</pre>",
     "interaction_type_slug": "choice",
     "interaction_data": {
@@ -274,22 +548,41 @@ calculation [[a + b]] and re-evaluates it when printed
     "scoring_algorithm": "Equivalence"
   }
 }
-@
-
-\paragraph{A function is defined.}
-The critical aspect is that defining and invoking a function are two
-separate acts --- the body runs only at a call.
-Choice~1 encodes the \emph{function created but not called}
-antipattern \autocite{Bosse2021Antipatterns}, which we also observed
-in our own teaching: the belief that the definition alone runs the
-body.
-
-<<item: a function is defined>>=
+<<item 12B: a sum computed earlier>>=
 {
-  "position": 4,
+  "position": 12,
   "points_possible": 1,
   "entry": {
-    "title": "A function is defined",
+    "title": "A sum computed earlier (B)",
+    "item_body": "<p>What does the following program print?</p><pre>p = 4\nq = 5\ns = p + q\nq = 2\nprint(s)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>6</p>"},
+        {"position": 2, "item_body": "<p>9</p>"},
+        {"position": 3, "item_body": "<p>2</p>"},
+        {"position": 4, "item_body": "<p>The program crashes</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 13: defining does not run the body.}
+The critical aspect is that defining and invoking a function are two
+separate acts --- the body runs only at a call.
+The printed-greeting distractor encodes the \emph{function created but
+not called} antipattern \autocite{Bosse2021Antipatterns}, which we
+also observed in our own teaching.
+
+<<item 13A: a function is defined>>=
+{
+  "position": 13,
+  "points_possible": 1,
+  "entry": {
+    "title": "A function is defined (A)",
     "item_body": "<p>What does the following program print when run?</p><pre>def greet():\n    print('Hi!')</pre>",
     "interaction_type_slug": "choice",
     "interaction_data": {
@@ -304,22 +597,41 @@ body.
     "scoring_algorithm": "Equivalence"
   }
 }
-@
-
-\paragraph{Calling with no arguments.}
-The critical aspect is that parameters are bound from the arguments at
-the call, not from global variables that happen to share their names.
-Choice~1 encodes the misconception we observed in our own teaching:
-that the argument need not be passed when a global of the same name
-exists.
-Choice~2 encodes assuming parameters default to zero.
-
-<<item: calling with no arguments>>=
+<<item 13B: a function is defined>>=
 {
-  "position": 5,
+  "position": 13,
   "points_possible": 1,
   "entry": {
-    "title": "Calling with no arguments",
+    "title": "A function is defined (B)",
+    "item_body": "<p>What does the following program print when run?</p><pre>def beep():\n    print('Beep!')</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>Nothing</p>"},
+        {"position": 2, "item_body": "<p>Beep!</p>"},
+        {"position": 3, "item_body": "<p>beep</p>"},
+        {"position": 4, "item_body": "<p>The program reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 1},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 14: parameters bind from arguments, not names.}
+The critical aspect is that parameters are bound from the arguments at
+the call, not from global variables that happen to share their names
+--- a misconception we observed in our own teaching.
+The computed-result distractor encodes it; the zero distractor encodes
+assuming parameters default to zero.
+
+<<item 14A: calling with no arguments>>=
+{
+  "position": 14,
+  "points_possible": 1,
+  "entry": {
+    "title": "Calling with no arguments (A)",
     "item_body": "<p>What happens when the following program runs?</p><pre>def add(x, y):\n    print(x + y)\n\nx = 3\ny = 4\nadd()</pre>",
     "interaction_type_slug": "choice",
     "interaction_data": {
@@ -334,22 +646,41 @@ Choice~2 encodes assuming parameters default to zero.
     "scoring_algorithm": "Equivalence"
   }
 }
+<<item 14B: calling with no arguments>>=
+{
+  "position": 14,
+  "points_possible": 1,
+  "entry": {
+    "title": "Calling with no arguments (B)",
+    "item_body": "<p>What happens when the following program runs?</p><pre>def mul(a, b):\n    print(a * b)\n\na = 2\nb = 5\nmul()</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>It prints 10</p>"},
+        {"position": 2, "item_body": "<p>It prints 1</p>"},
+        {"position": 3, "item_body": "<p>It reports an error: two arguments are missing</p>"},
+        {"position": 4, "item_body": "<p>It prints nothing and continues</p>"}
+      ]
+    },
+    "scoring_data": {"value": 3},
+    "scoring_algorithm": "Equivalence"
+  }
+}
 @
 
-\paragraph{Where the returned value goes.}
+\paragraph{Aspect 15: return hands back a value, not a name.}
 The critical aspect is that [[return]] hands back a \emph{value},
 which the caller must capture in a name of its own; the local name
 does not travel to the call site.
-Choice~1 encodes the observed misconception that [[return]]
-\enquote{sends} the variable's name, so that the name can be used
-after the call.
+The value distractor encodes the observed misconception that
+[[return]] \enquote{sends} the variable's name.
 
-<<item: where the returned value goes>>=
+<<item 15A: where the returned value goes>>=
 {
-  "position": 6,
+  "position": 15,
   "points_possible": 1,
   "entry": {
-    "title": "Where the returned value goes",
+    "title": "Where the returned value goes (A)",
     "item_body": "<p>What does the following program print?</p><pre>def three():\n    x = 3\n    return x\n\nthree()\nprint(x)</pre>",
     "interaction_type_slug": "choice",
     "interaction_data": {
@@ -364,21 +695,40 @@ after the call.
     "scoring_algorithm": "Equivalence"
   }
 }
-@
-
-\paragraph{A list passed to a function.}
-The critical aspect is that a list argument is a reference to the same
-list, not a copy, so a mutation inside the function is visible
-outside.
-Choice~1 encodes the copy misconception we observed; the aspect
-connects to the mutable-default example in \cref{debugging}.
-
-<<item: a list passed to a function>>=
+<<item 15B: where the returned value goes>>=
 {
-  "position": 7,
+  "position": 15,
   "points_possible": 1,
   "entry": {
-    "title": "A list passed to a function",
+    "title": "Where the returned value goes (B)",
+    "item_body": "<p>What does the following program print?</p><pre>def five():\n    y = 5\n    return y\n\nfive()\nprint(y)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>The program reports an error: y is not defined</p>"},
+        {"position": 2, "item_body": "<p>5</p>"},
+        {"position": 3, "item_body": "<p>Nothing</p>"},
+        {"position": 4, "item_body": "<p>None</p>"}
+      ]
+    },
+    "scoring_data": {"value": 1},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 16: a list argument is shared, not copied.}
+The critical aspect is that a list argument is a reference to the same
+list, so a mutation inside the function is visible outside; the
+unchanged-list distractor encodes the copy misconception we observed.
+The aspect connects to the mutable-default example in \cref{debugging}.
+
+<<item 16A: a list passed to a function>>=
+{
+  "position": 16,
+  "points_possible": 1,
+  "entry": {
+    "title": "A list passed to a function (A)",
     "item_body": "<p>What does the following program print?</p><pre>def grow(xs):\n    xs.append(4)\n\na = [1, 2, 3]\ngrow(a)\nprint(a)</pre>",
     "interaction_type_slug": "choice",
     "interaction_data": {
@@ -393,20 +743,40 @@ connects to the mutable-default example in \cref{debugging}.
     "scoring_algorithm": "Equivalence"
   }
 }
-@
-
-\paragraph{Calling before defining.}
-The critical aspect is top-to-bottom execution order: a function must
-be defined before the line that calls it.
-Choice~1 encodes the belief that the whole program is known before
-execution starts, so the later definition serves the earlier call.
-
-<<item: calling before defining>>=
+<<item 16B: a list passed to a function>>=
 {
-  "position": 8,
+  "position": 16,
   "points_possible": 1,
   "entry": {
-    "title": "Calling before defining",
+    "title": "A list passed to a function (B)",
+    "item_body": "<p>What does the following program print?</p><pre>def clear_first(zs):\n    zs[0] = 0\n\nb = [7, 8, 9]\nclear_first(b)\nprint(b)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>[0, 8, 9]</p>"},
+        {"position": 2, "item_body": "<p>[7, 8, 9]</p>"},
+        {"position": 3, "item_body": "<p>[0]</p>"},
+        {"position": 4, "item_body": "<p>The program reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 1},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 17: a function must be defined before the call.}
+The critical aspect is top-to-bottom execution order.
+The successful-greeting distractor encodes the belief that the whole
+program is known before execution starts, so a later definition serves
+an earlier call.
+
+<<item 17A: calling before defining>>=
+{
+  "position": 17,
+  "points_possible": 1,
+  "entry": {
+    "title": "Calling before defining (A)",
     "item_body": "<p>What happens when the following program runs?</p><pre>greet()\n\ndef greet():\n    print('Hi!')</pre>",
     "interaction_type_slug": "choice",
     "interaction_data": {
@@ -421,16 +791,871 @@ execution starts, so the later definition serves the earlier call.
     "scoring_algorithm": "Equivalence"
   }
 }
+<<item 17B: calling before defining>>=
+{
+  "position": 17,
+  "points_possible": 1,
+  "entry": {
+    "title": "Calling before defining (B)",
+    "item_body": "<p>What happens when the following program runs?</p><pre>wave()\n\ndef wave():\n    print('Wave!')</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>It reports an error: wave is not defined</p>"},
+        {"position": 2, "item_body": "<p>It prints Wave!</p>"},
+        {"position": 3, "item_body": "<p>It prints nothing and continues</p>"},
+        {"position": 4, "item_body": "<p>It prints Wave! twice</p>"}
+      ]
+    },
+    "scoring_data": {"value": 1},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\subsection{Conditionals (positions 21--23)}
+
+Three aspects from the conditionals analyses.
+
+<<conditionals pre items>>=
+<<item 21A: testing with a single equals sign>>,
+<<item 22B: one branch or the other>>,
+<<item 23A: comparing against two values>>
+@
+
+<<conditionals post items>>=
+<<item 21B: testing with a single equals sign>>,
+<<item 22A: one branch or the other>>,
+<<item 23B: comparing against two values>>
+@
+
+\paragraph{Aspect 21: \mintinline{python}{=} assigns, \mintinline{python}{==} compares.}
+The critical aspect is the distinction between the two operators,
+which in Python surfaces at once: \mintinline{python}{if x = 3:} is a
+syntax error.
+The successful-test distractor encodes writing \mintinline{python}{=}
+for a comparison, the \emph{attribution} reading catalogued by
+\textcite{Bosse2021Antipatterns} and mirrored by
+\textcite{Plass2015Variables}.
+
+<<item 21A: testing with a single equals sign>>=
+{
+  "position": 21,
+  "points_possible": 1,
+  "entry": {
+    "title": "Testing with a single equals sign (A)",
+    "item_body": "<p>What happens when the following program runs?</p><pre>x = 3\nif x = 3:\n    print('yes')</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>It prints yes</p>"},
+        {"position": 2, "item_body": "<p>It prints nothing</p>"},
+        {"position": 3, "item_body": "<p>It reports a syntax error at the if-line</p>"},
+        {"position": 4, "item_body": "<p>It prints 3</p>"}
+      ]
+    },
+    "scoring_data": {"value": 3},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 21B: testing with a single equals sign>>=
+{
+  "position": 21,
+  "points_possible": 1,
+  "entry": {
+    "title": "Testing with a single equals sign (B)",
+    "item_body": "<p>What happens when the following program runs?</p><pre>y = 7\nif y = 9:\n    print('no')</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>It prints nothing, since y is not 9</p>"},
+        {"position": 2, "item_body": "<p>It reports a syntax error at the if-line</p>"},
+        {"position": 3, "item_body": "<p>It prints no</p>"},
+        {"position": 4, "item_body": "<p>It prints 9</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 22: exactly one branch runs.}
+The critical aspect is that \mintinline{python}{if}--%
+\mintinline{python}{else} takes exactly one branch
+\autocite{MisconceptionsSurvey2017}.
+The both-lines distractor encodes the misconception that both branches
+execute.
+
+<<item 22A: one branch or the other>>=
+{
+  "position": 22,
+  "points_possible": 1,
+  "entry": {
+    "title": "One branch or the other (A)",
+    "item_body": "<p>What does the following program print?</p><pre>x = 10\nif x > 5:\n    print('big')\nelse:\n    print('small')</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>big</p>"},
+        {"position": 2, "item_body": "<p>big and then small</p>"},
+        {"position": 3, "item_body": "<p>small</p>"},
+        {"position": 4, "item_body": "<p>The program reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 1},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 22B: one branch or the other>>=
+{
+  "position": 22,
+  "points_possible": 1,
+  "entry": {
+    "title": "One branch or the other (B)",
+    "item_body": "<p>What does the following program print?</p><pre>t = 2\nif t > 5:\n    print('hot')\nelse:\n    print('cold')</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>hot</p>"},
+        {"position": 2, "item_body": "<p>hot and then cold</p>"},
+        {"position": 3, "item_body": "<p>cold</p>"},
+        {"position": 4, "item_body": "<p>Nothing</p>"}
+      ]
+    },
+    "scoring_data": {"value": 3},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 23: each operand of \mintinline{python}{or} is a complete comparison.}
+The critical aspect is that \mintinline{python}{x != a or b} joins the
+comparison with the bare, truthy value [[b]]
+\autocite{GuoMarkelZhang2020}, so the condition is true regardless of
+[[x]].
+The nothing-printed distractor encodes the natural-language reading
+\enquote{x differs from a or from b}, which is false when all three
+are equal.
+
+<<item 23A: comparing against two values>>=
+{
+  "position": 23,
+  "points_possible": 1,
+  "entry": {
+    "title": "Comparing against two values (A)",
+    "item_body": "<p>What does the following program print?</p><pre>x, a, b = 5, 5, 5\nif x != a or b:\n    print('differs')</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>Nothing, since x equals both a and b</p>"},
+        {"position": 2, "item_body": "<p>differs</p>"},
+        {"position": 3, "item_body": "<p>The program reports an error</p>"},
+        {"position": 4, "item_body": "<p>5</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 23B: comparing against two values>>=
+{
+  "position": 23,
+  "points_possible": 1,
+  "entry": {
+    "title": "Comparing against two values (B)",
+    "item_body": "<p>What does the following program print?</p><pre>y, c, d = 3, 3, 3\nif y != c or d:\n    print('unequal')</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>unequal</p>"},
+        {"position": 2, "item_body": "<p>Nothing, since y equals both c and d</p>"},
+        {"position": 3, "item_body": "<p>3</p>"},
+        {"position": 4, "item_body": "<p>The program reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 1},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\subsection{Repetitions (positions 31--33)}
+
+Three aspects from the repetitions analyses.
+
+<<repetitions pre items>>=
+<<item 31A: a loop that counts>>,
+<<item 32B: a discount applied>>,
+<<item 33A: an if inside a loop>>
+@
+
+<<repetitions post items>>=
+<<item 31B: a loop that counts>>,
+<<item 32A: a discount applied>>,
+<<item 33B: an if inside a loop>>
+@
+
+\paragraph{Aspect 31: the loop variable must change in the body.}
+The critical aspect is that the condition's variable must be updated
+inside the loop, or the condition never changes --- the
+\emph{control variable is never changed} antipattern
+\autocite{Bosse2021Antipatterns,Eckert2022Loops}.
+The counts-up distractor encodes assuming the loop advances its
+variable by itself.
+
+<<item 31A: a loop that counts>>=
+{
+  "position": 31,
+  "points_possible": 1,
+  "entry": {
+    "title": "A loop that counts (A)",
+    "item_body": "<p>What does the following program do?</p><pre>i = 0\nwhile i < 3:\n    print(i)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>It prints 0, 1, 2 and stops</p>"},
+        {"position": 2, "item_body": "<p>It prints 0 forever</p>"},
+        {"position": 3, "item_body": "<p>It prints 0 once and stops</p>"},
+        {"position": 4, "item_body": "<p>It reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 31B: a loop that counts>>=
+{
+  "position": 31,
+  "points_possible": 1,
+  "entry": {
+    "title": "A loop that counts (B)",
+    "item_body": "<p>What does the following program do?</p><pre>k = 5\nwhile k > 0:\n    print('tick')</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>It prints tick five times and stops</p>"},
+        {"position": 2, "item_body": "<p>It prints nothing</p>"},
+        {"position": 3, "item_body": "<p>It prints tick forever</p>"},
+        {"position": 4, "item_body": "<p>It reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 3},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 32: repetition re-applies, selection applies once.}
+The critical aspect is that a \mintinline{python}{while} re-applies
+its body for as long as the condition holds, where an
+\mintinline{python}{if} applies it once --- the \emph{repetition where
+selection is needed} antipattern causing wrong results
+\autocite{Bosse2021Antipatterns}.
+The applied-once distractor encodes reading the loop as a selection.
+
+<<item 32A: a discount applied>>=
+{
+  "position": 32,
+  "points_possible": 1,
+  "entry": {
+    "title": "A discount applied (A)",
+    "item_body": "<p>What does the following program print?</p><pre>price = 100\nwhile price >= 50:\n    price = price - 20\nprint(price)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>80</p>"},
+        {"position": 2, "item_body": "<p>40</p>"},
+        {"position": 3, "item_body": "<p>100</p>"},
+        {"position": 4, "item_body": "<p>It loops forever</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 32B: a discount applied>>=
+{
+  "position": 32,
+  "points_possible": 1,
+  "entry": {
+    "title": "A discount applied (B)",
+    "item_body": "<p>What does the following program print?</p><pre>level = 9\nwhile level >= 3:\n    level = level - 3\nprint(level)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>6</p>"},
+        {"position": 2, "item_body": "<p>3</p>"},
+        {"position": 3, "item_body": "<p>0</p>"},
+        {"position": 4, "item_body": "<p>It loops forever</p>"}
+      ]
+    },
+    "scoring_data": {"value": 3},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 33: the loop variable and the accumulator are distinct.}
+The critical aspect is the fusion of the loop variable, which ranges
+over the data, with a separate variable that the conditional updates
+\autocite{Sekiya2013}; students confuse the two roles.
+The sum-of-all and count distractors encode losing track of which
+variable the conditional filters and which it updates.
+
+<<item 33A: an if inside a loop>>=
+{
+  "position": 33,
+  "points_possible": 1,
+  "entry": {
+    "title": "An if inside a loop (A)",
+    "item_body": "<p>What does the following program print?</p><pre>total = 0\nfor x in [3, 8, 1, 9, 4]:\n    if x > 5:\n        total = total + x\nprint(total)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>17</p>"},
+        {"position": 2, "item_body": "<p>25</p>"},
+        {"position": 3, "item_body": "<p>2</p>"},
+        {"position": 4, "item_body": "<p>9</p>"}
+      ]
+    },
+    "scoring_data": {"value": 1},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 33B: an if inside a loop>>=
+{
+  "position": 33,
+  "points_possible": 1,
+  "entry": {
+    "title": "An if inside a loop (B)",
+    "item_body": "<p>What does the following program print?</p><pre>count = 0\nfor n in [2, 7, 5, 9]:\n    if n > 4:\n        count = count + 1\nprint(count)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>4</p>"},
+        {"position": 2, "item_body": "<p>3</p>"},
+        {"position": 3, "item_body": "<p>21</p>"},
+        {"position": 4, "item_body": "<p>9</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\subsection{Data types (positions 41--44)}
+
+Four aspects from the data-types analyses.
+
+<<types pre items>>=
+<<item 41A: printing a bare word>>,
+<<item 42B: input and arithmetic>>,
+<<item 43A: same-looking values>>,
+<<item 44B: the first element>>
+@
+
+<<types post items>>=
+<<item 41B: printing a bare word>>,
+<<item 42A: input and arithmetic>>,
+<<item 43B: same-looking values>>,
+<<item 44A: the first element>>
+@
+
+\paragraph{Aspect 41: quotes make a string; without them, a name.}
+The critical aspect is the quoting: characters in quotes are a string
+value, the same characters bare are a \emph{name}
+\autocite{GuoMarkelZhang2020}.
+The printed-word distractor encodes reading the bare word as text.
+
+<<item 41A: printing a bare word>>=
+{
+  "position": 41,
+  "points_possible": 1,
+  "entry": {
+    "title": "Printing a bare word (A)",
+    "item_body": "<p>What happens when the following program runs?</p><pre>print(Hello)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>It prints Hello</p>"},
+        {"position": 2, "item_body": "<p>It reports an error: Hello is not defined</p>"},
+        {"position": 3, "item_body": "<p>It prints nothing</p>"},
+        {"position": 4, "item_body": "<p>It prints 'Hello'</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 41B: printing a bare word>>=
+{
+  "position": 41,
+  "points_possible": 1,
+  "entry": {
+    "title": "Printing a bare word (B)",
+    "item_body": "<p>What happens when the following program runs?</p><pre>x = Blue\nprint(x)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>It prints Blue</p>"},
+        {"position": 2, "item_body": "<p>It prints x</p>"},
+        {"position": 3, "item_body": "<p>It reports an error: Blue is not defined</p>"},
+        {"position": 4, "item_body": "<p>It prints 'Blue'</p>"}
+      ]
+    },
+    "scoring_data": {"value": 3},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 42: input returns a string.}
+The critical aspect is that \mintinline{python}{input} always returns
+a string, never a number
+\autocite{GuoMarkelZhang2020,Bosse2021Antipatterns}.
+The two forms show the misconception's two failure surfaces from the
+catalogue: with \mintinline{python}{+ 1} it raises, with
+\mintinline{python}{n + n} it silently concatenates --- the case the
+catalogue warns \enquote{will not always raise an error}.
+The numeric distractors encode the automatic-conversion misconception.
+
+<<item 42A: input and arithmetic>>=
+{
+  "position": 42,
+  "points_possible": 1,
+  "entry": {
+    "title": "Input and arithmetic (A)",
+    "item_body": "<p>The user types 5 and presses enter. What happens?</p><pre>age = input('Age: ')\nprint(age + 1)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>It prints 6</p>"},
+        {"position": 2, "item_body": "<p>It reports a type error at the print-line</p>"},
+        {"position": 3, "item_body": "<p>It prints 51</p>"},
+        {"position": 4, "item_body": "<p>It prints 5</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 42B: input and arithmetic>>=
+{
+  "position": 42,
+  "points_possible": 1,
+  "entry": {
+    "title": "Input and arithmetic (B)",
+    "item_body": "<p>The user types 3 and presses enter. What does the program print?</p><pre>n = input('Number: ')\nprint(n + n)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>6</p>"},
+        {"position": 2, "item_body": "<p>33</p>"},
+        {"position": 3, "item_body": "<p>It reports a type error</p>"},
+        {"position": 4, "item_body": "<p>3 3</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 43: the type governs the operator, not the looks.}
+The critical aspect is that a value's type, not its appearance,
+determines what an operator does: \mintinline{python}{+} concatenates
+strings but sums integers, and \mintinline{python}{//} divides
+integrally where \mintinline{python}{/} does not
+\autocite{Gobil2009Errors,Kurvinen2016}.
+The numeric-sum and true-division distractors encode ignoring the
+operands' types.
+
+<<item 43A: same-looking values>>=
+{
+  "position": 43,
+  "points_possible": 1,
+  "entry": {
+    "title": "Same-looking values (A)",
+    "item_body": "<p>What does the following program print?</p><pre>x, y = '3', '4'\nprint(x + y)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>7</p>"},
+        {"position": 2, "item_body": "<p>34</p>"},
+        {"position": 3, "item_body": "<p>It reports an error</p>"},
+        {"position": 4, "item_body": "<p>3 4</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 43B: same-looking values>>=
+{
+  "position": 43,
+  "points_possible": 1,
+  "entry": {
+    "title": "Same-looking values (B)",
+    "item_body": "<p>What does the following program print?</p><pre>print(7 // 2)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>3.5</p>"},
+        {"position": 2, "item_body": "<p>3</p>"},
+        {"position": 3, "item_body": "<p>4</p>"},
+        {"position": 4, "item_body": "<p>It reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 44: the first element is at index 0.}
+The critical aspect is the mapping from index to position: the first
+element is at index~0 and the last valid index is one less than the
+length \autocite{Kurvinen2016,KumarVeerasamy2016}.
+The 1-based distractors encode counting positions from one, at both
+ends of the list.
+
+<<item 44A: the first element>>=
+{
+  "position": 44,
+  "points_possible": 1,
+  "entry": {
+    "title": "The first element (A)",
+    "item_body": "<p>What does the following program print?</p><pre>a = [10, 20, 30]\nprint(a[1])</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>10</p>"},
+        {"position": 2, "item_body": "<p>20</p>"},
+        {"position": 3, "item_body": "<p>30</p>"},
+        {"position": 4, "item_body": "<p>It reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 44B: the first element>>=
+{
+  "position": 44,
+  "points_possible": 1,
+  "entry": {
+    "title": "The first element (B)",
+    "item_body": "<p>What happens when the following program runs?</p><pre>w = ['a', 'b', 'c']\nprint(w[len(w)])</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>It prints c</p>"},
+        {"position": 2, "item_body": "<p>It prints a</p>"},
+        {"position": 3, "item_body": "<p>It reports an index error</p>"},
+        {"position": 4, "item_body": "<p>It prints nothing</p>"}
+      ]
+    },
+    "scoring_data": {"value": 3},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\subsection{Classes and objects (positions 51--53)}
+
+Three aspects from the classes analyses.
+The class used by the items is defined in the question stem, since the
+students may not have met our examples.
+
+<<classes pre items>>=
+<<item 51A: what a class holds>>,
+<<item 52B: two objects with equal attributes>>,
+<<item 53A: one method, many objects>>
+@
+
+<<classes post items>>=
+<<item 51B: what a class holds>>,
+<<item 52A: two objects with equal attributes>>,
+<<item 53B: one method, many objects>>
+@
+
+\paragraph{Aspect 51: a class is a template, not a container.}
+The critical aspect is that a class is a template from which
+independent objects are made --- not a container that holds its
+instances, and not a database \autocite{Holland1997,Ragonis2005OOP}.
+The container distractor encodes the class-holds-its-objects
+misconception; form B asks the same of a built-in type, per the
+catalogue's generalisation.
+
+<<item 51A: what a class holds>>=
+{
+  "position": 51,
+  "points_possible": 1,
+  "entry": {
+    "title": "What a class holds (A)",
+    "item_body": "<p>Consider this program.</p><pre>class Dog:\n    def __init__(self, name):\n        self.name = name\n\na = Dog('Rex')\nb = Dog('Fido')</pre><p>Which statement is true after it runs?</p>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>The class Dog now contains two dogs</p>"},
+        {"position": 2, "item_body": "<p>There are two independent Dog objects; the class stores neither</p>"},
+        {"position": 3, "item_body": "<p>b replaced a inside the class Dog</p>"},
+        {"position": 4, "item_body": "<p>The program reports an error: a class can only make one object</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 51B: what a class holds>>=
+{
+  "position": 51,
+  "points_possible": 1,
+  "entry": {
+    "title": "What a class holds (B)",
+    "item_body": "<p>Consider this program.</p><pre>s = str(7)\nt = str(9)</pre><p>Which statement is true after it runs?</p>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>There are two independent string objects; str stores neither</p>"},
+        {"position": 2, "item_body": "<p>The type str now contains '7' and '9'</p>"},
+        {"position": 3, "item_body": "<p>t replaced s inside str</p>"},
+        {"position": 4, "item_body": "<p>The program reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 1},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 52: equal attributes do not make one object.}
+The critical aspect is object identity: two objects may carry equal
+attribute values and still be distinct, so an attribute is not an
+object's identifier \autocite{Holland1997,Ragonis2005OOP}.
+The same-object distractor encodes equal-attributes-same-object; the
+error distractor encodes the catalogued belief that one attribute of
+every object must be unique.
+Form B probes the same aspect from the other side: two names bound to
+\emph{one} object.
+
+<<item 52A: two objects with equal attributes>>=
+{
+  "position": 52,
+  "points_possible": 1,
+  "entry": {
+    "title": "Two objects with equal attributes (A)",
+    "item_body": "<p>What does the following program print?</p><pre>class Dog:\n    def __init__(self, name):\n        self.name = name\n\na = Dog('Rex')\nb = Dog('Rex')\na.name = 'Max'\nprint(a.name, b.name)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>Max Max</p>"},
+        {"position": 2, "item_body": "<p>Rex Rex</p>"},
+        {"position": 3, "item_body": "<p>Max Rex</p>"},
+        {"position": 4, "item_body": "<p>It reports an error: two objects cannot have the same name</p>"}
+      ]
+    },
+    "scoring_data": {"value": 3},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 52B: two objects with equal attributes>>=
+{
+  "position": 52,
+  "points_possible": 1,
+  "entry": {
+    "title": "Two names for an object (B)",
+    "item_body": "<p>What does the following program print?</p><pre>class Cat:\n    def __init__(self, name):\n        self.name = name\n\nc = Cat('Mio')\nd = c\nc.name = 'Tim'\nprint(c.name, d.name)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>Tim Mio</p>"},
+        {"position": 2, "item_body": "<p>Tim Tim</p>"},
+        {"position": 3, "item_body": "<p>Mio Mio</p>"},
+        {"position": 4, "item_body": "<p>It reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 53: a method is defined once but acts per object.}
+The critical aspect fuses the previous two: the method is defined in
+the template, yet the call reaches only the object it is called on
+--- the chapter's fusion example.
+The all-objects distractor encodes the catalogued belief that the
+class's methods have power over all its instances
+\autocite{Ragonis2005OOP}.
+
+<<item 53A: one method, many objects>>=
+{
+  "position": 53,
+  "points_possible": 1,
+  "entry": {
+    "title": "One method, many objects (A)",
+    "item_body": "<p>What does the following program print?</p><pre>class Dog:\n    def __init__(self, name):\n        self.name = name\n    def rename(self, new_name):\n        self.name = new_name\n\na = Dog('Rex')\nb = Dog('Rex')\na.rename('Max')\nprint(a.name, b.name)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>Max Max</p>"},
+        {"position": 2, "item_body": "<p>Max Rex</p>"},
+        {"position": 3, "item_body": "<p>Rex Rex</p>"},
+        {"position": 4, "item_body": "<p>It reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 53B: one method, many objects>>=
+{
+  "position": 53,
+  "points_possible": 1,
+  "entry": {
+    "title": "One method, many objects (B)",
+    "item_body": "<p>What does the following program print?</p><pre>class Jar:\n    def __init__(self):\n        self.n = 0\n    def add(self):\n        self.n = self.n + 1\n\nj = Jar()\nk = Jar()\nj.add()\nj.add()\nk.add()\nprint(j.n, k.n)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>3 3</p>"},
+        {"position": 2, "item_body": "<p>1 1</p>"},
+        {"position": 3, "item_body": "<p>2 1</p>"},
+        {"position": 4, "item_body": "<p>It reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 3},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\subsection{Functions and lists, revisited (positions 61--62)}
+
+Two aspects from the debugging chapter's worked example: default
+arguments are evaluated once, and mutation differs from rebinding.
+The quiz pair is titled \enquote{functions and lists, revisited}
+towards the students, since \enquote{debugging} would give away that
+something is wrong in the programs.
+
+<<debugging pre items>>=
+<<item 61A: a default list that grows>>,
+<<item 62B: a default list that does not grow>>
+@
+
+<<debugging post items>>=
+<<item 61B: a default list that grows>>,
+<<item 62A: a default list that does not grow>>
+@
+
+\paragraph{Aspect 61: a default argument is evaluated once.}
+The critical aspect is that the default list is created once, at
+definition time, and mutated by every call that uses the default ---
+the surprising behaviour the debugging chapter's patterns of variation
+isolate.
+The fresh-default distractor encodes assuming a new list per call.
+
+<<item 61A: a default list that grows>>=
+{
+  "position": 61,
+  "points_possible": 1,
+  "entry": {
+    "title": "A default list that grows (A)",
+    "item_body": "<p>What does the following program print?</p><pre>def expand(x=[]):\n    x.append(1)\n    return x\n\nprint(expand())\nprint(expand())</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>[1] and then [1]</p>"},
+        {"position": 2, "item_body": "<p>[1] and then [1, 1]</p>"},
+        {"position": 3, "item_body": "<p>[] and then []</p>"},
+        {"position": 4, "item_body": "<p>It reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 61B: a default list that grows>>=
+{
+  "position": 61,
+  "points_possible": 1,
+  "entry": {
+    "title": "A default list that grows (B)",
+    "item_body": "<p>What does the following program print?</p><pre>def tally(xs=[]):\n    xs.append(0)\n    return len(xs)\n\nprint(tally())\nprint(tally())</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>1 and then 1</p>"},
+        {"position": 2, "item_body": "<p>0 and then 0</p>"},
+        {"position": 3, "item_body": "<p>1 and then 2</p>"},
+        {"position": 4, "item_body": "<p>It reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 3},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Aspect 62: mutation is not rebinding.}
+The critical aspect separates mutating the shared default
+([[append]]) from rebinding the local name ([[x + [1]]] makes a new
+list), which is exactly the contrast the debugging chapter's
+generalisation pattern varies.
+The accumulating distractor encodes carrying aspect~61's behaviour
+over to the rebinding form --- the two aspects must be discerned
+apart.
+
+<<item 62A: a default list that does not grow>>=
+{
+  "position": 62,
+  "points_possible": 1,
+  "entry": {
+    "title": "A default list that does not grow (A)",
+    "item_body": "<p>What does the following program print?</p><pre>def expand(x=[]):\n    return x + [1]\n\nprint(expand())\nprint(expand())</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>[1] and then [1, 1]</p>"},
+        {"position": 2, "item_body": "<p>[1] and then [1]</p>"},
+        {"position": 3, "item_body": "<p>[1, 1] and then [1, 1]</p>"},
+        {"position": 4, "item_body": "<p>It reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+<<item 62B: a default list that does not grow>>=
+{
+  "position": 62,
+  "points_possible": 1,
+  "entry": {
+    "title": "A default list that does not grow (B)",
+    "item_body": "<p>What does the following program print?</p><pre>def add_zero(xs=[]):\n    xs = xs + [0]\n    return xs\n\nprint(add_zero())\nprint(add_zero())</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>[0] and then [0]</p>"},
+        {"position": 2, "item_body": "<p>[0] and then [0, 0]</p>"},
+        {"position": 3, "item_body": "<p>[] and then []</p>"},
+        {"position": 4, "item_body": "<p>It reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 1},
+    "scoring_algorithm": "Equivalence"
+  }
+}
 @
 
 \subsection{What remains}
 
-Each remaining catalogue chapter --- conditionals, repetitions, types,
-classes and the debugging patterns --- gets an item bank of its own,
-derived the same way, together with its topic quiz pair; the banks
-join the course quizzes through the course-items chunk above.
 An analysis program, fetching the results from Canvas and pairing each
-student's start and end answers per item, completes the instrument.
-% TODO(#29): item banks and topic quiz pairs for the remaining
-% chapters; the analysis program; test creation end to end against a
-% sandbox course before prgi26.
+student's start and end answers per aspect (the forms differ, the
+aspect's position is the join key), completes the instrument.
+% TODO(#29): the analysis program; upgrade the counterbalanced forms
+% to a per-student random draw when canvaslms supports Classic
+% question groups.

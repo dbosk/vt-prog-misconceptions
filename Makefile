@@ -42,16 +42,13 @@ noweb_lexer.py:
 	cp ${NOWEB_LIB}/noweb_lexer.py $@
 article.pdf: noweb_lexer.py
 
+QUIZ_TOPICS=	course funcvars conditionals repetitions types classes \
+		debugging
+QUIZZES=	$(foreach t,${QUIZ_TOPICS},quiz-$(t)-start.json quiz-$(t)-end.json)
+
 .PHONY: programs
-programs: quiz-course-start.json quiz-course-end.json \
-	quiz-funcvars-start.json quiz-funcvars-end.json
-quiz-course-start.json: diagnostics.nw
-	${NOTANGLE.json}
-quiz-course-end.json: diagnostics.nw
-	${NOTANGLE.json}
-quiz-funcvars-start.json: diagnostics.nw
-	${NOTANGLE.json}
-quiz-funcvars-end.json: diagnostics.nw
+programs: ${QUIZZES}
+quiz-%.json: diagnostics.nw
 	${NOTANGLE.json}
 SRC+=problem-solving.tex
 SRC+=tools.tex
@@ -76,8 +73,7 @@ clean:
 	latexmk -C
 	${RM} article.bbl article.run.xml
 	${RM} diagnostics.tex noweb_lexer.py
-	${RM} quiz-course-start.json quiz-course-end.json
-	${RM} quiz-funcvars-start.json quiz-funcvars-end.json
+	${RM} ${QUIZZES}
 
 INCLUDE_MAKEFILES?=./makefiles
 include ${INCLUDE_MAKEFILES}/noweb.mk
