@@ -31,3 +31,5 @@ didactic_output_*.txt
 diagnostics.tex
 quiz-*.json
 noweb_lexer.py
+analyze_diagnostics.py
+diagnostics-results.csv

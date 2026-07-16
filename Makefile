@@ -47,9 +47,11 @@ QUIZ_TOPICS=	course funcvars conditionals repetitions types classes \
 QUIZZES=	$(foreach t,${QUIZ_TOPICS},quiz-$(t)-start.json quiz-$(t)-end.json)
 
 .PHONY: programs
-programs: ${QUIZZES}
+programs: ${QUIZZES} analyze_diagnostics.py
 quiz-%.json: diagnostics.nw
 	${NOTANGLE.json}
+analyze_diagnostics.py: diagnostics.nw
+	${NOTANGLE.py}
 SRC+=problem-solving.tex
 SRC+=tools.tex
 
@@ -73,7 +75,7 @@ clean:
 	latexmk -C
 	${RM} article.bbl article.run.xml
 	${RM} diagnostics.tex noweb_lexer.py
-	${RM} ${QUIZZES}
+	${RM} ${QUIZZES} analyze_diagnostics.py
 
 INCLUDE_MAKEFILES?=./makefiles
 include ${INCLUDE_MAKEFILES}/noweb.mk

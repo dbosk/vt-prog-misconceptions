@@ -1654,11 +1654,342 @@ apart.
 }
 @
 
-\subsection{What remains}
+\subsection{Analysing the results}
+\label{app:diagnostics-analysis}
 
-An analysis program, fetching the results from Canvas and pairing each
-student's start and end answers per aspect (the forms differ, the
-aspect's position is the join key), completes the instrument.
-% TODO(#29): the analysis program; upgrade the counterbalanced forms
-% to a per-student random draw when canvaslms supports Classic
-% question groups.
+Canvas compiles each quiz's responses into a student-analysis report:
+a CSV file with one row per student and one column per item, keyed by
+the item titles above.
+The analysis program, [[analyze_diagnostics.py]], fetches those
+reports itself --- we know the course and the quiz titles, so nothing
+is clicked or downloaded by hand --- using the same [[canvaslms]]
+machinery as the command-line tool.
+
+The program does not carry its own answer key.
+It reads the tangled quiz files: they define every quiz's title, every
+item's position, choices and correct answer, and they are tangled from
+the same source as this prose, so the key cannot drift from the
+instrument.
+Because a student meets forms A and B of an aspect across the two
+administrations, answers are paired by the aspect's \emph{position}
+(11--62), which both forms share; the form is recovered from the item
+title's suffix.
+The program writes one tidy CSV row per student, quiz and aspect ---
+quiz, phase, aspect position, aspect title, form, the chosen answer's
+position and text, and whether it is correct --- and prints per-aspect
+summary tables: how many students answered correctly before and after,
+and how the wrong answers distribute over the choices.
+The distribution over wrong answers is the diagnostic payoff: each
+distractor encodes a catalogued misconception, so the table shows
+\emph{which} misconceptions a cohort holds, not merely how many
+students err.
+% TODO(#29): upgrade the counterbalanced forms to a per-student random
+% draw when canvaslms supports Classic question groups
+% (dbosk/canvaslms#341); add learnlog instrumentation.
+
+<<[[analyze_diagnostics.py]]>>=
+"""Fetch and summarise the diagnostic-quiz results.
+
+The quizzes are defined in the quiz-*.json files tangled from the same
+literate source as this program (the appendix of the paper); those
+files are also this program's answer key.  The results come straight
+from Canvas via canvaslms.
+
+Run --self-test to check the pure functions against the quiz files
+without touching Canvas.
+"""
+
+import argparse
+import collections
+import csv
+import glob
+import json
+import os
+import re
+import sys
+
+<<the quiz files are the answer key>>
+<<recover aspect and form from an item title>>
+<<fetch the results from Canvas>>
+<<classify one student's answer to one item>>
+<<collect the tidy rows for one quiz>>
+<<summarise the aspects>>
+<<self-test against the quiz files>>
+<<analysis main>>
+
+if __name__ == "__main__":
+    main()
+@
+
+The course is a constant, and the quiz files are read once into a key:
+for every quiz title, a mapping from item position to the item's
+title, its choices and the correct choice.
+Canvas prefixes report columns with item identifiers, so columns are
+matched by containment, as in the parallel debugging study.
+
+<<the quiz files are the answer key>>=
+COURSE = "prgi26"
+
+
+def load_key(pattern="quiz-*.json"):
+    """Read the tangled quiz files into {quiz title: {position: item}}.
+
+    Each item is a dict with `title`, `choices` (position -> text) and
+    `correct` (the correct choice's position).  Ungraded items (the
+    preparation question) are skipped.
+    """
+    key = {}
+    for path in sorted(glob.glob(pattern)):
+        quiz = json.load(open(path))
+        items = {}
+        for item in quiz["items"]:
+            if not item["points_possible"]:
+                continue
+            entry = item["entry"]
+            choices = {
+                choice["position"]: strip_html(choice["item_body"])
+                for choice in entry["interaction_data"]["choices"]
+            }
+            items[item["position"]] = {
+                "title": entry["title"],
+                "choices": choices,
+                "correct": entry["scoring_data"]["value"],
+            }
+        key[quiz["settings"]["title"]] = items
+    return key
+
+
+def strip_html(text):
+    """Return `text` with HTML tags removed and entities resolved."""
+    text = re.sub(r"<[^>]+>", "", text)
+    return text.replace("&mdash;", "---").strip()
+
+
+def column_for(title, fieldnames):
+    """Return the report column whose name contains the item title."""
+    return next((name for name in fieldnames if title in name), None)
+@
+
+The item titles carry the aspect and the form: \enquote{Adding one to
+a variable (A)} is form A of the aspect \enquote{Adding one to a
+variable}.
+Both forms of an aspect share their position, so the position is the
+join key across administrations; the human-readable aspect name is
+the title with the form suffix removed.
+
+<<recover aspect and form from an item title>>=
+def form_of(title):
+    """Return 'A' or 'B' from a title ending in '(A)' or '(B)'."""
+    match = re.search(r"\(([AB])\)$", title)
+    return match.group(1) if match else None
+
+
+def aspect_of(title):
+    """Return the item title without its form suffix."""
+    return re.sub(r"\s*\([AB]\)$", "", title)
+@
+
+Just as the quizzes are created with [[canvaslms]], the results are
+extracted with it: the package provides the credentials, the course
+lookup and the report machinery, so the program reuses them instead of
+reimplementing the Canvas API calls.
+The report is generated on demand by Canvas, so we request it, wait
+for it, and download the CSV it points to.
+
+<<fetch the results from Canvas>>=
+def fetch_results(course_name, quiz_title):
+    """Download the student-analysis rows for one quiz."""
+    import appdirs
+    import requests
+    import canvaslms.cli
+    import canvaslms.cli.login
+    from canvasapi import Canvas
+    from canvaslms.cli.quizzes import (
+        create_new_quiz_report,
+        filter_quizzes,
+        is_new_quiz,
+        poll_progress,
+    )
+
+    config_file = os.path.join(
+        appdirs.user_config_dir("canvaslms"), "config.json"
+    )
+    config = canvaslms.cli.read_configuration(config_file)
+    hostname, token = canvaslms.cli.login.load_credentials(config)
+    if not hostname.startswith("http"):
+        hostname = f"https://{hostname}"
+    canvas = Canvas(hostname, token)
+
+    course = next(
+        c for c in canvas.get_courses()
+        if course_name in (c.name or "")
+        or course_name in (c.course_code or "")
+    )
+    quiz = next(filter_quizzes([course], re.escape(quiz_title)))
+    if not is_new_quiz(quiz):
+        sys.exit(f"quiz {quiz.title!r} is not a New Quiz")
+
+    progress = poll_progress(
+        create_new_quiz_report(course, quiz.id, canvas._Canvas__requester)
+    )
+    url = progress.results.get("url") if progress else None
+    if not url:
+        sys.exit("Canvas did not produce the student-analysis report")
+    response = requests.get(url)
+    response.raise_for_status()
+    return list(csv.DictReader(response.text.splitlines()))
+@
+
+A student's cell in the report holds the chosen answer's text.
+We match it against the item's choices after stripping the HTML both
+sides carry, and record the chosen position; matching on text rather
+than position is forced by the report format, and is safe because no
+item has two identical choices.
+
+<<classify one student's answer to one item>>=
+def classify(cell, item):
+    """Return (chosen position or None, correct or None) for one cell.
+
+    `None` means the student left the item unanswered or the cell text
+    matches no choice (e.g. a report-format change).
+    """
+    text = strip_html(cell or "")
+    if not text:
+        return None, None
+    for position, choice in item["choices"].items():
+        if text == choice:
+            return position, position == item["correct"]
+    return None, None
+@
+
+One quiz's rows become tidy rows: one per student and aspect, carrying
+everything the later statistical analysis needs to pair, split and
+aggregate --- including the form, so that form effects can themselves
+be checked.
+
+<<collect the tidy rows for one quiz>>=
+def tidy_rows(quiz_title, items, report, student_column="name"):
+    """Yield one dict per student and answered item in the report."""
+    for row in report:
+        student = row.get(student_column, "")
+        for position, item in sorted(items.items()):
+            column = column_for(item["title"], row.keys())
+            if column is None:
+                continue
+            chosen, correct = classify(row[column], item)
+            yield {
+                "quiz": quiz_title,
+                "student": student,
+                "position": position,
+                "aspect": aspect_of(item["title"]),
+                "form": form_of(item["title"]),
+                "chosen": chosen,
+                "answer": item["choices"].get(chosen, ""),
+                "correct": correct,
+            }
+@
+
+The summary prints, per aspect, the number of correct answers in each
+quiz that carries it, and the distribution of the wrong answers over
+the choices --- the misconception profile.
+
+<<summarise the aspects>>=
+def summarise(rows):
+    """Print per-aspect correctness and wrong-answer distributions."""
+    by_aspect = collections.defaultdict(list)
+    for row in rows:
+        by_aspect[(row["position"], row["aspect"])].append(row)
+    for (position, aspect), answers in sorted(by_aspect.items()):
+        print(f"\n[{position}] {aspect}")
+        by_quiz = collections.defaultdict(list)
+        for answer in answers:
+            by_quiz[answer["quiz"]].append(answer)
+        for quiz, quiz_answers in sorted(by_quiz.items()):
+            n = len(quiz_answers)
+            right = sum(1 for a in quiz_answers if a["correct"])
+            print(f"  {quiz}: {right}/{n} correct")
+            wrong = collections.Counter(
+                a["answer"] for a in quiz_answers
+                if a["correct"] is False
+            )
+            for answer, count in wrong.most_common():
+                print(f"    {count}x {answer[:60]}")
+@
+
+The self-test exercises the pure functions against the tangled quiz
+files, so the build can check the program without Canvas credentials:
+every graded item must yield its own correct choice back when its
+correct answer text is classified, and the pre/post form
+complementarity of \cref{app:diagnostics} must hold.
+
+<<self-test against the quiz files>>=
+def self_test():
+    """Check the answer key and the pure functions; exit non-zero on failure."""
+    key = load_key()
+    assert key, "no quiz files found; run make programs first"
+    failures = 0
+    for quiz_title, items in key.items():
+        for position, item in items.items():
+            correct_text = item["choices"][item["correct"]]
+            chosen, correct = classify(f"<p>{correct_text}</p>", item)
+            if not (chosen == item["correct"] and correct):
+                failures += 1
+                print(f"FAIL {quiz_title} [{position}]: "
+                      f"key does not round-trip")
+            if form_of(item["title"]) not in ("A", "B"):
+                failures += 1
+                print(f"FAIL {quiz_title} [{position}]: no form suffix")
+    for title, items in key.items():
+        if "(before)" in title or "start of course" in title:
+            partner = title.replace("(before)", "(after)").replace(
+                "start of course", "end of course"
+            )
+            for position, item in items.items():
+                other = key[partner][position]
+                if form_of(item["title"]) == form_of(other["title"]):
+                    failures += 1
+                    print(f"FAIL {title} [{position}]: same form pre/post")
+    print(f"self-test: {'FAIL' if failures else 'OK'}")
+    sys.exit(1 if failures else 0)
+@
+
+The main function ties the pieces together: load the key, fetch each
+quiz's report, accumulate the tidy rows, write them to the output CSV
+and print the summaries.
+Quizzes without responses yet are reported and skipped, so the program
+can run mid-course.
+
+<<analysis main>>=
+def main():
+    """Run the analysis per the command line."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--course", default=COURSE,
+                        help=f"course name (default: {COURSE})")
+    parser.add_argument("-o", "--output", default="diagnostics-results.csv",
+                        help="tidy per-answer CSV to write")
+    parser.add_argument("--self-test", action="store_true",
+                        help="check the key and pure functions, no Canvas")
+    args = parser.parse_args()
+    if args.self_test:
+        self_test()
+    key = load_key()
+    rows = []
+    for quiz_title, items in key.items():
+        try:
+            report = fetch_results(args.course, quiz_title)
+        except StopIteration:
+            print(f"skipping {quiz_title!r}: not found in {args.course!r}")
+            continue
+        if not report:
+            print(f"skipping {quiz_title!r}: no responses yet")
+            continue
+        rows.extend(tidy_rows(quiz_title, items, report))
+    if not rows:
+        sys.exit("no responses in any quiz")
+    with open(args.output, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(rows)
+    print(f"wrote {len(rows)} answers to {args.output}")
+    summarise(rows)
+@
