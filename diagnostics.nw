@@ -65,6 +65,9 @@ items.
 
 The course-level pair brackets the whole course: the start quiz runs in
 the first week, the end quiz in the last.
+The titles name the course level explicitly, since the parallel
+debugging study runs same-shaped concept quizzes in the same course
+and the two must stay distinguishable for students and analysis alike.
 The end quiz opens with a question of its own: whether the student
 prepared for the quiz.
 We ask because preparation would confound the gain measure --- a
@@ -78,7 +81,7 @@ quizzes; Canvas tolerates the gaps.
 {
   "quiz_type": "new",
   "settings": {
-    "title": "Concept quiz: what you know already",
+    "title": "Programming concepts quiz: start of course",
     "instructions": "<p>This quiz checks which programming concepts you already know, so that we can adapt the course. You will see your score afterwards, but not the correct answers&mdash;the course will teach you those. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
     "points_possible": 22,
     <<scheduling settings>>
@@ -97,7 +100,7 @@ quizzes; Canvas tolerates the gaps.
 {
   "quiz_type": "new",
   "settings": {
-    "title": "Concept quiz: what you know now",
+    "title": "Programming concepts quiz: end of course",
     "instructions": "<p>This quiz mirrors the concept quiz from the start of the course, so that we can see what you have learned during the course. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
     "points_possible": 22,
     <<scheduling settings>>
