@@ -1,0 +1,436 @@
+\section{Setting up the diagnostic quizzes, literately}
+\label{app:diagnostics}
+
+This appendix is a literate program: the prose and the code are one and
+the same source, woven into the text you are reading and tangled into
+the files the computer runs.
+It implements the diagnostic instruments for the learning-study
+evaluation motivated in \cref{conclusions}: pre- and post-tests at the
+level of the whole course, and pre- and post-tests around each taught
+topic.
+Four files are tangled from this section so far:
+[[quiz-course-start.json]] and [[quiz-course-end.json]], the
+course-level pair, and [[quiz-funcvars-start.json]] and
+[[quiz-funcvars-end.json]], the pair for the functions-and-variables
+topic.
+The learning platform of the course is Canvas, and the [[canvaslms]]
+command-line tool creates the quizzes from their JSON descriptions:
+\begin{minted}{bash}
+canvaslms quizzes create -c prgi26 -f quiz-course-start.json
+canvaslms quizzes create -c prgi26 -f quiz-course-end.json
+canvaslms quizzes create -c prgi26 -f quiz-funcvars-start.json
+canvaslms quizzes create -c prgi26 -f quiz-funcvars-end.json
+\end{minted}
+
+The items are where the catalogue pays off.
+Each item targets one critical aspect from the analyses in
+\cref{misconceptions}, and --- this is the diagnostic value --- each
+distractor encodes a \emph{catalogued misconception}: a student who
+picks it does not merely answer wrongly, they tell us which
+misconception they hold.
+This is the construction principle of concept inventories
+\autocite{Julie2020ConceptInventory,KaltakciGurel2015Diagnostics},
+here with the distractors grounded in the catalogue rather than
+collected anew.
+
+The same items appear in the start and end quiz of each pair, so that
+the difference measures the gain; and the topic items \emph{are} the
+course items, reused by reference, so the two levels cannot drift
+apart: an item improved for the topic quiz is improved for the course
+quiz, automatically.
+
+\subsection{The course-level quizzes}
+
+The course-level pair brackets the whole course: the start quiz runs in
+the first week, the end quiz in the last.
+The end quiz opens with a question of its own: whether the student
+prepared for the quiz.
+We ask because preparation would confound the gain measure --- a
+student who reviews the material the night before measures
+preparation, not what the course left behind.
+
+<<[[quiz-course-start.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Concept quiz: what you know already",
+    "instructions": "<p>This quiz checks which programming concepts you already know, so that we can adapt the course. You will see your score afterwards, but not the correct answers&mdash;the course will teach you those. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
+    "points_possible": 7,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<course knowledge items>>
+  ]
+}
+@
+
+<<[[quiz-course-end.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Concept quiz: what you know now",
+    "instructions": "<p>This quiz repeats the concept questions from the start-of-course quiz, so that we can see what you have learned during the course. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+    "points_possible": 7,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<preparation item>>,
+    <<course knowledge items>>
+  ]
+}
+@
+
+The course items are the union of the topic item banks.
+For now that is the functions-and-variables bank; each further topic
+adds its bank here, separated by a comma.
+% TODO(#29): add the item banks for conditionals, repetitions, types,
+% classes and debugging, one per catalogue chapter.
+
+<<course knowledge items>>=
+<<functions-variables items>>
+@
+
+All quizzes are diagnostics: there is no time limit, a single attempt
+suffices, and answers are never shuffled, since the order of the
+choices is meaningful in several items (the misconception-encoding
+distractor should not accidentally move next to the correct answer).
+Students see their score but never the correct answers --- the items
+must stay reusable for the post-test.
+
+<<scheduling settings>>=
+"time_limit": null,
+"due_at": null,
+"unlock_at": null,
+"lock_at": null,
+@
+
+<<interaction settings>>=
+"shuffle_answers": false,
+"shuffle_questions": false,
+"has_time_limit": false,
+@
+
+<<graded result view>>=
+"display_item_response_correctness": false,
+"display_item_correct_answer": false,
+"display_points_awarded": true,
+"display_points_possible": true
+@
+
+The preparation item is ungraded and sits first in every end quiz.
+
+<<preparation item>>=
+{
+  "position": 1,
+  "points_possible": 0,
+  "entry": {
+    "title": "Preparation",
+    "item_body": "<p>Did you prepare for this quiz&mdash;for example, review the course material&mdash;before taking it?</p>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>No</p>"},
+        {"position": 2, "item_body": "<p>Yes, briefly</p>"},
+        {"position": 3, "item_body": "<p>Yes, thoroughly</p>"}
+      ]
+    },
+    "scoring_data": {"value": 1},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\subsection{The topic quizzes: functions and variables}
+
+The topic pair brackets one teaching unit in the learning study: the
+start quiz runs immediately before the unit, the end quiz immediately
+after.
+Because the items are shared with the course quizzes by reference, a
+student's trajectory on one and the same item can be followed through
+all four administrations.
+
+<<[[quiz-funcvars-start.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Topic quiz: functions and variables (before)",
+    "instructions": "<p>This quiz checks what you already know about functions and variables, before we work on them. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
+    "points_possible": 7,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<functions-variables items>>
+  ]
+}
+@
+
+<<[[quiz-funcvars-end.json]]>>=
+{
+  "quiz_type": "new",
+  "settings": {
+    "title": "Topic quiz: functions and variables (after)",
+    "instructions": "<p>This quiz repeats the questions from before the functions-and-variables unit, so that we can see what the unit taught you. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+    "points_possible": 7,
+    <<scheduling settings>>
+    "quiz_settings": {
+      <<interaction settings>>
+      <<graded result view>>
+    }
+  },
+  "items": [
+    <<preparation item>>,
+    <<functions-variables items>>
+  ]
+}
+@
+
+\subsection{The functions-and-variables item bank}
+
+Seven items, one per critical aspect of the functions-and-variables
+analyses in \cref{misconceptions}.
+The preparation item holds position~1, so the bank starts at
+position~2 in every quiz.
+
+<<functions-variables items>>=
+<<item: adding one to a variable>>,
+<<item: a sum computed earlier>>,
+<<item: a function is defined>>,
+<<item: calling with no arguments>>,
+<<item: where the returned value goes>>,
+<<item: a list passed to a function>>,
+<<item: calling before defining>>
+@
+
+\paragraph{Adding one to a variable.}
+The critical aspect is that \mintinline{python}{=} assigns --- computes
+the right-hand side from the current values and stores the result ---
+rather than states an equation
+\autocite{Kohn2017VariableEvaluation,Plass2015Variables}.
+Choice~3 encodes the equation reading (\enquote{no solution}), which
+the abstract of \textcite{Kohn2017VariableEvaluation} reports verbatim
+as \enquote{believed to be outright impossible}; choice~4 encodes
+storing the calculation instead of its value; choice~1 encodes reading
+the second assignment as inert.
+
+<<item: adding one to a variable>>=
+{
+  "position": 2,
+  "points_possible": 1,
+  "entry": {
+    "title": "Adding one to a variable",
+    "item_body": "<p>What does the following program print?</p><pre>x = 5\nx = x + 1\nprint(x)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>5</p>"},
+        {"position": 2, "item_body": "<p>6</p>"},
+        {"position": 3, "item_body": "<p>The program reports an error: x = x + 1 has no solution</p>"},
+        {"position": 4, "item_body": "<p>x + 1</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{A sum computed earlier.}
+The critical aspect is statefulness: an assignment happens at its line,
+using the values current at that moment.
+Choice~2 encodes the lazy reading --- the variable holds the
+calculation [[a + b]] and re-evaluates it when printed
+\autocite{Kohn2017VariableEvaluation} --- which yields 3 after
+[[a]] changes.
+
+<<item: a sum computed earlier>>=
+{
+  "position": 3,
+  "points_possible": 1,
+  "entry": {
+    "title": "A sum computed earlier",
+    "item_body": "<p>What does the following program print?</p><pre>a = 3\nb = 2\nc = a + b\na = 1\nprint(c)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>5</p>"},
+        {"position": 2, "item_body": "<p>3</p>"},
+        {"position": 3, "item_body": "<p>6</p>"},
+        {"position": 4, "item_body": "<p>The program crashes</p>"}
+      ]
+    },
+    "scoring_data": {"value": 1},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{A function is defined.}
+The critical aspect is that defining and invoking a function are two
+separate acts --- the body runs only at a call.
+Choice~1 encodes the \emph{function created but not called}
+antipattern \autocite{Bosse2021Antipatterns}, which we also observed
+in our own teaching: the belief that the definition alone runs the
+body.
+
+<<item: a function is defined>>=
+{
+  "position": 4,
+  "points_possible": 1,
+  "entry": {
+    "title": "A function is defined",
+    "item_body": "<p>What does the following program print when run?</p><pre>def greet():\n    print('Hi!')</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>Hi!</p>"},
+        {"position": 2, "item_body": "<p>The program reports an error</p>"},
+        {"position": 3, "item_body": "<p>Nothing</p>"},
+        {"position": 4, "item_body": "<p>greet</p>"}
+      ]
+    },
+    "scoring_data": {"value": 3},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Calling with no arguments.}
+The critical aspect is that parameters are bound from the arguments at
+the call, not from global variables that happen to share their names.
+Choice~1 encodes the misconception we observed in our own teaching:
+that the argument need not be passed when a global of the same name
+exists.
+Choice~2 encodes assuming parameters default to zero.
+
+<<item: calling with no arguments>>=
+{
+  "position": 5,
+  "points_possible": 1,
+  "entry": {
+    "title": "Calling with no arguments",
+    "item_body": "<p>What happens when the following program runs?</p><pre>def add(x, y):\n    print(x + y)\n\nx = 3\ny = 4\nadd()</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>It prints 7</p>"},
+        {"position": 2, "item_body": "<p>It prints 0</p>"},
+        {"position": 3, "item_body": "<p>It prints nothing and continues</p>"},
+        {"position": 4, "item_body": "<p>It reports an error: two arguments are missing</p>"}
+      ]
+    },
+    "scoring_data": {"value": 4},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Where the returned value goes.}
+The critical aspect is that [[return]] hands back a \emph{value},
+which the caller must capture in a name of its own; the local name
+does not travel to the call site.
+Choice~1 encodes the observed misconception that [[return]]
+\enquote{sends} the variable's name, so that the name can be used
+after the call.
+
+<<item: where the returned value goes>>=
+{
+  "position": 6,
+  "points_possible": 1,
+  "entry": {
+    "title": "Where the returned value goes",
+    "item_body": "<p>What does the following program print?</p><pre>def three():\n    x = 3\n    return x\n\nthree()\nprint(x)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>3</p>"},
+        {"position": 2, "item_body": "<p>None</p>"},
+        {"position": 3, "item_body": "<p>The program reports an error: x is not defined</p>"},
+        {"position": 4, "item_body": "<p>Nothing</p>"}
+      ]
+    },
+    "scoring_data": {"value": 3},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{A list passed to a function.}
+The critical aspect is that a list argument is a reference to the same
+list, not a copy, so a mutation inside the function is visible
+outside.
+Choice~1 encodes the copy misconception we observed; the aspect
+connects to the mutable-default example in \cref{debugging}.
+
+<<item: a list passed to a function>>=
+{
+  "position": 7,
+  "points_possible": 1,
+  "entry": {
+    "title": "A list passed to a function",
+    "item_body": "<p>What does the following program print?</p><pre>def grow(xs):\n    xs.append(4)\n\na = [1, 2, 3]\ngrow(a)\nprint(a)</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>[1, 2, 3]</p>"},
+        {"position": 2, "item_body": "<p>[1, 2, 3, 4]</p>"},
+        {"position": 3, "item_body": "<p>[4]</p>"},
+        {"position": 4, "item_body": "<p>The program reports an error</p>"}
+      ]
+    },
+    "scoring_data": {"value": 2},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\paragraph{Calling before defining.}
+The critical aspect is top-to-bottom execution order: a function must
+be defined before the line that calls it.
+Choice~1 encodes the belief that the whole program is known before
+execution starts, so the later definition serves the earlier call.
+
+<<item: calling before defining>>=
+{
+  "position": 8,
+  "points_possible": 1,
+  "entry": {
+    "title": "Calling before defining",
+    "item_body": "<p>What happens when the following program runs?</p><pre>greet()\n\ndef greet():\n    print('Hi!')</pre>",
+    "interaction_type_slug": "choice",
+    "interaction_data": {
+      "choices": [
+        {"position": 1, "item_body": "<p>It prints Hi!</p>"},
+        {"position": 2, "item_body": "<p>It prints nothing and continues</p>"},
+        {"position": 3, "item_body": "<p>It prints Hi! twice</p>"},
+        {"position": 4, "item_body": "<p>It reports an error: greet is not defined</p>"}
+      ]
+    },
+    "scoring_data": {"value": 4},
+    "scoring_algorithm": "Equivalence"
+  }
+}
+@
+
+\subsection{What remains}
+
+Each remaining catalogue chapter --- conditionals, repetitions, types,
+classes and the debugging patterns --- gets an item bank of its own,
+derived the same way, together with its topic quiz pair; the banks
+join the course quizzes through the course-items chunk above.
+An analysis program, fetching the results from Canvas and pairing each
+student's start and end answers per item, completes the instrument.
+% TODO(#29): item banks and topic quiz pairs for the remaining
+% chapters; the analysis program; test creation end to end against a
+% sandbox course before prgi26.
