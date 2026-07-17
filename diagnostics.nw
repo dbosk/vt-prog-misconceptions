@@ -91,7 +91,7 @@ itself.
     "description": "<p>This quiz checks which programming concepts you already know, so that we can adapt the course. You will see your score afterwards, but not the correct answers&mdash;the course will teach you those. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<score-only result view>>
   },
   "questions": [
     <<aspect groups>>
@@ -104,10 +104,10 @@ itself.
   "quiz_type": "classic",
   "settings": {
     "title": "Programming concepts quiz: end of course",
-    "description": "<p>This quiz mirrors the concept quiz from the start of the course, so that we can see what you have learned during the course. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+    "description": "<p>This quiz mirrors the concept quiz from the start of the course, so that we can see what you have learned during the course. You will see your score and the correct answers afterwards, so you can use the quiz to review. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<revealing result view>>
   },
   "questions": [
     <<preparation question>>,
@@ -131,9 +131,6 @@ All quizzes are diagnostics: there is no time limit, a single attempt
 suffices, and answers are never shuffled, since the order of the
 choices is meaningful in several items (the misconception-encoding
 distractor should not accidentally move next to the correct answer).
-Students see their score but never the correct answers --- nor which
-of their own answers were correct --- so the items stay reusable for
-the later administrations.
 The [[quiz_type]] among the settings is not the outer [[quiz_type]]
 that picks the engine: it is Canvas's category for a Classic Quiz,
 where [[assignment]] means a graded quiz.
@@ -152,9 +149,31 @@ where [[assignment]] means a graded quiz.
 "one_question_at_a_time": false,
 @
 
-<<graded result view>>=
+What the students see afterwards differs between the two ends of a
+pair.
+A start quiz shows the score only --- never the correct answers, nor
+which of the student's own answers were correct --- since its items
+return in the matching end quiz.
+An end quiz is that pool's \emph{last} administration, so it reveals
+the correct answers: the students can review the quiz to study, which
+also gives them a reason beyond goodwill to take it seriously.
+The one exception to \enquote{last} is deliberate: the course-end
+quiz re-draws from the pools that the topic-end quizzes have already
+revealed.
+By then the revealed answers are simply course material --- studying
+them is the learning the course asks for --- and the preparation
+question below flags the students who reviewed right before the quiz,
+so this path is visible in the analysis rather than silently
+confounding it.
+
+<<score-only result view>>=
 "show_correct_answers": false,
 "hide_results": "always"
+@
+
+<<revealing result view>>=
+"show_correct_answers": true,
+"hide_results": null
 @
 
 The preparation question is ungraded and sits first in every end
@@ -196,7 +215,7 @@ only the bank differs.
     <<start-quiz boilerplate>>
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<score-only result view>>
   },
   "questions": [
     <<funcvars groups>>
@@ -212,7 +231,7 @@ only the bank differs.
     <<end-quiz boilerplate>>
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<revealing result view>>
   },
   "questions": [
     <<preparation question>>,
@@ -229,7 +248,7 @@ only the bank differs.
     <<start-quiz boilerplate>>
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<score-only result view>>
   },
   "questions": [
     <<conditionals groups>>
@@ -245,7 +264,7 @@ only the bank differs.
     <<end-quiz boilerplate>>
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<revealing result view>>
   },
   "questions": [
     <<preparation question>>,
@@ -262,7 +281,7 @@ only the bank differs.
     <<start-quiz boilerplate>>
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<score-only result view>>
   },
   "questions": [
     <<repetitions groups>>
@@ -278,7 +297,7 @@ only the bank differs.
     <<end-quiz boilerplate>>
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<revealing result view>>
   },
   "questions": [
     <<preparation question>>,
@@ -295,7 +314,7 @@ only the bank differs.
     <<start-quiz boilerplate>>
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<score-only result view>>
   },
   "questions": [
     <<types groups>>
@@ -311,7 +330,7 @@ only the bank differs.
     <<end-quiz boilerplate>>
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<revealing result view>>
   },
   "questions": [
     <<preparation question>>,
@@ -328,7 +347,7 @@ only the bank differs.
     <<start-quiz boilerplate>>
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<score-only result view>>
   },
   "questions": [
     <<classes groups>>
@@ -344,7 +363,7 @@ only the bank differs.
     <<end-quiz boilerplate>>
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<revealing result view>>
   },
   "questions": [
     <<preparation question>>,
@@ -361,7 +380,7 @@ only the bank differs.
     <<start-quiz boilerplate>>
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<score-only result view>>
   },
   "questions": [
     <<debugging groups>>
@@ -377,7 +396,7 @@ only the bank differs.
     <<end-quiz boilerplate>>
     <<scheduling settings>>
     <<interaction settings>>
-    <<graded result view>>
+    <<revealing result view>>
   },
   "questions": [
     <<preparation question>>,
@@ -394,7 +413,7 @@ after-quiz of every topic, so they are shared.
 @
 
 <<end-quiz boilerplate>>=
-"description": "<p>This quiz mirrors the questions from before this topic's unit, so that we can see what the unit taught you. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+"description": "<p>This quiz mirrors the questions from before this topic's unit, so that we can see what the unit taught you. You will see your score and the correct answers afterwards, so you can use the quiz to review the topic. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
 @
 
 \subsection{Functions and variables (aspects 11--17)}
