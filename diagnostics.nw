@@ -1,0 +1,1892 @@
+\section{Setting up the diagnostic quizzes, literately}
+\label{app:diagnostics}
+
+This appendix is a literate program: the prose and the code are one and
+the same source, woven into the text you are reading and tangled into
+the files the computer runs.
+It implements the diagnostic instruments for the learning-study
+evaluation motivated in \cref{conclusions}: pre- and post-tests at the
+level of the whole course, and pre- and post-tests around each taught
+topic.
+Fourteen files are tangled from this section: the course-level pair
+[[quiz-course-start.json]] and [[quiz-course-end.json]], and a
+start--end pair per topic
+([[quiz-funcvars-start.json]]/[[quiz-funcvars-end.json]] and
+correspondingly for [[conditionals]], [[repetitions]], [[types]],
+[[classes]] and [[debugging]]).
+The learning platform of the course is Canvas, and the [[canvaslms]]
+command-line tool creates the quizzes from their JSON descriptions,
+for example:
+\begin{minted}{bash}
+for f in quiz-*.json; do
+  canvaslms quizzes create -c prgi26 -f "$f"
+done
+\end{minted}
+
+The items are where the catalogue pays off.
+Each item targets one critical aspect from the analyses in
+\cref{misconceptions}, and --- this is the diagnostic value --- each
+distractor encodes a \emph{catalogued misconception}: a student who
+picks it does not merely answer wrongly, they tell us which
+misconception they hold.
+This is the construction principle of concept inventories
+\autocite{Julie2020ConceptInventory,KaltakciGurel2015Diagnostics},
+here with the distractors grounded in the catalogue rather than
+collected anew.
+
+\subsection{Parallel forms drawn at random}
+\label{app:diagnostics-forms}
+
+Measuring the same student twice with the same question risks
+measuring recognition of the question rather than understanding of the
+aspect.
+Every aspect therefore has \emph{two} parallel items, A and B: the
+critical aspect and the encoded misconceptions are invariant, and only
+the surface varies --- names, values, and which choice is correct.
+Each aspect enters its quizzes as a \emph{question group}: the group's
+pool holds both forms, and Canvas draws one of them at random, per
+student and per administration.
+Both forms thus appear in both administrations, spread over comparable
+random halves of the cohort, so a difficulty difference between the
+forms cancels in the aspect's aggregate gain; and since the analysis
+records which form each student drew
+(\cref{app:diagnostics-analysis}), form effects can be checked rather
+than assumed away.
+The draws being independent, about half the students meet the same
+form twice; for them the recognition risk returns, but it can be
+bounded by comparing the same-form with the switched-form pairs --- a
+comparison that fixed counterbalanced forms cannot make, because they
+assign every student the switched sequence.
+
+The random draw dictates the quiz engine.
+Canvas's New Quizzes cannot host it, because their item banks cannot
+be created through the API at all; Classic Quizzes' question groups
+can, so the quizzes below are Classic Quizzes.
+% The Classic question-group support in canvaslms came from our
+% upstream feature request, dbosk/canvaslms#341.
+
+\subsection{The course-level quizzes}
+
+The course-level pair brackets the whole course: the start quiz runs in
+the first week, the end quiz in the last.
+The titles name the course level explicitly, since the parallel
+debugging study runs same-shaped concept quizzes in the same course
+and the two must stay distinguishable for students and analysis alike.
+The end quiz opens with a question of its own: whether the student
+prepared for the quiz.
+We ask because preparation would confound the gain measure --- a
+student who reviews the material the night before measures
+preparation, not what the course left behind.
+Each group's name numbers its aspect, with the topic in the tens
+digit and the aspect within the topic in the ones digit, so aspects
+stay identifiable and stable across all fourteen quizzes and in the
+analysis; Canvas orders the groups as listed and sums their points
+itself.
+
+<<[[quiz-course-start.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Programming concepts quiz: start of course",
+    "description": "<p>This quiz checks which programming concepts you already know, so that we can adapt the course. You will see your score afterwards, but not the correct answers&mdash;the course will teach you those. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<score-only result view>>
+  },
+  "questions": [
+    <<aspect groups>>
+  ]
+}
+@
+
+<<[[quiz-course-end.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Programming concepts quiz: end of course",
+    "description": "<p>This quiz mirrors the concept quiz from the start of the course, so that we can see what you have learned during the course. You will see your score and the correct answers afterwards, so you can use the quiz to review. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<revealing result view>>
+  },
+  "questions": [
+    <<preparation question>>,
+    <<aspect groups>>
+  ]
+}
+@
+
+The course groups are the union of the topic banks.
+
+<<aspect groups>>=
+<<funcvars groups>>,
+<<conditionals groups>>,
+<<repetitions groups>>,
+<<types groups>>,
+<<classes groups>>,
+<<debugging groups>>
+@
+
+All quizzes are diagnostics: there is no time limit, a single attempt
+suffices, and answers are never shuffled, since the order of the
+choices is meaningful in several items (the misconception-encoding
+distractor should not accidentally move next to the correct answer).
+The [[quiz_type]] among the settings is not the outer [[quiz_type]]
+that picks the engine: it is Canvas's category for a Classic Quiz,
+where [[assignment]] means a graded quiz.
+
+<<scheduling settings>>=
+"time_limit": null,
+"due_at": null,
+"unlock_at": null,
+"lock_at": null,
+@
+
+<<interaction settings>>=
+"quiz_type": "assignment",
+"allowed_attempts": 1,
+"shuffle_answers": false,
+"one_question_at_a_time": false,
+@
+
+What the students see afterwards differs between the two ends of a
+pair.
+A start quiz shows the score only --- never the correct answers, nor
+which of the student's own answers were correct --- since its items
+return in the matching end quiz.
+An end quiz is that pool's \emph{last} administration, so it reveals
+the correct answers: the students can review the quiz to study, which
+also gives them a reason beyond goodwill to take it seriously.
+The one exception to \enquote{last} is deliberate: the course-end
+quiz re-draws from the pools that the topic-end quizzes have already
+revealed.
+By then the revealed answers are simply course material --- studying
+them is the learning the course asks for --- and the preparation
+question below flags the students who reviewed right before the quiz,
+so this path is visible in the analysis rather than silently
+confounding it.
+
+<<score-only result view>>=
+"show_correct_answers": false,
+"hide_results": "always"
+@
+
+<<revealing result view>>=
+"show_correct_answers": true,
+"hide_results": null
+@
+
+The preparation question is ungraded and sits first in every end
+quiz, outside any group so that every student gets it.
+Canvas wants some choice marked correct even here; the mark on
+\enquote{No} is arbitrary and never surfaces, since the question
+carries no points.
+
+<<preparation question>>=
+{
+  "question_name": "Preparation",
+  "question_text": "<p>Did you prepare for this quiz&mdash;for example, review the course material&mdash;before taking it?</p>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 0,
+  "answers": [
+    {"answer_text": "No", "answer_weight": 100},
+    {"answer_text": "Yes, briefly", "answer_weight": 0},
+    {"answer_text": "Yes, thoroughly", "answer_weight": 0}
+  ]
+}
+@
+
+\subsection{The topic quizzes}
+
+Each topic pair brackets one teaching unit in the learning study: the
+start quiz runs immediately before the unit, the end quiz immediately
+after.
+The topic banks \emph{are} the course groups, reused by reference, so
+the two levels cannot drift apart: an item improved for a topic quiz
+is improved for the course quiz, automatically.
+The six pairs are identical in structure, so we define them together;
+only the bank differs.
+
+<<[[quiz-funcvars-start.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: functions and variables (before)",
+    <<start-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<score-only result view>>
+  },
+  "questions": [
+    <<funcvars groups>>
+  ]
+}
+@
+
+<<[[quiz-funcvars-end.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: functions and variables (after)",
+    <<end-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<revealing result view>>
+  },
+  "questions": [
+    <<preparation question>>,
+    <<funcvars groups>>
+  ]
+}
+@
+
+<<[[quiz-conditionals-start.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: conditionals (before)",
+    <<start-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<score-only result view>>
+  },
+  "questions": [
+    <<conditionals groups>>
+  ]
+}
+@
+
+<<[[quiz-conditionals-end.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: conditionals (after)",
+    <<end-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<revealing result view>>
+  },
+  "questions": [
+    <<preparation question>>,
+    <<conditionals groups>>
+  ]
+}
+@
+
+<<[[quiz-repetitions-start.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: repetitions (before)",
+    <<start-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<score-only result view>>
+  },
+  "questions": [
+    <<repetitions groups>>
+  ]
+}
+@
+
+<<[[quiz-repetitions-end.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: repetitions (after)",
+    <<end-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<revealing result view>>
+  },
+  "questions": [
+    <<preparation question>>,
+    <<repetitions groups>>
+  ]
+}
+@
+
+<<[[quiz-types-start.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: data types (before)",
+    <<start-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<score-only result view>>
+  },
+  "questions": [
+    <<types groups>>
+  ]
+}
+@
+
+<<[[quiz-types-end.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: data types (after)",
+    <<end-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<revealing result view>>
+  },
+  "questions": [
+    <<preparation question>>,
+    <<types groups>>
+  ]
+}
+@
+
+<<[[quiz-classes-start.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: classes and objects (before)",
+    <<start-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<score-only result view>>
+  },
+  "questions": [
+    <<classes groups>>
+  ]
+}
+@
+
+<<[[quiz-classes-end.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: classes and objects (after)",
+    <<end-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<revealing result view>>
+  },
+  "questions": [
+    <<preparation question>>,
+    <<classes groups>>
+  ]
+}
+@
+
+<<[[quiz-debugging-start.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: functions and lists, revisited (before)",
+    <<start-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<score-only result view>>
+  },
+  "questions": [
+    <<debugging groups>>
+  ]
+}
+@
+
+<<[[quiz-debugging-end.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: functions and lists, revisited (after)",
+    <<end-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<revealing result view>>
+  },
+  "questions": [
+    <<preparation question>>,
+    <<debugging groups>>
+  ]
+}
+@
+
+The description shown to the students differs only in tense between the before- and
+after-quiz of every topic, so they are shared.
+
+<<start-quiz boilerplate>>=
+"description": "<p>This quiz checks what you already know about this topic, before we work on it. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
+@
+
+<<end-quiz boilerplate>>=
+"description": "<p>This quiz mirrors the questions from before this topic's unit, so that we can see what the unit taught you. You will see your score and the correct answers afterwards, so you can use the quiz to review the topic. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+@
+
+\subsection{Functions and variables (aspects 11--17)}
+
+Seven aspects from the functions-and-variables analyses, one
+question group each.
+
+<<funcvars groups>>=
+<<group 11: assignment is not an equation>>,
+<<group 12: assignments are not re-evaluated>>,
+<<group 13: defining does not run the body>>,
+<<group 14: parameters bind from arguments, not names>>,
+<<group 15: return hands back a value, not a name>>,
+<<group 16: a list argument is shared, not copied>>,
+<<group 17: a function must be defined before the call>>
+@
+
+\paragraph{Aspect 11: assignment is not an equation.}
+The critical aspect is that \mintinline{python}{=} assigns --- computes
+the right-hand side from the current values and stores the result ---
+rather than states an equation
+\autocite{Kohn2017VariableEvaluation,Plass2015Variables}.
+The \enquote{no solution} distractor encodes the equation reading,
+which the abstract of \textcite{Kohn2017VariableEvaluation} reports
+verbatim as \enquote{believed to be outright impossible}; the
+expression distractor encodes storing the calculation instead of its
+value; the unchanged-value distractor encodes reading the second
+assignment as inert.
+Form B varies the name, the values and the correct position; the three
+encoded misconceptions are the same.
+
+<<group 11: assignment is not an equation>>=
+{
+  "group": {"name": "Aspect 11: assignment is not an equation",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 11A: adding one to a variable>>,
+    <<item 11B: adding two to a variable>>
+  ]
+}
+<<item 11A: adding one to a variable>>=
+{
+  "question_name": "Adding one to a variable (A)",
+  "question_text": "<p>What does the following program print?</p><pre>x = 5\nx = x + 1\nprint(x)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "5", "answer_weight": 0},
+    {"answer_text": "6", "answer_weight": 100},
+    {"answer_text": "The program reports an error: x = x + 1 has no solution", "answer_weight": 0},
+    {"answer_text": "x + 1", "answer_weight": 0}
+  ]
+}
+<<item 11B: adding two to a variable>>=
+{
+  "question_name": "Adding two to a variable (B)",
+  "question_text": "<p>What does the following program print?</p><pre>n = 8\nn = n + 2\nprint(n)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "10", "answer_weight": 100},
+    {"answer_text": "n + 2", "answer_weight": 0},
+    {"answer_text": "8", "answer_weight": 0},
+    {"answer_text": "The program reports an error: n = n + 2 has no solution", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 12: assignments are not re-evaluated.}
+The critical aspect is statefulness: an assignment happens at its
+line, using the values current at that moment.
+The lazy distractor encodes the belief that the variable holds the
+calculation and re-evaluates it when printed
+\autocite{Kohn2017VariableEvaluation}.
+
+<<group 12: assignments are not re-evaluated>>=
+{
+  "group": {"name": "Aspect 12: assignments are not re-evaluated",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 12A: a sum computed earlier>>,
+    <<item 12B: a sum computed earlier>>
+  ]
+}
+<<item 12A: a sum computed earlier>>=
+{
+  "question_name": "A sum computed earlier (A)",
+  "question_text": "<p>What does the following program print?</p><pre>a = 3\nb = 2\nc = a + b\na = 1\nprint(c)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "5", "answer_weight": 100},
+    {"answer_text": "3", "answer_weight": 0},
+    {"answer_text": "6", "answer_weight": 0},
+    {"answer_text": "The program crashes", "answer_weight": 0}
+  ]
+}
+<<item 12B: a sum computed earlier>>=
+{
+  "question_name": "A sum computed earlier (B)",
+  "question_text": "<p>What does the following program print?</p><pre>p = 4\nq = 5\ns = p + q\nq = 2\nprint(s)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "6", "answer_weight": 0},
+    {"answer_text": "9", "answer_weight": 100},
+    {"answer_text": "2", "answer_weight": 0},
+    {"answer_text": "The program crashes", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 13: defining does not run the body.}
+The critical aspect is that defining and invoking a function are two
+separate acts --- the body runs only at a call.
+The printed-greeting distractor encodes the \emph{function created but
+not called} antipattern \autocite{Bosse2021Antipatterns}, which we
+also observed in our own teaching.
+
+<<group 13: defining does not run the body>>=
+{
+  "group": {"name": "Aspect 13: defining does not run the body",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 13A: a function is defined>>,
+    <<item 13B: a function is defined>>
+  ]
+}
+<<item 13A: a function is defined>>=
+{
+  "question_name": "A function is defined (A)",
+  "question_text": "<p>What does the following program print when run?</p><pre>def greet():\n    print('Hi!')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "Hi!", "answer_weight": 0},
+    {"answer_text": "The program reports an error", "answer_weight": 0},
+    {"answer_text": "Nothing", "answer_weight": 100},
+    {"answer_text": "greet", "answer_weight": 0}
+  ]
+}
+<<item 13B: a function is defined>>=
+{
+  "question_name": "A function is defined (B)",
+  "question_text": "<p>What does the following program print when run?</p><pre>def beep():\n    print('Beep!')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "Nothing", "answer_weight": 100},
+    {"answer_text": "Beep!", "answer_weight": 0},
+    {"answer_text": "beep", "answer_weight": 0},
+    {"answer_text": "The program reports an error", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 14: parameters bind from arguments, not names.}
+The critical aspect is that parameters are bound from the arguments at
+the call, not from global variables that happen to share their names
+--- a misconception we observed in our own teaching.
+The computed-result distractor encodes it; the zero distractor encodes
+assuming parameters default to zero.
+
+<<group 14: parameters bind from arguments, not names>>=
+{
+  "group": {"name": "Aspect 14: parameters bind from arguments, not names",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 14A: calling with no arguments>>,
+    <<item 14B: calling with no arguments>>
+  ]
+}
+<<item 14A: calling with no arguments>>=
+{
+  "question_name": "Calling with no arguments (A)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>def add(x, y):\n    print(x + y)\n\nx = 3\ny = 4\nadd()</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints 7", "answer_weight": 0},
+    {"answer_text": "It prints 0", "answer_weight": 0},
+    {"answer_text": "It prints nothing and continues", "answer_weight": 0},
+    {"answer_text": "It reports an error: two arguments are missing", "answer_weight": 100}
+  ]
+}
+<<item 14B: calling with no arguments>>=
+{
+  "question_name": "Calling with no arguments (B)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>def mul(a, b):\n    print(a * b)\n\na = 2\nb = 5\nmul()</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints 10", "answer_weight": 0},
+    {"answer_text": "It prints 1", "answer_weight": 0},
+    {"answer_text": "It reports an error: two arguments are missing", "answer_weight": 100},
+    {"answer_text": "It prints nothing and continues", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 15: return hands back a value, not a name.}
+The critical aspect is that [[return]] hands back a \emph{value},
+which the caller must capture in a name of its own; the local name
+does not travel to the call site.
+The value distractor encodes the observed misconception that
+[[return]] \enquote{sends} the variable's name.
+
+<<group 15: return hands back a value, not a name>>=
+{
+  "group": {"name": "Aspect 15: return hands back a value, not a name",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 15A: where the returned value goes>>,
+    <<item 15B: where the returned value goes>>
+  ]
+}
+<<item 15A: where the returned value goes>>=
+{
+  "question_name": "Where the returned value goes (A)",
+  "question_text": "<p>What does the following program print?</p><pre>def three():\n    x = 3\n    return x\n\nthree()\nprint(x)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "3", "answer_weight": 0},
+    {"answer_text": "None", "answer_weight": 0},
+    {"answer_text": "The program reports an error: x is not defined", "answer_weight": 100},
+    {"answer_text": "Nothing", "answer_weight": 0}
+  ]
+}
+<<item 15B: where the returned value goes>>=
+{
+  "question_name": "Where the returned value goes (B)",
+  "question_text": "<p>What does the following program print?</p><pre>def five():\n    y = 5\n    return y\n\nfive()\nprint(y)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "The program reports an error: y is not defined", "answer_weight": 100},
+    {"answer_text": "5", "answer_weight": 0},
+    {"answer_text": "Nothing", "answer_weight": 0},
+    {"answer_text": "None", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 16: a list argument is shared, not copied.}
+The critical aspect is that a list argument is a reference to the same
+list, so a mutation inside the function is visible outside; the
+unchanged-list distractor encodes the copy misconception we observed.
+The aspect connects to the mutable-default example in \cref{debugging}.
+
+<<group 16: a list argument is shared, not copied>>=
+{
+  "group": {"name": "Aspect 16: a list argument is shared, not copied",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 16A: a list passed to a function>>,
+    <<item 16B: a list passed to a function>>
+  ]
+}
+<<item 16A: a list passed to a function>>=
+{
+  "question_name": "A list passed to a function (A)",
+  "question_text": "<p>What does the following program print?</p><pre>def grow(xs):\n    xs.append(4)\n\na = [1, 2, 3]\ngrow(a)\nprint(a)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "[1, 2, 3]", "answer_weight": 0},
+    {"answer_text": "[1, 2, 3, 4]", "answer_weight": 100},
+    {"answer_text": "[4]", "answer_weight": 0},
+    {"answer_text": "The program reports an error", "answer_weight": 0}
+  ]
+}
+<<item 16B: a list passed to a function>>=
+{
+  "question_name": "A list passed to a function (B)",
+  "question_text": "<p>What does the following program print?</p><pre>def clear_first(zs):\n    zs[0] = 0\n\nb = [7, 8, 9]\nclear_first(b)\nprint(b)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "[0, 8, 9]", "answer_weight": 100},
+    {"answer_text": "[7, 8, 9]", "answer_weight": 0},
+    {"answer_text": "[0]", "answer_weight": 0},
+    {"answer_text": "The program reports an error", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 17: a function must be defined before the call.}
+The critical aspect is top-to-bottom execution order.
+The successful-greeting distractor encodes the belief that the whole
+program is known before execution starts, so a later definition serves
+an earlier call.
+
+<<group 17: a function must be defined before the call>>=
+{
+  "group": {"name": "Aspect 17: a function must be defined before the call",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 17A: calling before defining>>,
+    <<item 17B: calling before defining>>
+  ]
+}
+<<item 17A: calling before defining>>=
+{
+  "question_name": "Calling before defining (A)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>greet()\n\ndef greet():\n    print('Hi!')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints Hi!", "answer_weight": 0},
+    {"answer_text": "It prints nothing and continues", "answer_weight": 0},
+    {"answer_text": "It prints Hi! twice", "answer_weight": 0},
+    {"answer_text": "It reports an error: greet is not defined", "answer_weight": 100}
+  ]
+}
+<<item 17B: calling before defining>>=
+{
+  "question_name": "Calling before defining (B)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>wave()\n\ndef wave():\n    print('Wave!')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It reports an error: wave is not defined", "answer_weight": 100},
+    {"answer_text": "It prints Wave!", "answer_weight": 0},
+    {"answer_text": "It prints nothing and continues", "answer_weight": 0},
+    {"answer_text": "It prints Wave! twice", "answer_weight": 0}
+  ]
+}
+@
+
+\subsection{Conditionals (aspects 21--23)}
+
+Three aspects from the conditionals analyses.
+
+<<conditionals groups>>=
+<<group 21: = assigns, == compares>>,
+<<group 22: exactly one branch runs>>,
+<<group 23: each operand of or is a complete comparison>>
+@
+
+\paragraph{Aspect 21: \mintinline{python}{=} assigns, \mintinline{python}{==} compares.}
+The critical aspect is the distinction between the two operators,
+which in Python surfaces at once: \mintinline{python}{if x = 3:} is a
+syntax error.
+The successful-test distractor encodes writing \mintinline{python}{=}
+for a comparison, the \emph{attribution} reading catalogued by
+\textcite{Bosse2021Antipatterns} and mirrored by
+\textcite{Plass2015Variables}.
+
+<<group 21: = assigns, == compares>>=
+{
+  "group": {"name": "Aspect 21: = assigns, == compares",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 21A: testing with a single equals sign>>,
+    <<item 21B: testing with a single equals sign>>
+  ]
+}
+<<item 21A: testing with a single equals sign>>=
+{
+  "question_name": "Testing with a single equals sign (A)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>x = 3\nif x = 3:\n    print('yes')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints yes", "answer_weight": 0},
+    {"answer_text": "It prints nothing", "answer_weight": 0},
+    {"answer_text": "It reports a syntax error at the if-line", "answer_weight": 100},
+    {"answer_text": "It prints 3", "answer_weight": 0}
+  ]
+}
+<<item 21B: testing with a single equals sign>>=
+{
+  "question_name": "Testing with a single equals sign (B)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>y = 7\nif y = 9:\n    print('no')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints nothing, since y is not 9", "answer_weight": 0},
+    {"answer_text": "It reports a syntax error at the if-line", "answer_weight": 100},
+    {"answer_text": "It prints no", "answer_weight": 0},
+    {"answer_text": "It prints 9", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 22: exactly one branch runs.}
+The critical aspect is that \mintinline{python}{if}--%
+\mintinline{python}{else} takes exactly one branch
+\autocite{MisconceptionsSurvey2017}.
+The both-lines distractor encodes the misconception that both branches
+execute.
+
+<<group 22: exactly one branch runs>>=
+{
+  "group": {"name": "Aspect 22: exactly one branch runs",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 22A: one branch or the other>>,
+    <<item 22B: one branch or the other>>
+  ]
+}
+<<item 22A: one branch or the other>>=
+{
+  "question_name": "One branch or the other (A)",
+  "question_text": "<p>What does the following program print?</p><pre>x = 10\nif x > 5:\n    print('big')\nelse:\n    print('small')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "big", "answer_weight": 100},
+    {"answer_text": "big and then small", "answer_weight": 0},
+    {"answer_text": "small", "answer_weight": 0},
+    {"answer_text": "The program reports an error", "answer_weight": 0}
+  ]
+}
+<<item 22B: one branch or the other>>=
+{
+  "question_name": "One branch or the other (B)",
+  "question_text": "<p>What does the following program print?</p><pre>t = 2\nif t > 5:\n    print('hot')\nelse:\n    print('cold')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "hot", "answer_weight": 0},
+    {"answer_text": "hot and then cold", "answer_weight": 0},
+    {"answer_text": "cold", "answer_weight": 100},
+    {"answer_text": "Nothing", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 23: each operand of \mintinline{python}{or} is a complete comparison.}
+The critical aspect is that \mintinline{python}{x != a or b} joins the
+comparison with the bare, truthy value [[b]]
+\autocite{GuoMarkelZhang2020}, so the condition is true regardless of
+[[x]].
+The nothing-printed distractor encodes the natural-language reading
+\enquote{x differs from a or from b}, which is false when all three
+are equal.
+
+<<group 23: each operand of or is a complete comparison>>=
+{
+  "group": {"name": "Aspect 23: each operand of or is a complete comparison",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 23A: comparing against two values>>,
+    <<item 23B: comparing against two values>>
+  ]
+}
+<<item 23A: comparing against two values>>=
+{
+  "question_name": "Comparing against two values (A)",
+  "question_text": "<p>What does the following program print?</p><pre>x, a, b = 5, 5, 5\nif x != a or b:\n    print('differs')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "Nothing, since x equals both a and b", "answer_weight": 0},
+    {"answer_text": "differs", "answer_weight": 100},
+    {"answer_text": "The program reports an error", "answer_weight": 0},
+    {"answer_text": "5", "answer_weight": 0}
+  ]
+}
+<<item 23B: comparing against two values>>=
+{
+  "question_name": "Comparing against two values (B)",
+  "question_text": "<p>What does the following program print?</p><pre>y, c, d = 3, 3, 3\nif y != c or d:\n    print('unequal')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "unequal", "answer_weight": 100},
+    {"answer_text": "Nothing, since y equals both c and d", "answer_weight": 0},
+    {"answer_text": "3", "answer_weight": 0},
+    {"answer_text": "The program reports an error", "answer_weight": 0}
+  ]
+}
+@
+
+\subsection{Repetitions (aspects 31--33)}
+
+Three aspects from the repetitions analyses.
+
+<<repetitions groups>>=
+<<group 31: the loop variable must change in the body>>,
+<<group 32: repetition re-applies, selection applies once>>,
+<<group 33: the loop variable and the accumulator are distinct>>
+@
+
+\paragraph{Aspect 31: the loop variable must change in the body.}
+The critical aspect is that the condition's variable must be updated
+inside the loop, or the condition never changes --- the
+\emph{control variable is never changed} antipattern
+\autocite{Bosse2021Antipatterns,Eckert2022Loops}.
+The counts-up distractor encodes assuming the loop advances its
+variable by itself.
+
+<<group 31: the loop variable must change in the body>>=
+{
+  "group": {"name": "Aspect 31: the loop variable must change in the body",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 31A: a loop that counts>>,
+    <<item 31B: a loop that counts>>
+  ]
+}
+<<item 31A: a loop that counts>>=
+{
+  "question_name": "A loop that counts (A)",
+  "question_text": "<p>What does the following program do?</p><pre>i = 0\nwhile i < 3:\n    print(i)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints 0, 1, 2 and stops", "answer_weight": 0},
+    {"answer_text": "It prints 0 forever", "answer_weight": 100},
+    {"answer_text": "It prints 0 once and stops", "answer_weight": 0},
+    {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+<<item 31B: a loop that counts>>=
+{
+  "question_name": "A loop that counts (B)",
+  "question_text": "<p>What does the following program do?</p><pre>k = 5\nwhile k > 0:\n    print('tick')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints tick five times and stops", "answer_weight": 0},
+    {"answer_text": "It prints nothing", "answer_weight": 0},
+    {"answer_text": "It prints tick forever", "answer_weight": 100},
+    {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 32: repetition re-applies, selection applies once.}
+The critical aspect is that a \mintinline{python}{while} re-applies
+its body for as long as the condition holds, where an
+\mintinline{python}{if} applies it once --- the \emph{repetition where
+selection is needed} antipattern causing wrong results
+\autocite{Bosse2021Antipatterns}.
+The applied-once distractor encodes reading the loop as a selection.
+
+<<group 32: repetition re-applies, selection applies once>>=
+{
+  "group": {"name": "Aspect 32: repetition re-applies, selection applies once",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 32A: a discount applied>>,
+    <<item 32B: a discount applied>>
+  ]
+}
+<<item 32A: a discount applied>>=
+{
+  "question_name": "A discount applied (A)",
+  "question_text": "<p>What does the following program print?</p><pre>price = 100\nwhile price >= 50:\n    price = price - 20\nprint(price)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "80", "answer_weight": 0},
+    {"answer_text": "40", "answer_weight": 100},
+    {"answer_text": "100", "answer_weight": 0},
+    {"answer_text": "It loops forever", "answer_weight": 0}
+  ]
+}
+<<item 32B: a discount applied>>=
+{
+  "question_name": "A discount applied (B)",
+  "question_text": "<p>What does the following program print?</p><pre>level = 9\nwhile level >= 3:\n    level = level - 3\nprint(level)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "6", "answer_weight": 0},
+    {"answer_text": "3", "answer_weight": 0},
+    {"answer_text": "0", "answer_weight": 100},
+    {"answer_text": "It loops forever", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 33: the loop variable and the accumulator are distinct.}
+The critical aspect is the fusion of the loop variable, which ranges
+over the data, with a separate variable that the conditional updates
+\autocite{Sekiya2013}; students confuse the two roles.
+The sum-of-all and count distractors encode losing track of which
+variable the conditional filters and which it updates.
+
+<<group 33: the loop variable and the accumulator are distinct>>=
+{
+  "group": {"name": "Aspect 33: the loop variable and the accumulator are distinct",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 33A: an if inside a loop>>,
+    <<item 33B: an if inside a loop>>
+  ]
+}
+<<item 33A: an if inside a loop>>=
+{
+  "question_name": "An if inside a loop (A)",
+  "question_text": "<p>What does the following program print?</p><pre>total = 0\nfor x in [3, 8, 1, 9, 4]:\n    if x > 5:\n        total = total + x\nprint(total)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "17", "answer_weight": 100},
+    {"answer_text": "25", "answer_weight": 0},
+    {"answer_text": "2", "answer_weight": 0},
+    {"answer_text": "9", "answer_weight": 0}
+  ]
+}
+<<item 33B: an if inside a loop>>=
+{
+  "question_name": "An if inside a loop (B)",
+  "question_text": "<p>What does the following program print?</p><pre>count = 0\nfor n in [2, 7, 5, 9]:\n    if n > 4:\n        count = count + 1\nprint(count)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "4", "answer_weight": 0},
+    {"answer_text": "3", "answer_weight": 100},
+    {"answer_text": "21", "answer_weight": 0},
+    {"answer_text": "9", "answer_weight": 0}
+  ]
+}
+@
+
+\subsection{Data types (aspects 41--44)}
+
+Four aspects from the data-types analyses.
+
+<<types groups>>=
+<<group 41: quotes make a string; without them, a name>>,
+<<group 42: input returns a string>>,
+<<group 43: the type governs the operator, not the looks>>,
+<<group 44: the first element is at index 0>>
+@
+
+\paragraph{Aspect 41: quotes make a string; without them, a name.}
+The critical aspect is the quoting: characters in quotes are a string
+value, the same characters bare are a \emph{name}
+\autocite{GuoMarkelZhang2020}.
+The printed-word distractor encodes reading the bare word as text.
+
+<<group 41: quotes make a string; without them, a name>>=
+{
+  "group": {"name": "Aspect 41: quotes make a string; without them, a name",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 41A: printing a bare word>>,
+    <<item 41B: printing a bare word>>
+  ]
+}
+<<item 41A: printing a bare word>>=
+{
+  "question_name": "Printing a bare word (A)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>print(Hello)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints Hello", "answer_weight": 0},
+    {"answer_text": "It reports an error: Hello is not defined", "answer_weight": 100},
+    {"answer_text": "It prints nothing", "answer_weight": 0},
+    {"answer_text": "It prints 'Hello'", "answer_weight": 0}
+  ]
+}
+<<item 41B: printing a bare word>>=
+{
+  "question_name": "Printing a bare word (B)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>x = Blue\nprint(x)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints Blue", "answer_weight": 0},
+    {"answer_text": "It prints x", "answer_weight": 0},
+    {"answer_text": "It reports an error: Blue is not defined", "answer_weight": 100},
+    {"answer_text": "It prints 'Blue'", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 42: input returns a string.}
+The critical aspect is that \mintinline{python}{input} always returns
+a string, never a number
+\autocite{GuoMarkelZhang2020,Bosse2021Antipatterns}.
+The two forms show the misconception's two failure surfaces from the
+catalogue: with \mintinline{python}{+ 1} it raises, with
+\mintinline{python}{n + n} it silently concatenates --- the case the
+catalogue warns \enquote{will not always raise an error}.
+The numeric distractors encode the automatic-conversion misconception.
+
+<<group 42: input returns a string>>=
+{
+  "group": {"name": "Aspect 42: input returns a string",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 42A: input and arithmetic>>,
+    <<item 42B: input and arithmetic>>
+  ]
+}
+<<item 42A: input and arithmetic>>=
+{
+  "question_name": "Input and arithmetic (A)",
+  "question_text": "<p>The user types 5 and presses enter. What happens?</p><pre>age = input('Age: ')\nprint(age + 1)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints 6", "answer_weight": 0},
+    {"answer_text": "It reports a type error at the print-line", "answer_weight": 100},
+    {"answer_text": "It prints 51", "answer_weight": 0},
+    {"answer_text": "It prints 5", "answer_weight": 0}
+  ]
+}
+<<item 42B: input and arithmetic>>=
+{
+  "question_name": "Input and arithmetic (B)",
+  "question_text": "<p>The user types 3 and presses enter. What does the program print?</p><pre>n = input('Number: ')\nprint(n + n)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "6", "answer_weight": 0},
+    {"answer_text": "33", "answer_weight": 100},
+    {"answer_text": "It reports a type error", "answer_weight": 0},
+    {"answer_text": "3 3", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 43: the type governs the operator, not the looks.}
+The critical aspect is that a value's type, not its appearance,
+determines what an operator does: \mintinline{python}{+} concatenates
+strings but sums integers, and \mintinline{python}{//} divides
+integrally where \mintinline{python}{/} does not
+\autocite{Gobil2009Errors,Kurvinen2016}.
+The numeric-sum and true-division distractors encode ignoring the
+operands' types.
+
+<<group 43: the type governs the operator, not the looks>>=
+{
+  "group": {"name": "Aspect 43: the type governs the operator, not the looks",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 43A: same-looking values>>,
+    <<item 43B: same-looking values>>
+  ]
+}
+<<item 43A: same-looking values>>=
+{
+  "question_name": "Same-looking values (A)",
+  "question_text": "<p>What does the following program print?</p><pre>x, y = '3', '4'\nprint(x + y)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "7", "answer_weight": 0},
+    {"answer_text": "34", "answer_weight": 100},
+    {"answer_text": "It reports an error", "answer_weight": 0},
+    {"answer_text": "3 4", "answer_weight": 0}
+  ]
+}
+<<item 43B: same-looking values>>=
+{
+  "question_name": "Same-looking values (B)",
+  "question_text": "<p>What does the following program print?</p><pre>print(7 // 2)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "3.5", "answer_weight": 0},
+    {"answer_text": "3", "answer_weight": 100},
+    {"answer_text": "4", "answer_weight": 0},
+    {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 44: the first element is at index 0.}
+The critical aspect is the mapping from index to position: the first
+element is at index~0 and the last valid index is one less than the
+length \autocite{Kurvinen2016,KumarVeerasamy2016}.
+The 1-based distractors encode counting positions from one, at both
+ends of the list.
+
+<<group 44: the first element is at index 0>>=
+{
+  "group": {"name": "Aspect 44: the first element is at index 0",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 44A: the first element>>,
+    <<item 44B: the first element>>
+  ]
+}
+<<item 44A: the first element>>=
+{
+  "question_name": "The first element (A)",
+  "question_text": "<p>What does the following program print?</p><pre>a = [10, 20, 30]\nprint(a[1])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "10", "answer_weight": 0},
+    {"answer_text": "20", "answer_weight": 100},
+    {"answer_text": "30", "answer_weight": 0},
+    {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+<<item 44B: the first element>>=
+{
+  "question_name": "The first element (B)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>w = ['a', 'b', 'c']\nprint(w[len(w)])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints c", "answer_weight": 0},
+    {"answer_text": "It prints a", "answer_weight": 0},
+    {"answer_text": "It reports an index error", "answer_weight": 100},
+    {"answer_text": "It prints nothing", "answer_weight": 0}
+  ]
+}
+@
+
+\subsection{Classes and objects (aspects 51--53)}
+
+Three aspects from the classes analyses.
+The class used by the items is defined in the question stem, since the
+students may not have met our examples.
+
+<<classes groups>>=
+<<group 51: a class is a template, not a container>>,
+<<group 52: equal attributes do not make one object>>,
+<<group 53: a method is defined once but acts per object>>
+@
+
+\paragraph{Aspect 51: a class is a template, not a container.}
+The critical aspect is that a class is a template from which
+independent objects are made --- not a container that holds its
+instances, and not a database \autocite{Holland1997,Ragonis2005OOP}.
+The container distractor encodes the class-holds-its-objects
+misconception; form B asks the same of a built-in type, per the
+catalogue's generalisation.
+
+<<group 51: a class is a template, not a container>>=
+{
+  "group": {"name": "Aspect 51: a class is a template, not a container",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 51A: what a class holds>>,
+    <<item 51B: what a class holds>>
+  ]
+}
+<<item 51A: what a class holds>>=
+{
+  "question_name": "What a class holds (A)",
+  "question_text": "<p>Consider this program.</p><pre>class Dog:\n    def __init__(self, name):\n        self.name = name\n\na = Dog('Rex')\nb = Dog('Fido')</pre><p>Which statement is true after it runs?</p>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "The class Dog now contains two dogs", "answer_weight": 0},
+    {"answer_text": "There are two independent Dog objects; the class stores neither", "answer_weight": 100},
+    {"answer_text": "b replaced a inside the class Dog", "answer_weight": 0},
+    {"answer_text": "The program reports an error: a class can only make one object", "answer_weight": 0}
+  ]
+}
+<<item 51B: what a class holds>>=
+{
+  "question_name": "What a class holds (B)",
+  "question_text": "<p>Consider this program.</p><pre>s = str(7)\nt = str(9)</pre><p>Which statement is true after it runs?</p>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "There are two independent string objects; str stores neither", "answer_weight": 100},
+    {"answer_text": "The type str now contains '7' and '9'", "answer_weight": 0},
+    {"answer_text": "t replaced s inside str", "answer_weight": 0},
+    {"answer_text": "The program reports an error", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 52: equal attributes do not make one object.}
+The critical aspect is object identity: two objects may carry equal
+attribute values and still be distinct, so an attribute is not an
+object's identifier \autocite{Holland1997,Ragonis2005OOP}.
+The same-object distractor encodes equal-attributes-same-object; the
+error distractor encodes the catalogued belief that one attribute of
+every object must be unique.
+Form B probes the same aspect from the other side: two names bound to
+\emph{one} object.
+
+<<group 52: equal attributes do not make one object>>=
+{
+  "group": {"name": "Aspect 52: equal attributes do not make one object",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 52A: two objects with equal attributes>>,
+    <<item 52B: two objects with equal attributes>>
+  ]
+}
+<<item 52A: two objects with equal attributes>>=
+{
+  "question_name": "Two objects with equal attributes (A)",
+  "question_text": "<p>What does the following program print?</p><pre>class Dog:\n    def __init__(self, name):\n        self.name = name\n\na = Dog('Rex')\nb = Dog('Rex')\na.name = 'Max'\nprint(a.name, b.name)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "Max Max", "answer_weight": 0},
+    {"answer_text": "Rex Rex", "answer_weight": 0},
+    {"answer_text": "Max Rex", "answer_weight": 100},
+    {"answer_text": "It reports an error: two objects cannot have the same name", "answer_weight": 0}
+  ]
+}
+<<item 52B: two objects with equal attributes>>=
+{
+  "question_name": "Two names for an object (B)",
+  "question_text": "<p>What does the following program print?</p><pre>class Cat:\n    def __init__(self, name):\n        self.name = name\n\nc = Cat('Mio')\nd = c\nc.name = 'Tim'\nprint(c.name, d.name)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "Tim Mio", "answer_weight": 0},
+    {"answer_text": "Tim Tim", "answer_weight": 100},
+    {"answer_text": "Mio Mio", "answer_weight": 0},
+    {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 53: a method is defined once but acts per object.}
+The critical aspect fuses the previous two: the method is defined in
+the template, yet the call reaches only the object it is called on
+--- the chapter's fusion example.
+The all-objects distractor encodes the catalogued belief that the
+class's methods have power over all its instances
+\autocite{Ragonis2005OOP}.
+
+<<group 53: a method is defined once but acts per object>>=
+{
+  "group": {"name": "Aspect 53: a method is defined once but acts per object",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 53A: one method, many objects>>,
+    <<item 53B: one method, many objects>>
+  ]
+}
+<<item 53A: one method, many objects>>=
+{
+  "question_name": "One method, many objects (A)",
+  "question_text": "<p>What does the following program print?</p><pre>class Dog:\n    def __init__(self, name):\n        self.name = name\n    def rename(self, new_name):\n        self.name = new_name\n\na = Dog('Rex')\nb = Dog('Rex')\na.rename('Max')\nprint(a.name, b.name)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "Max Max", "answer_weight": 0},
+    {"answer_text": "Max Rex", "answer_weight": 100},
+    {"answer_text": "Rex Rex", "answer_weight": 0},
+    {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+<<item 53B: one method, many objects>>=
+{
+  "question_name": "One method, many objects (B)",
+  "question_text": "<p>What does the following program print?</p><pre>class Jar:\n    def __init__(self):\n        self.n = 0\n    def add(self):\n        self.n = self.n + 1\n\nj = Jar()\nk = Jar()\nj.add()\nj.add()\nk.add()\nprint(j.n, k.n)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "3 3", "answer_weight": 0},
+    {"answer_text": "1 1", "answer_weight": 0},
+    {"answer_text": "2 1", "answer_weight": 100},
+    {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+@
+
+\subsection{Functions and lists, revisited (aspects 61--62)}
+
+Two aspects from the debugging chapter's worked example: default
+arguments are evaluated once, and mutation differs from rebinding.
+The quiz pair is titled \enquote{functions and lists, revisited}
+towards the students, since \enquote{debugging} would give away that
+something is wrong in the programs.
+
+<<debugging groups>>=
+<<group 61: a default argument is evaluated once>>,
+<<group 62: mutation is not rebinding>>
+@
+
+\paragraph{Aspect 61: a default argument is evaluated once.}
+The critical aspect is that the default list is created once, at
+definition time, and mutated by every call that uses the default ---
+the surprising behaviour the debugging chapter's patterns of variation
+isolate.
+The fresh-default distractor encodes assuming a new list per call.
+
+<<group 61: a default argument is evaluated once>>=
+{
+  "group": {"name": "Aspect 61: a default argument is evaluated once",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 61A: a default list that grows>>,
+    <<item 61B: a default list that grows>>
+  ]
+}
+<<item 61A: a default list that grows>>=
+{
+  "question_name": "A default list that grows (A)",
+  "question_text": "<p>What does the following program print?</p><pre>def expand(x=[]):\n    x.append(1)\n    return x\n\nprint(expand())\nprint(expand())</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "[1] and then [1]", "answer_weight": 0},
+    {"answer_text": "[1] and then [1, 1]", "answer_weight": 100},
+    {"answer_text": "[] and then []", "answer_weight": 0},
+    {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+<<item 61B: a default list that grows>>=
+{
+  "question_name": "A default list that grows (B)",
+  "question_text": "<p>What does the following program print?</p><pre>def tally(xs=[]):\n    xs.append(0)\n    return len(xs)\n\nprint(tally())\nprint(tally())</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "1 and then 1", "answer_weight": 0},
+    {"answer_text": "0 and then 0", "answer_weight": 0},
+    {"answer_text": "1 and then 2", "answer_weight": 100},
+    {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 62: mutation is not rebinding.}
+The critical aspect separates mutating the shared default
+([[append]]) from rebinding the local name ([[x + [1]]] makes a new
+list), which is exactly the contrast the debugging chapter's
+generalisation pattern varies.
+The accumulating distractor encodes carrying aspect~61's behaviour
+over to the rebinding form --- the two aspects must be discerned
+apart.
+
+<<group 62: mutation is not rebinding>>=
+{
+  "group": {"name": "Aspect 62: mutation is not rebinding",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 62A: a default list that does not grow>>,
+    <<item 62B: a default list that does not grow>>
+  ]
+}
+<<item 62A: a default list that does not grow>>=
+{
+  "question_name": "A default list that does not grow (A)",
+  "question_text": "<p>What does the following program print?</p><pre>def expand(x=[]):\n    return x + [1]\n\nprint(expand())\nprint(expand())</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "[1] and then [1, 1]", "answer_weight": 0},
+    {"answer_text": "[1] and then [1]", "answer_weight": 100},
+    {"answer_text": "[1, 1] and then [1, 1]", "answer_weight": 0},
+    {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+<<item 62B: a default list that does not grow>>=
+{
+  "question_name": "A default list that does not grow (B)",
+  "question_text": "<p>What does the following program print?</p><pre>def add_zero(xs=[]):\n    xs = xs + [0]\n    return xs\n\nprint(add_zero())\nprint(add_zero())</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "[0] and then [0]", "answer_weight": 100},
+    {"answer_text": "[0] and then [0, 0]", "answer_weight": 0},
+    {"answer_text": "[] and then []", "answer_weight": 0},
+    {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+@
+
+\subsection{Analysing the results}
+\label{app:diagnostics-analysis}
+
+Canvas compiles each quiz's responses into a student-analysis report:
+a CSV file with one row per student and one column per pooled
+question, headed by the question's Canvas id and text.
+The analysis program, [[analyze_diagnostics.py]], fetches those
+reports itself --- we know the course and the quiz titles, so nothing
+is clicked or downloaded by hand --- using the same [[canvaslms]]
+machinery as the command-line tool.
+
+The program does not carry its own answer key.
+It reads the tangled quiz files: they define every quiz's title, every
+aspect's group, and every question's choices and correct answer, and
+they are tangled from the same source as this prose, so the key cannot
+drift from the instrument.
+Answers are paired across the two administrations by the aspect
+number in the group's name (11--62), which is what the two forms of an
+aspect share; which form Canvas drew for a student is read off the
+form suffix of the question they answered.
+The program writes one tidy CSV row per student, quiz and aspect ---
+quiz, student, aspect number and label, the drawn form, the chosen
+answer's position and text, and whether it is correct --- and prints
+per-aspect summary tables: how many students answered correctly before
+and after, and how the wrong answers distribute over the choices.
+The distribution over wrong answers is the diagnostic payoff: each
+distractor encodes a catalogued misconception, so the table shows
+\emph{which} misconceptions a cohort holds, not merely how many
+students err.
+% TODO(#29): add learnlog instrumentation (the vt-debug episodes.nw
+% pattern).
+
+<<[[analyze_diagnostics.py]]>>=
+"""Fetch and summarise the diagnostic-quiz results.
+
+The quizzes are defined in the quiz-*.json files tangled from the same
+literate source as this program (the appendix of the paper); those
+files are also this program's answer key.  The results come straight
+from Canvas via canvaslms.
+
+Run --self-test to check the pure functions against the quiz files
+without touching Canvas.
+"""
+
+import argparse
+import collections
+import csv
+import glob
+import json
+import os
+import re
+import sys
+
+<<the quiz files are the answer key>>
+<<recover the aspect and the form from the names>>
+<<match report columns to pool questions>>
+<<fetch the results from Canvas>>
+<<classify one student's answer to one question>>
+<<collect the tidy rows for one quiz>>
+<<summarise the aspects>>
+<<self-test against the quiz files>>
+<<analysis main>>
+
+if __name__ == "__main__":
+    main()
+@
+
+The course is a constant, and the quiz files are read once into a
+key: for every quiz title, a mapping from aspect number to the
+aspect's label and its two forms, and for every form, the question's
+text, its choices and the correct choice.
+The choices are keyed by their one-based place in the question's
+answer list; that place is stable because answer shuffling is off ---
+the choice order is meaningful, as \cref{app:diagnostics-forms}
+requires.
+
+<<the quiz files are the answer key>>=
+COURSE = "prgi26"
+
+
+def load_key(pattern="quiz-*.json"):
+    """Read the tangled quiz files into {quiz title: {number: aspect}}.
+
+    Each aspect is a dict with `label` (from its group's name) and
+    `forms`: {question name: {`text`, `choices` (position -> text),
+    `correct` (the correct choice's position)}}.  Ungrouped questions
+    (the preparation question) are skipped.
+    """
+    key = {}
+    for path in sorted(glob.glob(pattern)):
+        quiz = json.load(open(path))
+        aspects = {}
+        for entry in quiz["questions"]:
+            if "group" not in entry:
+                continue
+            number, label = parse_group_name(entry["group"]["name"])
+            forms = {}
+            for question in entry["questions"]:
+                choices = {
+                    position: answer["answer_text"]
+                    for position, answer
+                    in enumerate(question["answers"], 1)
+                }
+                correct = next(
+                    position
+                    for position, answer
+                    in enumerate(question["answers"], 1)
+                    if answer["answer_weight"]
+                )
+                forms[question["question_name"]] = {
+                    "text": question["question_text"],
+                    "choices": choices,
+                    "correct": correct,
+                }
+            aspects[number] = {"label": label, "forms": forms}
+        key[quiz["settings"]["title"]] = aspects
+    return key
+@
+
+The group names carry the aspect: \enquote{Aspect 11: assignment is
+not an equation} is aspect number 11 with its label.
+The question names carry the form: \enquote{Adding one to a variable
+(A)} is form A.
+The number is the join key across quizzes and administrations; the
+label is the human-readable aspect in the output.
+
+<<recover the aspect and the form from the names>>=
+def parse_group_name(name):
+    """Return (aspect number, label) from an 'Aspect N: ...' group name."""
+    match = re.match(r"Aspect (\d+): (.*)", name)
+    return int(match.group(1)), match.group(2)
+
+
+def form_of(question_name):
+    """Return 'A' or 'B' from a name ending in '(A)' or '(B)'."""
+    match = re.search(r"\(([AB])\)$", question_name)
+    return match.group(1) if match else None
+@
+
+Canvas heads each question column with the question's id and its text;
+the id is assigned at creation time, so it cannot be known here, and
+the program matches on the text instead.
+Both sides are stripped of markup and normalised in whitespace before
+comparing, since Canvas strips the HTML its own way; an exact match is
+preferred and containment is the fallback, in case the header
+truncates the text.
+
+<<match report columns to pool questions>>=
+def strip_html(text):
+    """Return `text` with HTML tags removed and entities resolved."""
+    text = re.sub(r"<[^>]+>", " ", text)
+    return text.replace("&mdash;", "---").strip()
+
+
+def normalise(text):
+    """Return `text` stripped of HTML, with whitespace collapsed."""
+    return re.sub(r"\s+", " ", strip_html(text))
+
+
+def column_for(question, fieldnames):
+    """Return the report column for one pool question, or None."""
+    text = normalise(question["text"])
+    heads = {
+        name: normalise(re.sub(r"^\d+: ", "", name or ""))
+        for name in fieldnames
+    }
+    for name, head in heads.items():
+        if head == text:
+            return name
+    for name, head in heads.items():
+        if head and (head in text or text in head):
+            return name
+    return None
+@
+
+Just as the quizzes are created with [[canvaslms]], the results are
+extracted with it: the package provides the credentials, the course
+lookup and the report machinery, so the program reuses them instead of
+reimplementing the Canvas API calls.
+The report is generated on demand by Canvas, so we request it --- with
+all versions included, in case a quiz was edited after some students
+answered --- poll it until Canvas marks it complete, and download the
+CSV it points to.
+
+<<fetch the results from Canvas>>=
+def fetch_results(course_name, quiz_title):
+    """Download the student-analysis rows for one quiz."""
+    import appdirs
+    import requests
+    import canvaslms.cli
+    import canvaslms.cli.login
+    from canvasapi import Canvas
+    from canvaslms.cli.quizzes import (
+        filter_quizzes,
+        is_new_quiz,
+        poll_progress,
+    )
+
+    config_file = os.path.join(
+        appdirs.user_config_dir("canvaslms"), "config.json"
+    )
+    config = canvaslms.cli.read_configuration(config_file)
+    hostname, token = canvaslms.cli.login.load_credentials(config)
+    if not hostname.startswith("http"):
+        hostname = f"https://{hostname}"
+    canvas = Canvas(hostname, token)
+
+    course = next(
+        c for c in canvas.get_courses()
+        if course_name in (c.name or "")
+        or course_name in (c.course_code or "")
+    )
+    quiz = next(filter_quizzes([course], re.escape(quiz_title)))
+    if is_new_quiz(quiz):
+        sys.exit(f"quiz {quiz.title!r} is not a Classic Quiz")
+
+    report = quiz.create_report(
+        report_type="student_analysis", includes_all_versions=True
+    )
+    for _ in range(30):
+        report = quiz.get_quiz_report(report.id)
+        if poll_progress(report, max_attempts=1):
+            break
+    file = getattr(report, "file", None)
+    url = (
+        file.get("url") if isinstance(file, dict)
+        else getattr(file, "url", None)
+    )
+    if not url:
+        sys.exit("Canvas did not produce the student-analysis report")
+    response = requests.get(url)
+    response.raise_for_status()
+    return list(csv.DictReader(response.text.splitlines()))
+@
+
+A student's cell in the report holds the chosen answer's text.
+We match it against the question's choices, normalised on both sides,
+and record the chosen position; matching on text rather than position
+is forced by the report format, and is safe because no question has
+two identical choices.
+
+<<classify one student's answer to one question>>=
+def classify(cell, question):
+    """Return (chosen position or None, correct or None) for one cell.
+
+    `None` means the student left the question unanswered or the cell
+    text matches no choice (e.g. a report-format change).
+    """
+    text = normalise(cell or "")
+    if not text:
+        return None, None
+    for position, choice in question["choices"].items():
+        if text == normalise(choice):
+            return position, position == question["correct"]
+    return None, None
+@
+
+One quiz's rows become tidy rows: one per student and aspect, carrying
+everything the later statistical analysis needs to pair, split and
+aggregate --- including the drawn form, so that form effects can
+themselves be checked.
+The report has a column for every question in every pool, but a
+student has an answer only under the form Canvas drew for them, so
+the answered column identifies the form.
+An aspect with no answered column is still one row, with an empty
+form: the student left it unanswered, and the report does not say
+which form they saw.
+
+<<collect the tidy rows for one quiz>>=
+def tidy_rows(quiz_title, aspects, report, student_column="name"):
+    """Yield one dict per student and aspect in the report."""
+    for row in report:
+        student = row.get(student_column, "")
+        for number, aspect in sorted(aspects.items()):
+            chosen = correct = form = None
+            answer = ""
+            for question_name, question in aspect["forms"].items():
+                column = column_for(question, row.keys())
+                if column is None or not (row[column] or "").strip():
+                    continue
+                chosen, correct = classify(row[column], question)
+                form = form_of(question_name)
+                answer = question["choices"].get(chosen, "")
+                break
+            yield {
+                "quiz": quiz_title,
+                "student": student,
+                "aspect": number,
+                "label": aspect["label"],
+                "form": form,
+                "chosen": chosen,
+                "answer": answer,
+                "correct": correct,
+            }
+@
+
+The summary prints, per aspect, the number of correct answers in each
+quiz that carries it, and the distribution of the wrong answers over
+the choices --- the misconception profile.
+
+<<summarise the aspects>>=
+def summarise(rows):
+    """Print per-aspect correctness and wrong-answer distributions."""
+    by_aspect = collections.defaultdict(list)
+    for row in rows:
+        by_aspect[(row["aspect"], row["label"])].append(row)
+    for (number, label), answers in sorted(by_aspect.items()):
+        print(f"\n[{number}] {label}")
+        by_quiz = collections.defaultdict(list)
+        for answer in answers:
+            by_quiz[answer["quiz"]].append(answer)
+        for quiz, quiz_answers in sorted(by_quiz.items()):
+            n = len(quiz_answers)
+            right = sum(1 for a in quiz_answers if a["correct"])
+            print(f"  {quiz}: {right}/{n} correct")
+            wrong = collections.Counter(
+                a["answer"] for a in quiz_answers
+                if a["correct"] is False
+            )
+            for answer, count in wrong.most_common():
+                print(f"    {count}x {answer[:60]}")
+@
+
+The self-test exercises the pure functions against the tangled quiz
+files, so the build can check the program without Canvas credentials:
+every group must hold exactly forms A and B and draw one of them for
+one point; every question's correct answer text must classify back to
+its correct position; and the before- and after-quiz of every pair
+must hold the same pools, since the draw --- not the quiz --- decides
+which form a student meets.
+
+<<self-test against the quiz files>>=
+def self_test():
+    """Check the answer key and the pure functions; exit non-zero on failure."""
+    key = load_key()
+    assert key, "no quiz files found; run make programs first"
+    failures = 0
+    for path in sorted(glob.glob("quiz-*.json")):
+        for entry in json.load(open(path))["questions"]:
+            if "group" not in entry:
+                continue
+            spec = entry["group"]
+            if (spec.get("pick_count"), spec.get("question_points")) != (1, 1):
+                failures += 1
+                print(f"FAIL {path}: {spec['name']!r} "
+                      f"does not draw one form for one point")
+    for quiz_title, aspects in key.items():
+        for number, aspect in aspects.items():
+            forms = sorted(form_of(name) or "?" for name in aspect["forms"])
+            if forms != ["A", "B"]:
+                failures += 1
+                print(f"FAIL {quiz_title} [{number}]: pool holds {forms}")
+            for question_name, question in aspect["forms"].items():
+                correct_text = question["choices"][question["correct"]]
+                chosen, correct = classify(correct_text, question)
+                if not (chosen == question["correct"] and correct):
+                    failures += 1
+                    print(f"FAIL {quiz_title} [{number}] {question_name}: "
+                          f"key does not round-trip")
+    for title, aspects in key.items():
+        if "(before)" in title or "start of course" in title:
+            partner = title.replace("(before)", "(after)").replace(
+                "start of course", "end of course"
+            )
+            for number, aspect in aspects.items():
+                other = key[partner][number]
+                if sorted(aspect["forms"]) != sorted(other["forms"]):
+                    failures += 1
+                    print(f"FAIL {title} [{number}]: pools differ pre/post")
+    print(f"self-test: {'FAIL' if failures else 'OK'}")
+    sys.exit(1 if failures else 0)
+@
+
+The main function ties the pieces together: load the key, fetch each
+quiz's report, accumulate the tidy rows, write them to the output CSV
+and print the summaries.
+Quizzes without responses yet are reported and skipped, so the program
+can run mid-course.
+
+<<analysis main>>=
+def main():
+    """Run the analysis per the command line."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--course", default=COURSE,
+                        help=f"course name (default: {COURSE})")
+    parser.add_argument("-o", "--output", default="diagnostics-results.csv",
+                        help="tidy per-answer CSV to write")
+    parser.add_argument("--self-test", action="store_true",
+                        help="check the key and pure functions, no Canvas")
+    args = parser.parse_args()
+    if args.self_test:
+        self_test()
+    key = load_key()
+    rows = []
+    for quiz_title, aspects in key.items():
+        try:
+            report = fetch_results(args.course, quiz_title)
+        except StopIteration:
+            print(f"skipping {quiz_title!r}: not found in {args.course!r}")
+            continue
+        if not report:
+            print(f"skipping {quiz_title!r}: no responses yet")
+            continue
+        rows.extend(tidy_rows(quiz_title, aspects, report))
+    if not rows:
+        sys.exit("no responses in any quiz")
+    with open(args.output, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(rows)
+    print(f"wrote {len(rows)} answers to {args.output}")
+    summarise(rows)
+@

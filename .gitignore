@@ -26,3 +26,10 @@ pythontex_data.pkl
 pythontex-files-*
 py_*.stdout
 didactic_output_*.txt
+
+# woven and tangled from the appendix literate program (diagnostics.nw)
+diagnostics.tex
+quiz-*.json
+noweb_lexer.py
+analyze_diagnostics.py
+diagnostics-results.csv
