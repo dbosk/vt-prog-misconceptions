@@ -79,8 +79,47 @@ only whether the body refers to the loop variable.
     \end{minipage}
 \end{description}
 
+The \emph{extent} of the loop --- which lines repeat at all --- is itself a
+documented source of misconceptions.
+\textcite{Sleeman1984} found, interviewing high-school Pascal novices, that
+a print-statement written next to a loop was read as part of it:
+\textcquote[p.~15]{Sleeman1984}{WRITELN adjacent to the loop is included in
+it}, an error noted with nearly half the students interviewed;
+\textcite{Sorva2012Dissertation} carries it in his inventory as
+\textcquote[Table~A.1, p.~360]{Sorva2012Dissertation}{Adjacent code executes
+within loop}.
+In Python the critical aspect is that \emph{indentation} delimits the body:
+the loop repeats exactly its indented suite, not whatever stands near it.
+The contrast keeps every statement invariant and varies only the indentation
+of the last one --- on the left it belongs to the body and prints three
+times, on the right it follows the loop and prints once.
+
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={3}]{python}
+    for x in [1, 2, 3]:
+        print(x)
+        print("---")
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={3}]{python}
+    for x in [1, 2, 3]:
+        print(x)
+    print("---")
+  \end{minted}
+\end{minipage}
+
+To generalise we keep the critical value invariant --- membership is decided
+by indentation alone --- and vary the loop and the trailing statement: a
+\mintinline{python}{while} loop with an update inside and a print after, a
+loop over a string with an accumulator inside and the result printed after.
+The aspect fuses naturally with nested structures later, where each
+indentation level delimits its own suite.
+
 When students define and use loops, \textcite{GuoMarkelZhang2020} found
-three common misconceptions that the students had about the loop-statement, 
+three common misconceptions that the students had about the loop-statement,
 
 \begin{enumerate}
     \item A misconception about which variable in a loop defined as 
