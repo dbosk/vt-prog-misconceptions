@@ -1,5 +1,6 @@
 \mode*
-\subsection{Problem solving}
+\subsection{Problem solving and program dynamics}
+\label{problem-solving}
 
 \subsubsection{Role in the syllabus}
 
@@ -18,15 +19,126 @@ explanation is that many students have a fragile grasp of both basic programming
 principles and the ability to systematically carry out routine programming
 tasks, such as tracing [\ldots] suggesting that these skills are a prerequisite
 for problem-solving.}
+Follow-up work sharpened this into a hierarchy: student performance on tracing
+correlates with performance on code writing, and a path analysis
+\textcquote{Lopez2008Hierarchy}{suggests the possibility of a hierarchy of
+programming related tasks}, with knowledge of programming constructs at the
+bottom, tracing at an intermediate level, and writing at the top
+\autocite{Lopez2008Hierarchy}.
 
 This matters for our analysis: if tracing and a firm grasp of individual
 constructs are prerequisites for problem solving, then teaching against the
 construct-level misconceptions catalogued above is also groundwork for problem
-solving.
+solving. What remains for this section is the misconception that blocks the
+intermediate level itself.
+
+\subsubsection{The program is not its text}
+
+The misconception underneath poor tracing is a static reading of the program:
+\textcite[p.~234]{Sorva2012Dissertation} describes
+\textcquote[p.~234]{Sorva2012Dissertation}{some learners' failure to see that a
+program has a dynamic existence in addition to its static aspect}.
+Read that way, the text order \emph{is} the execution order.
+\textcite{Sleeman1984} found novices who held exactly this rule:
+\textcquote[pp.~20--21]{Sleeman1984}{All statements including those in
+procedure bodies were executed in the order they appeared}, and difficulties
+with the sequentiality of statements recur across the literature
+\autocite[Table~A.1, p.~360]{Sorva2012Dissertation}.
+Students struggle to follow code step by step and to reason about the order in
+which a program will execute \autocite[p.~20]{Sleeman1984}, a difficulty also
+documented by \textcite{Kurvinen2016}. Both feed directly into the
+problem-solving gap that \textcite{Lister2004Tracing} identified, since a
+student who cannot trace a short program reliably has little hope of assembling
+a larger one.
+
+\mode<presentation>{%
+\begin{frame}
+  \begin{block}{Misconception\autocite{Sleeman1984,Sorva2012Dissertation}}
+    \begin{itemize}
+      \item A program is read as static text: statements execute in the
+        order they are written --- including the bodies of functions, where
+        they stand.
+    \end{itemize}
+  \end{block}
+\end{frame}%
+}
+
+The object of learning is the \emph{execution order} of a program, and the
+critical aspect is that control flow --- not textual position --- decides
+when, and whether, a line runs.
+The contrast keeps the program's behaviour invariant and varies only the
+textual arrangement: both programs below print
+\mintinline{python}{a}, \mintinline{python}{b}, \mintinline{python}{c}, in
+that order.
+A student reading text order as execution order predicts the same for the
+left program but \mintinline{python}{b}, \mintinline{python}{a},
+\mintinline{python}{c} for the right one --- the line printing
+\mintinline{python}{b} stands first in the text, yet runs second, because a
+definition is not an execution site.
+
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}{python}
+    print("a")
+    print("b")
+    print("c")
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={1,2}]{python}
+    def middle():
+        print("b")
+    print("a")
+    middle()
+    print("c")
+  \end{minted}
+\end{minipage}
+
+To generalise, we keep the critical value invariant --- the execution order
+is derived from control flow, not read off the page --- and vary the
+construct that makes them diverge, one per analysis in the preceding
+sections: a false \mintinline{python}{if} \emph{skips} its suite, a loop
+\emph{revisits} its body, a call \emph{jumps} into a body defined elsewhere
+and returns. Tracing each with a finger on the currently-executing line
+makes the deviation from text order the invariant experience across all
+three.
+
+For the fusion, the student must hold these together in one program --- and
+there is direct evidence that this integration is a separate difficulty, not
+a free consequence of mastering the parts.
+\textcite{Huang2024Composition} found in novice code tracing
+\textcquote{Huang2024Composition}{a robust composition effect across problems
+and students}: problems requiring several component skills at once are harder
+than the matched single-skill problems, with
+\textcquote{Huang2024Composition}{conceptual misunderstandings of how to
+integrate component skills} as one identified source of errors.
+In variation-theory terms, fusion is where the integration is taught rather
+than assumed. The function from the return-statement analysis in
+\cref{misconceptions} serves: a definition (jumped into), a loop (revisited),
+a conditional (skipped or not) and an early return, traced line by line.
+
+\begin{minted}{python}
+    def first_negative(values):
+        for value in values:
+            if value < 0:
+                return value
+        return None
+
+    print(first_negative([4, -1, -5]))
+\end{minted}
+
+Diagnosing tracing misconceptions is itself an active line of work:
+\textcite{Bastian2026AdaptiveTracing} construct an adaptive test to
+\textcquote{Bastian2026AdaptiveTracing}{identify these misconceptions}
+related to control flow. Our diagnostic instruments
+(\cref{app:diagnostics}) take the same stance with fixed items: each
+distractor encodes one catalogued misconception.
 
 \subsubsection{Difficulties that can occur}
 
-Two difficulties recur. The first is mathematical content.
+Beyond the misconception above, two difficulties recur. The first is
+mathematical content.
 \textcite{KumarVeerasamy2016} found that students did markedly worse on
 math-related tasks than on others:
 \blockcquote{KumarVeerasamy2016}{This study analysis also explored that novices
@@ -38,9 +150,10 @@ development stated that students who are at the concrete operational stage
 struggle to write large programs with partial specifications, although they can
 write small programs from well-defined specifications \textelp{}.}
 
-The second is tracing and execution order. Students struggle to follow code
-step by step and to reason about the order in which a program will execute
-\autocite[p.~20]{Sleeman1984}, a difficulty also documented by
-\textcite{Kurvinen2016}. Both feed directly into the problem-solving gap that
-\textcite{Lister2004Tracing} identified, since a student who cannot trace a short
-program reliably has little hope of assembling a larger one.
+The second is the integration difficulty already discussed: even students who
+handle each construct separately may fail when a problem composes them
+\autocite{Huang2024Composition}. Neither is a misconception in the
+catalogue's sense --- there is no false belief to contrast away --- but both
+constrain how far the patterns of variation can carry a student, and the
+composition effect in particular motivates never stopping a teaching design
+before its fusion step.
