@@ -8,12 +8,12 @@ It implements the diagnostic instruments for the learning-study
 evaluation motivated in \cref{conclusions}: pre- and post-tests at the
 level of the whole course, and pre- and post-tests around each taught
 topic.
-Fourteen files are tangled from this section: the course-level pair
+Sixteen files are tangled from this section: the course-level pair
 [[quiz-course-start.json]] and [[quiz-course-end.json]], and a
 start--end pair per topic
 ([[quiz-funcvars-start.json]]/[[quiz-funcvars-end.json]] and
 correspondingly for [[conditionals]], [[repetitions]], [[types]],
-[[classes]] and [[debugging]]).
+[[classes]], [[debugging]] and [[tracing]]).
 The learning platform of the course is Canvas, and the [[canvaslms]]
 command-line tool creates the quizzes from their JSON descriptions,
 for example:
@@ -79,7 +79,7 @@ student who reviews the material the night before measures
 preparation, not what the course left behind.
 Each group's name numbers its aspect, with the topic in the tens
 digit and the aspect within the topic in the ones digit, so aspects
-stay identifiable and stable across all fourteen quizzes and in the
+stay identifiable and stable across all sixteen quizzes and in the
 analysis; Canvas orders the groups as listed and sums their points
 itself.
 
@@ -124,7 +124,8 @@ The course groups are the union of the topic banks.
 <<repetitions groups>>,
 <<types groups>>,
 <<classes groups>>,
-<<debugging groups>>
+<<debugging groups>>,
+<<tracing groups>>
 @
 
 All quizzes are diagnostics: there is no time limit, a single attempt
@@ -204,7 +205,7 @@ after.
 The topic banks \emph{are} the course groups, reused by reference, so
 the two levels cannot drift apart: an item improved for a topic quiz
 is improved for the course quiz, automatically.
-The six pairs are identical in structure, so we define them together;
+The seven pairs are identical in structure, so we define them together;
 only the bank differs.
 
 <<[[quiz-funcvars-start.json]]>>=
@@ -405,6 +406,39 @@ only the bank differs.
 }
 @
 
+<<[[quiz-tracing-start.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: reading programs (before)",
+    <<start-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<score-only result view>>
+  },
+  "questions": [
+    <<tracing groups>>
+  ]
+}
+@
+
+<<[[quiz-tracing-end.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: reading programs (after)",
+    <<end-quiz boilerplate>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<revealing result view>>
+  },
+  "questions": [
+    <<preparation question>>,
+    <<tracing groups>>
+  ]
+}
+@
+
 The description shown to the students differs only in tense between the before- and
 after-quiz of every topic, so they are shared.
 
@@ -416,9 +450,9 @@ after-quiz of every topic, so they are shared.
 "description": "<p>This quiz mirrors the questions from before this topic's unit, so that we can see what the unit taught you. You will see your score and the correct answers afterwards, so you can use the quiz to review the topic. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
 @
 
-\subsection{Functions and variables (aspects 11--17)}
+\subsection{Functions and variables (aspects 11--19)}
 
-Seven aspects from the functions-and-variables analyses, one
+Nine aspects from the functions-and-variables analyses, one
 question group each.
 
 <<funcvars groups>>=
@@ -428,7 +462,9 @@ question group each.
 <<group 14: parameters bind from arguments, not names>>,
 <<group 15: return hands back a value, not a name>>,
 <<group 16: a list argument is shared, not copied>>,
-<<group 17: a function must be defined before the call>>
+<<group 17: a function must be defined before the call>>,
+<<group 18: an assignment replaces the old value>>,
+<<group 19: return ends the function>>
 @
 
 \paragraph{Aspect 11: assignment is not an equation.}
@@ -744,6 +780,101 @@ an earlier call.
 }
 @
 
+\paragraph{Aspect 18: an assignment replaces the old value.}
+The critical aspect is that assigning to a variable \emph{replaces} what it
+held --- a variable does not \enquote{remember} its old values
+\autocite[Table~A.1, p.~359]{Sorva2012Dissertation}.
+The both-values distractor encodes the multi-value reading; the first-value
+distractor encodes the second assignment as inert (the mirror belief); the
+error distractor encodes that a variable, once assigned, cannot be assigned
+again.
+Form B varies the type (a string), the names and the correct position; the
+encoded misconceptions are the same.
+
+<<group 18: an assignment replaces the old value>>=
+{
+  "group": {"name": "Aspect 18: an assignment replaces the old value",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 18A: a variable assigned twice>>,
+    <<item 18B: a name assigned twice>>
+  ]
+}
+<<item 18A: a variable assigned twice>>=
+{
+  "question_name": "A variable assigned twice (A)",
+  "question_text": "<p>What does the following program print?</p><pre>x = 5\nx = 3\nprint(x)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "3", "answer_weight": 100},
+    {"answer_text": "5 3", "answer_weight": 0},
+    {"answer_text": "5", "answer_weight": 0},
+    {"answer_text": "The program reports an error: x already has a value", "answer_weight": 0}
+  ]
+}
+<<item 18B: a name assigned twice>>=
+{
+  "question_name": "A name assigned twice (B)",
+  "question_text": "<p>What does the following program print?</p><pre>name = 'Ada'\nname = 'Bo'\nprint(name)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "Ada", "answer_weight": 0},
+    {"answer_text": "Ada Bo", "answer_weight": 0},
+    {"answer_text": "The program reports an error: name already has a value", "answer_weight": 0},
+    {"answer_text": "Bo", "answer_weight": 100}
+  ]
+}
+@
+
+\paragraph{Aspect 19: return ends the function.}
+The critical aspect is that an executed return statement terminates the call
+then and there: statements after it never run
+\autocite{Esche2025Return}.
+The both-lines distractor encodes return as merely handing back a value while
+execution continues; the reversed-order distractor encodes handing back
+first and continuing after; the only-print distractor encodes the print as
+overriding the return.
+Form B varies the names, the strings and the correct position.
+
+<<group 19: return ends the function>>=
+{
+  "group": {"name": "Aspect 19: return ends the function",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 19A: a print after the return>>,
+    <<item 19B: a print after the return>>
+  ]
+}
+<<item 19A: a print after the return>>=
+{
+  "question_name": "A print after the return (A)",
+  "question_text": "<p>What does the following program print?</p><pre>def report():\n    return 'done'\n    print('working')\n\nprint(report())</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "done", "answer_weight": 100},
+    {"answer_text": "working done", "answer_weight": 0},
+    {"answer_text": "done working", "answer_weight": 0},
+    {"answer_text": "working", "answer_weight": 0}
+  ]
+}
+<<item 19B: a print after the return>>=
+{
+  "question_name": "A print after the return (B)",
+  "question_text": "<p>What does the following program print?</p><pre>def greet():\n    return 'hi'\n    print('bye')\n\nprint(greet())</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "bye hi", "answer_weight": 0},
+    {"answer_text": "hi", "answer_weight": 100},
+    {"answer_text": "bye", "answer_weight": 0},
+    {"answer_text": "hi bye", "answer_weight": 0}
+  ]
+}
+@
+
 \subsection{Conditionals (aspects 21--23)}
 
 Three aspects from the conditionals analyses.
@@ -890,14 +1021,15 @@ are equal.
 }
 @
 
-\subsection{Repetitions (aspects 31--33)}
+\subsection{Repetitions (aspects 31--34)}
 
-Three aspects from the repetitions analyses.
+Four aspects from the repetitions analyses.
 
 <<repetitions groups>>=
 <<group 31: the loop variable must change in the body>>,
 <<group 32: repetition re-applies, selection applies once>>,
-<<group 33: the loop variable and the accumulator are distinct>>
+<<group 33: the loop variable and the accumulator are distinct>>,
+<<group 34: indentation delimits the loop body>>
 @
 
 \paragraph{Aspect 31: the loop variable must change in the body.}
@@ -1030,6 +1162,53 @@ variable the conditional filters and which it updates.
     {"answer_text": "3", "answer_weight": 100},
     {"answer_text": "21", "answer_weight": 0},
     {"answer_text": "9", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 34: indentation delimits the loop body.}
+The critical aspect is that the loop repeats exactly its indented suite ---
+not whatever stands next to it
+\autocite[p.~15]{Sleeman1984}\autocite[Table~A.1, p.~360]{Sorva2012Dissertation}.
+The two forms probe the two directions of the misreading: in form A the
+final print is \emph{outside} the loop and the adjacency distractor pulls it
+in; in form B it is \emph{inside} and the distractor pushes it out.
+The remaining distractors encode the trailing statement as never running and
+as running before the loop.
+
+<<group 34: indentation delimits the loop body>>=
+{
+  "group": {"name": "Aspect 34: indentation delimits the loop body",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 34A: a print after the loop>>,
+    <<item 34B: a print inside the loop>>
+  ]
+}
+<<item 34A: a print after the loop>>=
+{
+  "question_name": "A print after the loop (A)",
+  "question_text": "<p>What does the following program print?</p><pre>for x in [1, 2]:\n    print(x)\nprint('done')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "1 2 done", "answer_weight": 100},
+    {"answer_text": "1 done 2 done", "answer_weight": 0},
+    {"answer_text": "1 2", "answer_weight": 0},
+    {"answer_text": "done 1 2", "answer_weight": 0}
+  ]
+}
+<<item 34B: a print inside the loop>>=
+{
+  "question_name": "A print inside the loop (B)",
+  "question_text": "<p>What does the following program print?</p><pre>for k in [7, 8]:\n    print(k)\n    print('go')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "7 8 go", "answer_weight": 0},
+    {"answer_text": "7 go 8 go", "answer_weight": 100},
+    {"answer_text": "7 8", "answer_weight": 0},
+    {"answer_text": "go 7 8", "answer_weight": 0}
   ]
 }
 @
@@ -1473,6 +1652,67 @@ apart.
     {"answer_text": "[0] and then [0, 0]", "answer_weight": 0},
     {"answer_text": "[] and then []", "answer_weight": 0},
     {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+@
+
+\subsection{Reading programs (aspect 71)}
+
+One aspect from the problem-solving analyses
+(\cref{problem-solving}): that the execution order of a program is
+derived from control flow, not read off the page.
+The quiz pair is titled \enquote{reading programs} towards the
+students; \enquote{tracing} would name the skill under test.
+
+\paragraph{Aspect 71: text order is not execution order.}
+The program prints its three letters in alphabetical order, but the
+line printing the second letter stands \emph{first} in the text,
+inside a function called later
+\autocite[pp.~20--21]{Sleeman1984}\autocite[p.~234]{Sorva2012Dissertation}.
+The text-order distractor encodes reading top to bottom; the
+twice-printed distractor encodes the definition executing both where
+it stands and at the call; the missing-letter distractor encodes the
+called body never running.
+Form B varies the letters, the function name and the correct
+position.
+
+<<tracing groups>>=
+<<group 71: text order is not execution order>>
+@
+
+<<group 71: text order is not execution order>>=
+{
+  "group": {"name": "Aspect 71: text order is not execution order",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 71A: a function defined first>>,
+    <<item 71B: a function defined first>>
+  ]
+}
+<<item 71A: a function defined first>>=
+{
+  "question_name": "A function defined first (A)",
+  "question_text": "<p>In which order does the following program print its letters?</p><pre>def middle():\n    print('b')\n\nprint('a')\nmiddle()\nprint('c')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "a b c", "answer_weight": 100},
+    {"answer_text": "b a c", "answer_weight": 0},
+    {"answer_text": "b a b c", "answer_weight": 0},
+    {"answer_text": "a c", "answer_weight": 0}
+  ]
+}
+<<item 71B: a function defined first>>=
+{
+  "question_name": "A function defined first (B)",
+  "question_text": "<p>In which order does the following program print its letters?</p><pre>def second():\n    print('y')\n\nprint('x')\nsecond()\nprint('z')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "y x z", "answer_weight": 0},
+    {"answer_text": "x z", "answer_weight": 0},
+    {"answer_text": "x y z", "answer_weight": 100},
+    {"answer_text": "y x y z", "answer_weight": 0}
   ]
 }
 @
