@@ -267,11 +267,16 @@
 % QUOTE (Background, "Math", p.18): "the statement describes an equation to be
 %   solved by the computer (var a = 6; var b; a = b + 4; This is then expected
 %   to solve the equation for b: b = 2.)"
+% QUOTE (S1b, p. 34): "Students seem to look at it more as a \"statement of
+%   equality\". If this statement is correct, the program is executed. If the
+%   statement is not correct, the program yields an Error."
 % VERIFIED: full-text PDF read; a is already defined, b undefined, a = b + 4 is
-%   solved for b -- exactly the claim. FLAG: the conditionals.tex co-citation is
-%   mis-scoped -- Plass's matching finding (S1b) is an assignment read as an
-%   equality test, not an if-statement; prose rescope deferred to follow-up.
-% DATE: 2026-06-29
+%   solved for b -- exactly the claim.  The conditionals.tex use is rescoped to
+%   the S1b finding (an assignment read as an equality test that gates the
+%   run), quoted verbatim above; the if-specific "false condition ends the
+%   program" claim is carried by Sorva2012Dissertation, Table A.1 no. 26
+%   (issue #22).
+% DATE: 2026-07-19
 @mastersthesis{Plass2015Variables,
   title={Identifying and addressing common programming misconceptions with 
          variables (part 1)},
@@ -449,6 +454,11 @@ novices},
 %   Appendix)."
 % QUOTE (Findings): "reference to arrays versus array elements, identifying off by
 %   one index errors"
+% QUOTE (p. 12): "We also had similar results with students confused about
+%   lists and list indices. Moreover, 13% of the students used negative
+%   numbers as indices to read or display the values from lists." [with the
+%   off-by-one Delphi-CI item, carries the types.tex list-index claims
+%   re-attributed from Kurvinen2016, issue #22]
 % QUOTE (p. 12): "67% of students defined the methods correctly though a few
 %   had problems in using the return statement in functions. Moreover, 68% of
 %   the students understood the application of functions, although 8% of the
@@ -494,20 +504,20 @@ Summative Assessments},
 %   misconceptions.
 % FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); entry
 %   re-located via DOI 10.1145/2899415.2899447 and abstract read
-% PICKED: an exam-data misconception study; cited for specific items -- data-type
-%   misconceptions (types.tex:55), array indexation from 0 not 1 (types.tex:136),
-%   tracing/execution-order (problem-solving.tex:44), missing-return
-%   (functions-variables.tex:965).
+% PICKED: an exam-data misconception study; cited for tracing/execution-order
+%   (problem-solving.tex) and missing-return (functions-variables.tex).  The
+%   former types.tex uses (data-type misconceptions; array indexation from 0)
+%   are re-attributed to the verified KumarVeerasamy2016 and GuoMarkelZhang2020
+%   (issue #22).
 % QUOTE (abstract): "The data is analyzed to identify typical misconceptions in
 %   programming exercises ... Finally, we discuss how the results of the analysis
 %   can be utilized to tackle these misconceptions during the course."
 % VERIFIED: abstract only (ACM full text Cloudflare-gated, no OA copy); supports
-%   ONLY the general "exam analysis identified typical misconceptions" claim. FLAG:
-%   the abstract does NOT mention data types or array indexing -- the specific
-%   types.tex:55/:136 items are unconfirmed against reachable text; prose rescope/
-%   re-attribution (array-from-0 is independently supported by KumarVeerasamy2016
-%   and GuoMarkelZhang2020) deferred to follow-up.
-% DATE: 2026-06-29
+%   ONLY the general "exam analysis identified typical misconceptions" claim.
+%   The formerly mis-scoped types.tex items are re-attributed (issue #22); the
+%   remaining uses cite Kurvinen for tracing difficulty at the general level.
+%   FLAG: full-text pass still worthwhile for the tracing use (issue #23).
+% DATE: 2026-07-19
 @inproceedings{Kurvinen2016,
   author = {Kurvinen, Einari and Hellgren, Niko and Kaila, Erkki and Laakso, 
             Mikko-Jussi and Salakoski, Tapio},
@@ -1337,6 +1347,9 @@ series = {L@S '20}
 %   (2007)"]
 % QUOTE (Table A.1, no. 23, p. 360): "Difficulties in understanding the
 %   sequentiality of statements."
+% QUOTE (Table A.1, no. 26, p. 360): "A false condition ends program if no
+%   else branch." [sources column: "Putnam et al. (1986); Sleeman et al.
+%   (1986)"; backs the rescoped conditionals.tex claim, issue #22]
 % QUOTE (Table A.1, no. 30, p. 360): "Adjacent code executes within loop."
 % QUOTE (p. 234): "Another, more generic misconception is some learners'
 %   failure to see that a program has a dynamic existence in addition to its

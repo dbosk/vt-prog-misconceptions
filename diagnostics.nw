@@ -1319,7 +1319,7 @@ The critical aspect is that a value's type, not its appearance,
 determines what an operator does: \mintinline{python}{+} concatenates
 strings but sums integers, and \mintinline{python}{//} divides
 integrally where \mintinline{python}{/} does not
-\autocite{Gobil2009Errors,Kurvinen2016}.
+\autocite{Gobil2009Errors,GuoMarkelZhang2020}.
 The numeric-sum and true-division distractors encode ignoring the
 operands' types.
 
@@ -1363,7 +1363,7 @@ operands' types.
 \paragraph{Aspect 44: the first element is at index 0.}
 The critical aspect is the mapping from index to position: the first
 element is at index~0 and the last valid index is one less than the
-length \autocite{Kurvinen2016,KumarVeerasamy2016}.
+length \autocite{KumarVeerasamy2016}.
 The 1-based distractors encode counting positions from one, at both
 ends of the list.
 
