@@ -155,8 +155,8 @@ but the two CS-specific indexes were unproductive in our run. The systematic
 search over general-purpose indexes instead surfaced a broader and more recent
 set. We read this as evidence that a tool-assisted multi-database search
 \emph{extends} a manual review, and that the two should be combined ---
-ideally with citation snowballing, which we deferred (\cref{app:litlimitations})
---- rather than either replacing the other.
+together with citation snowballing (\cref{app:litsnowball}) --- rather than
+either replacing the other.
 
 \subsection{Verification and provenance}
 
@@ -172,6 +172,31 @@ flag retracted, corrected, or superseded papers via Crossref. The provenance
 blocks are validated mechanically, so no reference may enter the catalogue
 without a recorded, verbatim justification.
 
+\subsection{Citation snowballing}
+\label{app:litsnowball}
+
+The snowballing step deferred by the initial run was carried out later, in one
+generation over the catalogue's own primary sources. The seed set was the
+eleven DOI-resolvable primary misconception studies cited in the catalogue
+(two further primaries, Sleeman's report and Plass's thesis, lack DOIs);
+backward snowballing followed every work a seed references, and forward
+snowballing every work citing a seed (up to 200 per seed), both through the
+OpenAlex API. This produced 787 distinct candidates, of which 24 were already
+in the corpus --- the bibliographies, the systematic phase's retrieved set and
+its decision log. A keyword screen for topic left 401, a stricter screen
+requiring both the population (novice, introductory, CS1) and an error- or
+misconception-bearing title left 51, and these were hand-screened against the
+protocol's inclusion criterion. Fifteen were kept; the 36 exclusions are
+recorded with per-paper reasons alongside the script
+(\texttt{literature-review/}).
+
+The kept set validates the coverage hypothesis of \cref{app:litcomparison}:
+the highest-cited recoveries are precisely the classic primaries that the
+inventory literature attributes --- \textcite{Pea1986Superbug} among them,
+which we integrate into the catalogue (\cref{problem-solving}) --- alongside
+recent successors of our seeds. The remaining kept papers await integration;
+they are tracked in the repository's issue tracker.
+
 \subsection{Limitations and deferred steps}
 \label{app:litlimitations}
 
@@ -180,9 +205,9 @@ returned authorisation errors and DBLP returned nothing to the retained set, so
 the two computer-science-specific indexes did not contribute; the systematic
 phase effectively searched general-purpose indexes, which depresses recall of
 CS-conference papers. Second, results per provider were capped, so the search is
-not exhaustive. Third, we deferred citation \emph{snowballing} (backward and
-forward citation following from a seed set): this is the step most likely to
-recover the construct-specific papers the manual review found, and it is the
-natural next extension of this protocol. The full session --- queries, retrieved
-papers, and screening decisions --- is saved and can be re-exported to reproduce
-the tables above.
+not exhaustive; the citation snowball (\cref{app:litsnowball}) was likewise
+capped at one generation and 200 forward citations per seed. Third, of the
+snowball's kept papers only one is integrated so far; the remainder await
+full-text verification and integration. The full session --- queries, retrieved
+papers, and screening decisions, now including the snowball's --- is saved and
+can be re-exported to reproduce the tables above.
