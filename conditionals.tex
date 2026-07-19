@@ -1,15 +1,22 @@
 \mode*
 \subsection{Conditionals}
 
-A common control structure taught in CS1 is if- and else-statements, where 
-the students learn how to create easy conditionals that controls the 
+A common control structure taught in CS1 is if- and else-statements, where
+the students learn how to create easy conditionals that controls the
 progress of the programme. How a programme will understand and execute an if
--statement is something that students have misconceptions about. A severe 
-misconception that \textcite{Plass2015Variables} found was that some 
-students believe that an if-statement can control if the programme will 
-keep on executing or shut down, depending on if the statement is true or 
-false. Students believe that an if-statement that is false will terminate 
-the programme, even though a quit-statement has not been introduced. 
+-statement is something that students have misconceptions about. A severe
+misconception in this area is that a condition can decide whether the
+programme keeps running at all: students believe that an if-statement
+whose condition is false will terminate the programme, even though a
+quit-statement has not been introduced --- \textcite{Sorva2012Dissertation}
+carries it in his inventory as \textcquote[Table~A.1,
+p.~360]{Sorva2012Dissertation}{A false condition ends program if no else
+branch}. \textcite{Plass2015Variables} observed the belief's root already
+in assignments read as tests: their students took a statement such as
+\mintinline{python}{x = 5} for a \enquote{statement of equality}, and
+\textcquote[p.~34]{Plass2015Variables}{If this statement is correct, the
+program is executed. If the statement is not correct, the program yields
+an Error}.
 Another misconception is that when writing an if and else statement, both 
 if and else will be executed, even when the if-statement is true \autocite{
 MisconceptionsSurvey2017}.

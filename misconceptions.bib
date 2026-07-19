@@ -267,11 +267,16 @@
 % QUOTE (Background, "Math", p.18): "the statement describes an equation to be
 %   solved by the computer (var a = 6; var b; a = b + 4; This is then expected
 %   to solve the equation for b: b = 2.)"
+% QUOTE (S1b, p. 34): "Students seem to look at it more as a \"statement of
+%   equality\". If this statement is correct, the program is executed. If the
+%   statement is not correct, the program yields an Error."
 % VERIFIED: full-text PDF read; a is already defined, b undefined, a = b + 4 is
-%   solved for b -- exactly the claim. FLAG: the conditionals.tex co-citation is
-%   mis-scoped -- Plass's matching finding (S1b) is an assignment read as an
-%   equality test, not an if-statement; prose rescope deferred to follow-up.
-% DATE: 2026-06-29
+%   solved for b -- exactly the claim.  The conditionals.tex use is rescoped to
+%   the S1b finding (an assignment read as an equality test that gates the
+%   run), quoted verbatim above; the if-specific "false condition ends the
+%   program" claim is carried by Sorva2012Dissertation, Table A.1 no. 26
+%   (issue #22).
+% DATE: 2026-07-19
 @mastersthesis{Plass2015Variables,
   title={Identifying and addressing common programming misconceptions with 
          variables (part 1)},
@@ -449,9 +454,20 @@ novices},
 %   Appendix)."
 % QUOTE (Findings): "reference to arrays versus array elements, identifying off by
 %   one index errors"
-% VERIFIED: full-text PDF read (Turku OA copy); all three cited passages confirmed
-%   verbatim.
-% DATE: 2026-06-29
+% QUOTE (p. 12): "We also had similar results with students confused about
+%   lists and list indices. Moreover, 13% of the students used negative
+%   numbers as indices to read or display the values from lists." [with the
+%   off-by-one Delphi-CI item, carries the types.tex list-index claims
+%   re-attributed from Kurvinen2016, issue #22]
+% QUOTE (p. 12): "67% of students defined the methods correctly though a few
+%   had problems in using the return statement in functions. Moreover, 68% of
+%   the students understood the application of functions, although 8% of the
+%   students passed the wrong argument/value as the return value, which may be
+%   considered as semantics error (refer table A5)." [backs the returning-the-
+%   right-value refinement in functions-variables.tex]
+% VERIFIED: full-text PDF read (Turku OA copy); all cited passages confirmed
+%   verbatim (re-fetched 2026-07-17 for the right-value passage).
+% DATE: 2026-07-17
 @article{KumarVeerasamy2016,
   author = {Ashok Kumar Veerasamy and Daryl D'Souza and Mikko-Jussi Laakso},
   title ={Identifying Novice Student Programming Misconceptions and Errors From 
@@ -488,20 +504,20 @@ Summative Assessments},
 %   misconceptions.
 % FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); entry
 %   re-located via DOI 10.1145/2899415.2899447 and abstract read
-% PICKED: an exam-data misconception study; cited for specific items -- data-type
-%   misconceptions (types.tex:55), array indexation from 0 not 1 (types.tex:136),
-%   tracing/execution-order (problem-solving.tex:44), missing-return
-%   (functions-variables.tex:965).
+% PICKED: an exam-data misconception study; cited for tracing/execution-order
+%   (problem-solving.tex) and missing-return (functions-variables.tex).  The
+%   former types.tex uses (data-type misconceptions; array indexation from 0)
+%   are re-attributed to the verified KumarVeerasamy2016 and GuoMarkelZhang2020
+%   (issue #22).
 % QUOTE (abstract): "The data is analyzed to identify typical misconceptions in
 %   programming exercises ... Finally, we discuss how the results of the analysis
 %   can be utilized to tackle these misconceptions during the course."
 % VERIFIED: abstract only (ACM full text Cloudflare-gated, no OA copy); supports
-%   ONLY the general "exam analysis identified typical misconceptions" claim. FLAG:
-%   the abstract does NOT mention data types or array indexing -- the specific
-%   types.tex:55/:136 items are unconfirmed against reachable text; prose rescope/
-%   re-attribution (array-from-0 is independently supported by KumarVeerasamy2016
-%   and GuoMarkelZhang2020) deferred to follow-up.
-% DATE: 2026-06-29
+%   ONLY the general "exam analysis identified typical misconceptions" claim.
+%   The formerly mis-scoped types.tex items are re-attributed (issue #22); the
+%   remaining uses cite Kurvinen for tracing difficulty at the general level.
+%   FLAG: full-text pass still worthwhile for the tracing use (issue #23).
+% DATE: 2026-07-19
 @inproceedings{Kurvinen2016,
   author = {Kurvinen, Einari and Hellgren, Niko and Kaila, Erkki and Laakso, 
             Mikko-Jussi and Salakoski, Tapio},
@@ -594,15 +610,18 @@ Summative Assessments},
 % FOUND-VIA: original manual review (co-author C. Soori, Google Scholar)
 % PICKED: cited in the original manual review for the multi-value / algebra-
 %   transfer variable misconception.
-% QUOTE: TODO -- UNVERIFIED. The cited HERCMA'07 paper has no reachable full text;
-%   the same authors' readable sibling paper (IEEII 2007) never states the
-%   "variable holds more than one value" misconception. No verbatim passage
-%   entailing the cited claim has been located.
-% VERIFIED: NOT verified -- kept as a TODO pending a decision to obtain the HERCMA
-%   full text, re-attribute the claim (e.g. to MisconceptionsSurvey2017 /
-%   progmiscon MultiValueVariable), or drop the citation. The "holds an entire
-%   algorithm" co-citation is already carried by the verified Kohn2017 + Plass2015.
-% DATE: 2026-06-29
+% QUOTE: the HERCMA'07 primary text remains unreachable, but the attribution
+%   is corroborated: Sorva2012Dissertation, Table A.1 no. 9 (p. 359) states
+%   "A variable can hold multiple values at a time / 'remembers' old values"
+%   and credits "Doukakis et al. (2007)" among its sources (likewise nos. 14,
+%   15 and 19 for further variable misconceptions).
+% VERIFIED: attribution corroborated via Sorva2012Dissertation (full text
+%   read); the HERCMA'07 text itself is still unread.  Load-bearing prose
+%   citations go to Sorva2012Dissertation, with Doukakis2007 co-cited on
+%   Sorva's attribution (resolution of issue #21).  The "holds an entire
+%   algorithm" co-citation is already carried by the verified Kohn2017 +
+%   Plass2015.
+% DATE: 2026-07-17
 @article{Doukakis2007,
 author = {Doukakis, Dimitrios and Tsaganou, Grammatiki and Grigoriadou, Maria},
 year = {2007},
@@ -1304,4 +1323,191 @@ series = {L@S '20}
   pages     = {177--182},
   year      = {2013},
   doi       = {10.1145/2445196.2445250},
+}
+
+% === provenance: Sorva2012Dissertation ===
+% CLAIM: A variable can hold multiple values at a time / "remembers" old values
+%   is a documented misconception (attributed by Sorva's inventory to du Boulay
+%   1986, Soloway et al. 1982, Putnam et al. 1986, Sleeman et al. 1986, and
+%   Doukakis et al. 2007); adjacent code is believed to execute within a loop;
+%   novices have difficulties with the sequentiality of statements; and some
+%   learners fail to see that a program has a dynamic existence in addition to
+%   its static aspect.
+% FOUND-VIA: WebSearch "aaltodoc Sirkiä Sorva visual program simulation student
+%   mistakes 2012 pdf" while triaging the systematic review's kept papers
+%   (issue #12); OA full text on aaltodoc (Aalto University repository)
+% PICKED: the dissertation's Appendix A is a comprehensive, source-attributed
+%   inventory of documented CS1 misconceptions -- the right citable secondary
+%   source where the primary texts (du Boulay 1986 SAGE-gated, Doukakis 2007
+%   HERCMA unreachable) are inaccessible; OA and read in full text, unlike the
+%   sibling Koli 2012 paper (ACM-gated).
+% QUOTE (Table A.1, no. 9, p. 359): "A variable can hold multiple values at a
+%   time / 'remembers' old values." [sources column: "du Boulay (1986); Soloway
+%   et al. (1982); Putnam et al. (1986); Sleeman et al. (1986); Doukakis et al.
+%   (2007)"]
+% QUOTE (Table A.1, no. 23, p. 360): "Difficulties in understanding the
+%   sequentiality of statements."
+% QUOTE (Table A.1, no. 26, p. 360): "A false condition ends program if no
+%   else branch." [sources column: "Putnam et al. (1986); Sleeman et al.
+%   (1986)"; backs the rescoped conditionals.tex claim, issue #22]
+% QUOTE (Table A.1, no. 30, p. 360): "Adjacent code executes within loop."
+% QUOTE (p. 234): "Another, more generic misconception is some learners'
+%   failure to see that a program has a dynamic existence in addition to its
+%   static aspect."
+% VERIFIED: full-text PDF read (aaltodoc OA); the appendix table states each
+%   misconception verbatim with its sources, so it entails the catalogue-level
+%   claims cited to it.
+% DATE: 2026-07-17
+@phdthesis{Sorva2012Dissertation,
+  author = {Juha Sorva},
+  title  = {Visual Program Simulation in Introductory Programming Education},
+  school = {Aalto University},
+  year   = {2012},
+  series = {Aalto University publication series Doctoral Dissertations},
+  number = {61/2012},
+  isbn   = {978-952-60-4626-6},
+  url    = {https://aaltodoc.aalto.fi/items/d982d1ce-af44-465d-83b4-56a558fe9f26},
+}
+
+% === provenance: Esche2025Return ===
+% CLAIM: Novices describing functions rarely mention the keyword return
+%   explicitly, even more rarely that return ends the function, and some hold
+%   the (new) misconception that return and void are mutually exclusive.
+% FOUND-VIA: systematic review session "misconceptions-systematic" (WoS
+%   provider); kept by LLM screening (issue #12 triage)
+% PICKED: a recent primary study (ITiCSE 2025) analysing 3000+ CS1 free-text
+%   answers specifically about the return keyword; extends the catalogue's
+%   return-boundary misconceptions with the ends-the-function aspect.
+% QUOTE (abstract): "The keyword 'return' itself was rarely mentioned
+%   explicitly, unless a 'void' function made use of it. The aspect that the
+%   keyword 'return' ends the function was even less often explicitly
+%   mentioned. As a new misconception, some students stated that 'return' and
+%   'void' are mutually exclusive."
+% VERIFIED: abstract only (ACM full text Cloudflare-gated; no OA copy per
+%   Unpaywall). FLAG: full-text pass pending institutional access (issue #23).
+% DATE: 2026-07-17
+@inproceedings{Esche2025Return,
+  author    = {Svana Esche},
+  title     = {Focus on Return: Terms Novices Use to Describe Functions in
+               Java},
+  booktitle = {Proceedings of the 30th ACM Conference on Innovation and
+               Technology in Computer Science Education (ITiCSE 2025), Vol. 1},
+  year      = {2025},
+  doi       = {10.1145/3724363.3729065},
+}
+
+% === provenance: Huang2024Composition ===
+% CLAIM: Novices who master component skills separately still fail when a
+%   problem requires integrating them (the composition effect), with conceptual
+%   misunderstandings of how to integrate as one source of errors.
+% FOUND-VIA: systematic review session "misconceptions-systematic" (WoS
+%   provider); kept by LLM screening (issue #12 triage)
+% PICKED: a classroom study (ACM TOCE) that isolates the integration step by
+%   matching integrated problems with single-skill problems; the direct
+%   empirical grounding for why the fusion pattern targets a real difficulty.
+% QUOTE (abstract): "we systematically investigate the nature of the
+%   composition effect in novice code tracing ... We designed a set of problems
+%   that require integrating component skills, along with matched problems that
+%   use the same component skills separately ... First, we found a robust
+%   composition effect across problems and students, mostly with small or
+%   medium effect sizes. Second, we identified two potential sources of errors
+%   for this composition effect: conceptual misunderstandings of how to
+%   integrate component skills and process errors resulting from slips"
+% VERIFIED: abstract only (ACM full text Cloudflare-gated; no OA copy per
+%   Unpaywall). FLAG: full-text pass pending institutional access (issue #23).
+% DATE: 2026-07-17
+@article{Huang2024Composition,
+  author  = {Yun Huang and Christian D. Schunn and Julio Guerra and Peter
+             Brusilovsky},
+  title   = {Why Students Cannot Easily Integrate Component Skills: An
+             Investigation of the Composition Effect in Programming},
+  journal = {ACM Transactions on Computing Education},
+  year    = {2024},
+  doi     = {10.1145/3673239},
+}
+
+% === provenance: Lopez2008Hierarchy ===
+% CLAIM: Novice performance on tracing correlates with code writing, and the
+%   tasks form a hierarchy with knowledge of constructs at the bottom, tracing
+%   at an intermediate level, and writing at the top.
+% FOUND-VIA: systematic review session "misconceptions-systematic" (OpenAlex
+%   provider); kept by LLM screening (issue #12 triage)
+% PICKED: the primary ICER study behind the reading-tracing-writing hierarchy,
+%   complementing Lister2004Tracing's prerequisite claim with a path model.
+% QUOTE (abstract): "The performance of students on code tracing tasks
+%   correlated with their performance on code writing tasks ... The diagram
+%   suggests the possibility of a hierarchy of programming related tasks.
+%   Knowledge of programming constructs forms the bottom of the hierarchy, with
+%   'explain in English', Parson's puzzles, and the tracing of iterative code
+%   forming one or more intermediate levels in the hierarchy."
+% VERIFIED: abstract only (ACM full text Cloudflare-gated; no OA copy per
+%   Unpaywall). FLAG: full-text pass pending institutional access (issue #23).
+% DATE: 2026-07-17
+@inproceedings{Lopez2008Hierarchy,
+  author    = {Mike Lopez and Jacqueline Whalley and Phil Robbins and Raymond
+               Lister},
+  title     = {Relationships between Reading, Tracing and Writing Skills in
+               Introductory Programming},
+  booktitle = {Proceedings of the Fourth International Workshop on Computing
+               Education Research (ICER '08)},
+  year      = {2008},
+  doi       = {10.1145/1404520.1404531},
+}
+
+% === provenance: Bastian2026AdaptiveTracing ===
+% CLAIM: Adaptive testing built on a program-tracing instrument can diagnose
+%   specific control-flow misconceptions in a time-efficient, isolated way.
+% FOUND-VIA: systematic review session "misconceptions-systematic" (WoS
+%   provider); kept by LLM screening (issue #12 triage)
+% PICKED: a current (IEEE ToE 2026) diagnostic-instrument study on control-flow
+%   misconceptions; methodological neighbour of our diagnostic quizzes.
+% QUOTE (abstract): "This article presents a theoretical derivation of an
+%   approach for diagnosing misconceptions related to control flow. Based on
+%   the notion of shadowed misconception, an adaptive test to identify these
+%   misconceptions is constructed, and an evaluation of this test in the
+%   context of an introductory programming course (N = 97) is presented."
+% VERIFIED: abstract only (IEEE full text gated; no OA copy per Unpaywall).
+%   FLAG: full-text pass pending institutional access (issue #23).
+% DATE: 2026-07-17
+@article{Bastian2026AdaptiveTracing,
+  author  = {Morten Bastian and Andreas M{\"u}hling},
+  title   = {Isolated Detection of Misconceptions in an Adaptive Program
+             Tracing Instrument},
+  journal = {IEEE Transactions on Education},
+  year    = {2026},
+  doi     = {10.1109/TE.2026.3685553},
+}
+
+% === provenance: Pea1986Superbug ===
+% CLAIM: Novices hold language-independent conceptual bugs -- parallelism
+%   (several lines of a program active or known at once), intentionality and
+%   egocentrism -- rooted in a "superbug": a hidden mind in the language with
+%   intelligent interpretive powers.
+% FOUND-VIA: citation snowball, backward from Eckert2022Loops, Kaczmarczyk2010
+%   and Sekiya2013 (literature-review/snowball.py, OpenAlex, 2026-07-19)
+% PICKED: the classic primary source for the parallelism and superbug
+%   misconceptions; credited repeatedly in Sorva's inventory (Table A.1
+%   nos. 8, 25, 33), so citing it replaces a citation-of-a-citation.
+% QUOTE (Classes of Bugs): "The parallelism bug is revealed in diverse
+%   contexts, but its essence is the assumption that different lines in a
+%   program can be active or somehow known by the computer at the same time,
+%   or in parallel."
+% QUOTE (abstract): "It is suggested that these classes of conceptual bugs are
+%   rooted in a 'superbug,' the default strategy that there is a hidden mind
+%   somewhere in the programming language that has intelligent interpretive
+%   powers."
+% VERIFIED: full text read in the ERIC technical-report version (ED319373,
+%   Technical Report No. 31, 1984), of which the JECR 1986 article is the
+%   published version; quotes verbatim from the report scan. FLAG: journal
+%   pagination/wording unverified against the SAGE-gated article (issue #23).
+% DATE: 2026-07-19
+@article{Pea1986Superbug,
+  author  = {Roy D. Pea},
+  title   = {Language-Independent Conceptual ``Bugs'' in Novice Programming},
+  journal = {Journal of Educational Computing Research},
+  volume  = {2},
+  number  = {1},
+  pages   = {25--36},
+  year    = {1986},
+  doi     = {10.2190/689T-1R2A-X4W4-29J2},
 }

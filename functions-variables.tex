@@ -52,6 +52,53 @@ value will be that equation, not the value that the equation represents
 \end{frame}%
 }
 
+A third documented misconception about what a variable holds concerns how many
+values it holds: \textcite{Sorva2012Dissertation} catalogues, in his inventory
+of documented misconceptions, that
+\textcquote[Table~A.1, p.~359]{Sorva2012Dissertation}{A variable can hold
+multiple values at a time / \enquote{remembers} old values}, crediting among
+others \textcite{Doukakis2007}.
+A student holding it expects an assignment to \emph{add} to the variable, so
+that earlier values remain retrievable.
+
+\mode<presentation>{%
+\begin{frame}
+  \begin{block}{Misconception\autocite{Sorva2012Dissertation,Doukakis2007}}
+    \begin{itemize}
+      \item A variable can hold multiple values at a time, or
+        \enquote{remembers} its old values.
+    \end{itemize}
+  \end{block}
+\end{frame}%
+}
+
+The critical aspect is statefulness in its destructive guise: an assignment
+\emph{replaces} the variable's value.
+A minimal contrast keeps the printed variable invariant and varies only
+whether it is assigned once or twice; the left program prints
+\mintinline{python}{5}, the right prints \mintinline{python}{3} alone ---
+not both values, and not the first.
+
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}{python}
+    x = 5
+    print(x)
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={2}]{python}
+    x = 5
+    x = 3
+    print(x)
+  \end{minted}
+\end{minipage}
+
+The statefulness pattern below then generalises this: each assignment
+happens at its line, using the values current at that moment, and what a
+variable held before is gone.
+
 \begin{frame}
 From a variation theoretic perspective, we can say two things about this:
 \begin{enumerate}
@@ -1175,7 +1222,45 @@ correct value and only printing it.
     
 \end{enumerate}
 
-A student might also write a function which returns a value, but that 
+The trouble with returning does not end once students write a
+return-statement: \textcite{KumarVeerasamy2016} found that even among the
+students who understood functions,
+\textcquote[p.~12]{KumarVeerasamy2016}{8\% of the students passed the wrong
+argument/value as the return value}.
+The critical aspect is \emph{which} of the function's names the return
+statement hands back, so the contrast keeps the function's whole computation
+invariant and varies only the returned variable: the left program assigns
+\mintinline{python}{6} to \mintinline{python}{x} (the sum), the right
+\mintinline{python}{2.0} (the average the name promises).
+
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={4}]{python}
+    def calculate_average(values):
+        values_sum = sum(values)
+        average = values_sum/len(values)
+        return values_sum
+
+    x = calculate_average([1, 2, 3])
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={4}]{python}
+    def calculate_average(values):
+        values_sum = sum(values)
+        average = values_sum/len(values)
+        return average
+
+    x = calculate_average([1, 2, 3])
+  \end{minted}
+\end{minipage}
+
+The generalisation and fusion of the first pattern above then apply
+unchanged, since their examples already return the value their names
+promise.
+
+A student might also write a function which returns a value, but that
 value is not stored nor being used later in the program 
 \autocite{AltadmriBrown2015}.
 
@@ -1272,7 +1357,82 @@ without return-statements.
 
 \end{description}
 
-It is not only the return value that is difficult to grasp for students, 
+A final aspect of the return statement is easily missed altogether: that it
+\emph{ends} the function.
+\textcite{Esche2025Return}, analysing over 3000 free-text descriptions of
+functions by CS1 students, reports:
+\textcquote{Esche2025Return}{The keyword \enquote{return} itself was rarely
+mentioned explicitly}, and further:
+\textcquote{Esche2025Return}{The aspect that the keyword \enquote{return} ends
+the function was even less often explicitly mentioned}; the study also
+surfaced, in its Java setting, the new misconception that
+\textcquote{Esche2025Return}{\enquote{return} and \enquote{void} are mutually
+exclusive}.
+An aspect the students do not mention is an aspect we cannot assume they
+discern.
+
+\mode<presentation>{%
+\begin{frame}
+  \begin{block}{Misconception\autocite{Esche2025Return}}
+    \begin{itemize}
+      \item Novices rarely discern that \mintinline{python}{return}
+        \emph{ends} the function --- they treat it as only handing back a
+        value.
+    \end{itemize}
+  \end{block}
+\end{frame}%
+}
+
+The critical aspect is that an executed return statement terminates the call
+then and there: statements after it never run.
+The contrast keeps the function's two statements invariant and varies only
+their order --- calling the left function prints only \mintinline{python}{done}
+(the print-statement is never reached), the right prints
+\mintinline{python}{working} and then \mintinline{python}{done}.
+
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={2}]{python}
+    def report():
+        return "done"
+        print("working")
+
+    print(report())
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{minted}[highlightlines={3}]{python}
+    def report():
+        print("working")
+        return "done"
+
+    print(report())
+  \end{minted}
+\end{minipage}
+
+To generalise, we keep the critical value invariant --- the return ends the
+call the moment it executes --- and vary where it sits: at the end of the
+body, inside a conditional, inside a loop.
+The last of these is also a fusion, since the student must attend to the
+loop, the condition and the early exit simultaneously: the function below
+returns from \emph{inside} the loop at the first negative value, so for
+\mintinline{python}{[4, -1, -5]} it returns \mintinline{python}{-1}, not
+\mintinline{python}{-5} --- the loop does not run to completion.
+
+\hfill
+\begin{minted}[highlightlines={4}]{python}
+    def first_negative(values):
+        for value in values:
+            if value < 0:
+                return value
+        return None
+
+    print(first_negative([4, -1, -5]))
+\end{minted}
+\hfill
+
+It is not only the return value that is difficult to grasp for students,
 the 
 input arguments are also a difficult concept for some students. When 
 calling a 

@@ -47,12 +47,11 @@ only the quotes.
   it as a property of the string \emph{type}.%
 }
 
-When using data types in CS1 the students are often required to use some 
-kind of comparison between variables. This creates situations where the 
-students try to compare different data types to each other, which shows 
-that the students have misconceptions about the difference between data 
-types and how they are initialised and then later used \autocite{
-Kurvinen2016}. Another misconception that is common is what data type that 
+When using data types in CS1 the students are often required to use some
+kind of comparison between variables. This creates situations where the
+students try to compare different data types to each other, without
+discerning that the operands' types differ. A misconception that is
+common here is what data type that
 is returned from terminal input or text-files. Both of these will return 
 strings, but students often hold the misconception that when reading 
 numbers from the terminal or files, they will automatically be converted to 
@@ -137,15 +136,15 @@ invariant and vary only the type.
 \end{description}
 
 
- \textcite{Kurvinen2016} found in their studies that it is not intuitive 
-for students that the indexation of an array starts at 0 instead of 1. 
-They also noticed that students have a hard time figuring out how to loop 
-through an array's elements by using the elements index. The same problem 
-was found by \textcite{KumarVeerasamy2016} who found that students often 
-are of by one index when looping through an array using index, causing 
-index-error when trying to extract an element with an index larger then 
-the length of the list. They also saw a tendency to use negative index-
-numbers when unnecessary to extract elements from an array.
+ It is not intuitive for students that the indexation of a list starts at
+0 instead of 1, and looping through a list's elements by their index is
+correspondingly hard. \textcite{KumarVeerasamy2016} found students
+\textcquote[p.~12]{KumarVeerasamy2016}{confused about lists and list
+indices}: students often are off by one index when looping through a list
+using index, causing an index-error when trying to extract an element
+with an index larger than the length of the list, and
+\textcquote[p.~12]{KumarVeerasamy2016}{13\% of the students used negative
+numbers as indices to read or display the values from lists}.
 
 The object of learning is \emph{how an index maps to a position in a list}. The
 critical aspect is that indexing starts at \mintinline{python}{0}, so the first
