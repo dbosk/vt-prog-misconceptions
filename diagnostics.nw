@@ -72,8 +72,12 @@ the first week, the end quiz in the last.
 The titles name the course level explicitly, since the parallel
 debugging study runs same-shaped concept quizzes in the same course
 and the two must stay distinguishable for students and analysis alike.
-The end quiz opens with a question of its own: whether the student
-prepared for the quiz.
+Each quiz of the pair opens with an ungraded question of its own.
+The start quiz opens with the consent item
+(\cref{app:diagnostics-ethics}): the quizzes collect research data,
+consent must precede collection, and the start quiz is the first of
+the sixteen a student meets.
+The end quiz opens with whether the student prepared for the quiz.
 We ask because preparation would confound the gain measure --- a
 student who reviews the material the night before measures
 preparation, not what the course left behind.
@@ -94,6 +98,7 @@ itself.
     <<score-only result view>>
   },
   "questions": [
+    <<consent question>>,
     <<aspect groups>>
   ]
 }
@@ -175,6 +180,55 @@ confounding it.
 <<revealing result view>>=
 "show_correct_answers": true,
 "hide_results": null
+@
+
+\subsection{The consent and preparation items}
+\label{app:diagnostics-ethics}
+
+The quizzes collect research data, so participation in the study is
+opt-in: the consent item below opens the course-level start quiz,
+which runs in the first week, before any topic quiz, so the one asked
+consent covers all sixteen quizzes and none of the others asks again.
+The wording is the same as the course's other diagnostics --- the
+parallel debugging study's background quiz opens with it too --- so a
+student who has answered one recognises the next; each study still
+filters its extraction by the consent its own instrument collected
+(\cref{app:diagnostics-analysis}), so a \enquote{No} here excludes
+these sixteen quizzes regardless of what was answered elsewhere.
+A student's grade is unaffected either way: the item carries no
+points, grading and teaching run identically regardless of the
+answer, and the research extraction filters by consent after the
+fact.
+An application for ethical review of the course's data collection has
+been drafted (the working draft accompanies this paper's source as
+[[ethics-application-prgi26.md]]) but not yet filed; no collected
+data is used for research before the review is decided.
+% XXX(#34) Ethics application for the prgi26 data collection: drafted, not
+% yet filed; add the reference number and its terms once decided, and
+% align the consent wording with the approved application.
+
+The item is a multiple-choice question rather than Canvas's
+true/false type because a Classic true/false question cannot relabel
+its choices, and the student should answer \enquote{Yes} or
+\enquote{No}, not \enquote{True} or \enquote{False} --- the same two
+choices the sibling studies' New-Quiz consent item offers, so the
+item reads identically wherever a student meets it.
+Canvas wants some choice marked correct; the weight on \enquote{Yes}
+is that requirement and nothing else --- the item carries no points,
+so no answer is more correct than the other, exactly as for the
+preparation question below.
+
+<<consent question>>=
+{
+  "question_name": "Consent",
+  "question_text": "<p>I consent to my answers in these quizzes, and my submissions in the course, being used pseudonymised in computing education research. My participation does not affect my grade.</p>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 0,
+  "answers": [
+    {"answer_text": "Yes", "answer_weight": 100},
+    {"answer_text": "No", "answer_weight": 0}
+  ]
+}
 @
 
 The preparation question is ungraded and sits first in every end
@@ -1746,6 +1800,11 @@ The distribution over wrong answers is the diagnostic payoff: each
 distractor encodes a catalogued misconception, so the table shows
 \emph{which} misconceptions a cohort holds, not merely how many
 students err.
+Only consenting students' rows enter any of it: every quiz's report
+is filtered by the consent collected in the course-level start quiz
+(\cref{app:diagnostics-ethics}), and the student column carries the
+login ID rather than the name --- both arrangements have their own
+subsections below.
 % TODO(#29): add learnlog instrumentation (the vt-debug episodes.nw
 % pattern).
 
@@ -1755,7 +1814,8 @@ students err.
 The quizzes are defined in the quiz-*.json files tangled from the same
 literate source as this program (the appendix of the paper); those
 files are also this program's answer key.  The results come straight
-from Canvas via canvaslms.
+from Canvas via canvaslms.  Only rows of students who answered yes to
+the consent question of the course-level start quiz are extracted.
 
 Run --self-test to check the pure functions against the quiz files
 without touching Canvas.
@@ -1763,8 +1823,10 @@ without touching Canvas.
 
 import argparse
 import collections
+import contextlib
 import csv
 import glob
+import io
 import json
 import os
 import re
@@ -1773,7 +1835,10 @@ import sys
 <<the quiz files are the answer key>>
 <<recover the aspect and the form from the names>>
 <<match report columns to pool questions>>
+<<the student behind a row>>
+<<attach the login IDs>>
 <<fetch the results from Canvas>>
+<<the consent filter>>
 <<classify one student's answer to one question>>
 <<collect the tidy rows for one quiz>>
 <<summarise the aspects>>
@@ -1892,6 +1957,117 @@ def column_for(question, fieldnames):
     return None
 @
 
+\subsubsection{Who a row belongs to}
+
+The question text joins the report's columns to the pools; what joins
+the report's \emph{rows} --- across the sixteen quizzes and the two
+administrations --- is the student, and there a name will not do.
+Two students can share a name, and one course is enough for that.
+The identifier we use instead is the student's \emph{login ID}: an
+email address, unique across the institution, and the key the
+parallel debugging study joins these concept scores on as its control
+variable --- a join on names would not merely risk merging namesakes,
+it would not join at all.
+The student-analysis report does not carry the login ID, so the
+fetcher attaches it to every row from the course's own roster below.
+Every use goes through [[student_of]]; a row without the login column
+falls back to the course and the name, prefixed with the course so a
+fallback key is visibly not a login ID.
+
+<<the student behind a row>>=
+STUDENT = "name"
+LOGIN_COLUMN = "login"
+
+
+def student_of(row):
+    """Return the identifier of the student behind a row.
+
+    The login ID attached by the fetcher when available; rows without
+    it fall back to course and name.
+    """
+    return row.get(LOGIN_COLUMN) or f"{COURSE}/{row[STUDENT]}"
+@
+
+The report identifies its students by name and, in its [[id]] and
+[[sis_id]] columns, by the platform's and the institution's numbers;
+the login ID itself lives in the course roster, one API call away.
+Each row is looked up by the identifier it does carry: the platform
+ID first, since Canvas assigns it and builds the report from it, then
+the institutional ID, and only for a report carrying neither does the
+name come into it --- accepted then only when exactly one enrolled
+student bears it.
+A name borne by two is reported and left alone, so both rows keep the
+fallback and stay visibly unresolved, rather than both being handed
+the same login and silently merged into one student.
+
+<<attach the login IDs>>=
+def attach_logins(rows, course):
+    """Attach each row's student login ID from the course roster."""
+    <<index the roster by every identifier it offers>>
+    <<look each row up in that index>>
+@
+
+A roster we cannot read is a reason to fall back, not to stop: the
+summaries themselves do not need the identity, and a missing
+enrolment scope or an expired token should not cost us them.
+So the failure is announced and the rows are left as they came.
+A roster entry without a login ID is skipped rather than indexed
+under its name: indexing it would make a name that belongs to one
+usable student look ambiguous, and we would refuse a lookup we could
+have made.
+
+<<index the roster by every identifier it offers>>=
+by_id, by_sis, by_name = {}, {}, {}
+try:
+    students = list(course.get_users(enrollment_type=["student"]))
+except Exception as error:
+    print(f"warning: cannot read the roster of {COURSE}: {error}")
+    return
+for user in students:
+    login = getattr(user, "login_id", None)
+    if not login:
+        continue
+    by_id[str(user.id)] = login
+    sis = getattr(user, "sis_user_id", None)
+    if sis:
+        by_sis[str(sis)] = login
+    by_name.setdefault(user.name, []).append(login)
+@
+
+The report's column headings are Canvas's, so we find the two ID
+columns by name once and reuse them for every row.
+The three lookups are tried in turn and the first that answers wins,
+which is also the order of how much we trust them.
+A row that none of them answers is left without the column, which is
+exactly what [[student_of]] reads as \enquote{fall back}.
+
+<<look each row up in that index>>=
+if not rows:
+    return
+id_column = next((c for c in rows[0] if c.strip().lower() == "id"), None)
+sis_column = next((c for c in rows[0]
+                   if c.strip().lower() == "sis_id"), None)
+for row in rows:
+    login = None
+    if id_column and row.get(id_column):
+        login = by_id.get(str(row[id_column]).strip())
+    if not login and sis_column and row.get(sis_column):
+        login = by_sis.get(str(row[sis_column]).strip())
+    if not login:
+        candidates = by_name.get(row[STUDENT], [])
+        if len(candidates) == 1:
+            login = candidates[0]
+        elif len(candidates) > 1:
+            print(f"warning: several students in {COURSE} are named"
+                  f" {row[STUDENT]!r} and the report has no usable ID"
+                  f" column; falling back to the name, which cannot"
+                  f" tell them apart")
+    if login:
+        row[LOGIN_COLUMN] = login
+@
+
+\subsubsection{Fetching the results}
+
 Just as the quizzes are created with [[canvaslms]], the results are
 extracted with it: the package provides the credentials, the course
 lookup and the report machinery, so the program reuses them instead of
@@ -1900,6 +2076,9 @@ The report is generated on demand by Canvas, so we request it --- with
 all versions included, in case a quiz was edited after some students
 answered --- poll it until Canvas marks it complete, and download the
 CSV it points to.
+The fetcher also attaches each row's login ID while the [[course]]
+object is at hand, so every report the rest of the program sees
+already knows who its rows belong to.
 
 <<fetch the results from Canvas>>=
 def fetch_results(course_name, quiz_title):
@@ -1949,7 +2128,95 @@ def fetch_results(course_name, quiz_title):
         sys.exit("Canvas did not produce the student-analysis report")
     response = requests.get(url)
     response.raise_for_status()
-    return list(csv.DictReader(response.text.splitlines()))
+    rows = list(csv.DictReader(response.text.splitlines()))
+    attach_logins(rows, course)
+    return rows
+@
+
+\subsubsection{Consent}
+
+Consent is asked once, in the course-level start quiz
+(\cref{app:diagnostics-ethics}), and covers all sixteen quizzes; the
+other fifteen carry no consent item of their own, so every quiz's
+rows are filtered by the students who answered yes at the start.
+The program reads the consent question from the tangled quiz files,
+like the answer key, so the filter cannot drift from the instrument
+any more than the key can.
+When the course-start report is missing, or carries no consent
+column, there is nothing to filter by; the program then says so and
+keeps every row rather than guessing silently in either direction ---
+a state that only a dry run should ever see, since the start quiz
+runs before any quiz whose rows would need filtering.
+
+<<the consent filter>>=
+def load_consent(pattern="quiz-*.json"):
+    """Return (quiz title, consent question text) from the quiz files.
+
+    The consent question is the ungrouped question named `Consent`;
+    (None, None) when no tangled quiz carries one.
+    """
+    for path in sorted(glob.glob(pattern)):
+        quiz = json.load(open(path))
+        for entry in quiz["questions"]:
+            if "group" in entry:
+                continue
+            if entry.get("question_name") == "Consent":
+                return quiz["settings"]["title"], entry["question_text"]
+    return None, None
+@
+
+Finding the consent column repeats the normalise-and-contain matching
+of [[column_for]], but on a question text alone rather than a pool
+question, so it gets its own function instead of overloading that
+one's contract.
+One guard is added: the containment fallback exists for truncated
+headers, but a short metadata head must not pass it --- [[id]] is a
+substring of \enquote{pseudonymised} --- so heads shorter than the
+words \enquote{I consent} are out of the running.
+
+<<the consent filter>>=
+def consent_column(fieldnames, text):
+    """Return the report column carrying the consent question, or None."""
+    target = normalise(text)
+    heads = {
+        name: normalise(re.sub(r"^\d+: ", "", name or ""))
+        for name in fieldnames
+    }
+    for name, head in heads.items():
+        if head == target:
+            return name
+    for name, head in heads.items():
+        if len(head) >= len("I consent") and (head in target
+                                              or target in head):
+            return name
+    return None
+@
+
+The consent set holds the students who answered yes, keyed by
+[[student_of]] like every other join; [[None]] means the question was
+not found at all, which the caller must distinguish from an empty set
+--- nobody consenting filters everything, the question being absent
+filters nothing.
+
+<<the consent filter>>=
+def consenting(report, text):
+    """Return the students who answered yes, or None without the column."""
+    if not report or text is None:
+        return None
+    column = consent_column(report[0].keys(), text)
+    if column is None:
+        return None
+    return {
+        student_of(row) for row in report
+        if normalise(row[column] or "").lower() in ("yes", "true")
+    }
+
+
+def filter_consent(rows, students):
+    """Keep the rows of the consenting students; None keeps every row."""
+    if students is None:
+        return rows
+    return [row for row in rows if student_of(row) in students]
 @
 
 A student's cell in the report holds the chosen answer's text.
@@ -1986,10 +2253,10 @@ form: the student left it unanswered, and the report does not say
 which form they saw.
 
 <<collect the tidy rows for one quiz>>=
-def tidy_rows(quiz_title, aspects, report, student_column="name"):
+def tidy_rows(quiz_title, aspects, report):
     """Yield one dict per student and aspect in the report."""
     for row in report:
-        student = row.get(student_column, "")
+        student = student_of(row)
         for number, aspect in sorted(aspects.items()):
             chosen = correct = form = None
             answer = ""
@@ -2047,6 +2314,8 @@ one point; every question's correct answer text must classify back to
 its correct position; and the before- and after-quiz of every pair
 must hold the same pools, since the draw --- not the quiz --- decides
 which form a student meets.
+The identity and consent machinery is checked on stand-ins at the
+end, below.
 
 <<self-test against the quiz files>>=
 def self_test():
@@ -2086,15 +2355,81 @@ def self_test():
                 if sorted(aspect["forms"]) != sorted(other["forms"]):
                     failures += 1
                     print(f"FAIL {title} [{number}]: pools differ pre/post")
+    <<check identity and consent on stand-ins>>
     print(f"self-test: {'FAIL' if failures else 'OK'}")
     sys.exit(1 if failures else 0)
 @
 
-The main function ties the pieces together: load the key, fetch each
-quiz's report, accumulate the tidy rows, write them to the output CSV
-and print the summaries.
+The case the identity machinery exists for is two students who share a
+name: given an ID column the two rows must come out as two students,
+and given only the name the program must warn and resolve nothing.
+The consent checks build a one-question report from the tangled
+consent question itself: the consent set must hold exactly the
+yes-answers, filtering must keep exactly those rows, and a report
+without the consent column must yield [[None]] --- filter nothing ---
+rather than an empty set, which would filter everything.
+
+<<check identity and consent on stand-ins>>=
+class FakeUser:
+    """A roster entry with the attributes the lookup reads."""
+
+    def __init__(self, user_id, name, login_id):
+        self.id = user_id
+        self.name = name
+        self.login_id = login_id
+
+class FakeCourse:
+    """A course whose roster is a fixed list of users."""
+
+    def __init__(self, users):
+        self.users = users
+
+    def get_users(self, **kwargs):
+        return self.users
+
+namesakes = FakeCourse([FakeUser(1, "Ann Andersson", "ann@kth.se"),
+                        FakeUser(2, "Ann Andersson", "anna@kth.se")])
+rows = [{"id": "1", STUDENT: "Ann Andersson"},
+        {"id": "2", STUDENT: "Ann Andersson"}]
+attach_logins(rows, namesakes)
+if [student_of(row) for row in rows] != ["ann@kth.se", "anna@kth.se"]:
+    failures += 1
+    print("FAIL: the id column does not tell namesakes apart")
+rows = [{STUDENT: "Ann Andersson"}]
+notes = io.StringIO()
+with contextlib.redirect_stdout(notes):
+    attach_logins(rows, namesakes)
+if LOGIN_COLUMN in rows[0] or "warning" not in notes.getvalue():
+    failures += 1
+    print("FAIL: an ambiguous name resolved instead of warning")
+title, text = load_consent()
+if title is None:
+    failures += 1
+    print("FAIL: no consent question in the tangled quizzes")
+else:
+    head = f"1234: {strip_html(text)}"
+    report = [{STUDENT: "Ann", LOGIN_COLUMN: "ann@kth.se", head: "Yes"},
+              {STUDENT: "Bo", LOGIN_COLUMN: "bo@kth.se", head: "No"}]
+    students = consenting(report, text)
+    if students != {"ann@kth.se"}:
+        failures += 1
+        print("FAIL: the consent set is not exactly the yes-answers")
+    if filter_consent(report, students) != report[:1]:
+        failures += 1
+        print("FAIL: consent filtering keeps the wrong rows")
+    if consenting([{STUDENT: "Ann"}], text) is not None:
+        failures += 1
+        print("FAIL: a report without the consent column must be None")
+@
+
+The main function ties the pieces together: load the key, fetch every
+quiz's report, derive the consenting students from the course-start
+report, accumulate the tidy rows of those students only, write them to
+the output CSV and print the summaries.
 Quizzes without responses yet are reported and skipped, so the program
-can run mid-course.
+can run mid-course; the reports are all fetched before any is tidied,
+because the consent set must be in hand before the first row is kept
+or dropped.
 
 <<analysis main>>=
 def main():
@@ -2110,8 +2445,8 @@ def main():
     if args.self_test:
         self_test()
     key = load_key()
-    rows = []
-    for quiz_title, aspects in key.items():
+    reports = {}
+    for quiz_title in key:
         try:
             report = fetch_results(args.course, quiz_title)
         except StopIteration:
@@ -2120,7 +2455,15 @@ def main():
         if not report:
             print(f"skipping {quiz_title!r}: no responses yet")
             continue
-        rows.extend(tidy_rows(quiz_title, aspects, report))
+        reports[quiz_title] = report
+    consent_title, consent_text = load_consent()
+    students = consenting(reports.get(consent_title), consent_text)
+    if students is None:
+        print("note: no consent answers to filter by; keeping every row")
+    rows = []
+    for quiz_title, report in reports.items():
+        rows.extend(tidy_rows(quiz_title, key[quiz_title],
+                              filter_consent(report, students)))
     if not rows:
         sys.exit("no responses in any quiz")
     with open(args.output, "w", newline="") as f:
