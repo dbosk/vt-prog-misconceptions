@@ -52,13 +52,15 @@ kind of comparison between variables. This creates situations where the
 students try to compare different data types to each other, without
 discerning that the operands' types differ. A misconception that is
 common here is what data type that
-is returned from terminal input or text-files. Both of these will return 
-strings, but students often hold the misconception that when reading 
-numbers from the terminal or files, they will automatically be converted to 
-integers \autocite{GuoMarkelZhang2020}. This misconception will 
-unfortunately not always raise an error, since many mathematical operators 
-work for both strings and integers, and the misconception will instead lead
-to subtle errors later on in the programme.
+is returned from terminal input or text-files. Both of these return
+strings, but students often assume that a number read from the terminal or
+a file is already a number: as \textcite{GuoMarkelZhang2020} put it, such
+data \textcquote{GuoMarkelZhang2020}{often start as strings}, and if they
+are not converted \textcquote{GuoMarkelZhang2020}{it is still possible to
+use math operators like + and > on them, which will perform string
+concatenation and comparison}. The misconception will therefore not always
+raise an error, and instead leads to subtle errors later on in the
+programme.
 \textcite{Bosse2021Antipatterns} catalogue the same failure as the
 \emph{missing type conversion} antipattern in CS1 Python submissions:
 \textcquote{Bosse2021Antipatterns}{Failure to convert, when necessary, will make

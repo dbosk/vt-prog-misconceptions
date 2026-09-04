@@ -911,7 +911,11 @@ pitfalls and how to get literature reviews published.}
 %   read from files/terminal is already numeric when it is still a string.
 % FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); full text
 %   re-located via DOI 10.1145/3386527.3406733 and read (P. Guo's hosted copy,
-%   pg.ucsd.edu)
+%   https://pg.ucsd.edu/publications/learnersourcing-at-scale-python-tutor_LAS-2020-WIP.pdf,
+%   the file his homepage links; the same file was for a while also served
+%   without the "-WIP" suffix, and that URL now returns his notice "This
+%   article is no longer available. Do not distribute unauthorized copies
+%   or translations of it ...")
 % PICKED: most specific, verbatim-named learner errors in Guo et al.'s 16,791-
 %   explanation learnersourced corpus; the same catalogue backs the co-cited uses
 %   in types.tex, repetitions.tex:82, and functions-variables.tex:672.
@@ -921,12 +925,22 @@ pitfalls and how to get literature reviews published.}
 % QUOTE (Findings, Mathematical Misconceptions): "When numerical data is read from
 %   files or terminal input, they often start as strings. If they are not properly
 %   converted to numbers, it is still possible to use math operators like + and >
-%   on them, which will perform string concatenation and comparison."
+%   on them, which will perform string concatenation and comparison,
+%   respectively."
 % VERIFIED: full-text (re-confirmed verbatim against Guo's copy); the corpus lists
 %   each cited misconception as a learner-explanation pattern. NB types.tex:59 says
 %   input is "automatically converted to integers" -- Guo's point is it stays a
 %   string unless converted; the misconception is the students' assumption it is
-%   already numeric (prose nuance flagged for follow-up).
+%   already numeric (prose nuance flagged for follow-up; fixed in types.tex
+%   on 2026-09-04).
+% VERIFIED (2026-09-04): the paper is not retracted (Crossref carries no
+%   update for the DOI) and the "-WIP" copy above still serves a PDF
+%   byte-identical to the one read on 2026-09-03 (4 pp., created
+%   2020-06-17); the copy without the suffix, which the intropy decks had
+%   used, was taken down on 2026-09-03 together with other old self-hosted
+%   PDFs of the author's.  Both quotations re-read verbatim in it; the
+%   "Mathematical Misconceptions" sentence ends ", respectively", which the
+%   earlier transcription dropped.  Cached in scholar's PDF cache.
 % DATE: 2026-06-29
 @inproceedings{GuoMarkelZhang2020,
 author = {Guo, Philip J. and Markel, Julia M. and Zhang, Xiong},
