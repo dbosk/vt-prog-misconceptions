@@ -189,23 +189,29 @@ The quizzes collect research data, so participation in the study is
 opt-in: the consent item below opens the course-level start quiz,
 which runs in the first week, before any topic quiz, so the one asked
 consent covers all sixteen quizzes and none of the others asks again.
-The wording is the same as the course's other diagnostics --- the
-parallel debugging study's background quiz opens with it too --- so a
-student who has answered one recognises the next; each study still
-filters its extraction by the consent its own instrument collected
-(\cref{app:diagnostics-analysis}), so a \enquote{No} here excludes
-these sixteen quizzes regardless of what was answered elsewhere.
+The wording is the same as the parallel debugging study's background
+quiz, which opens with it too, so a student who has answered one
+recognises the next; each study still filters its extraction by the
+consent its own instrument collected (\cref{app:diagnostics-analysis}),
+so a \enquote{No} here excludes these sixteen quizzes regardless of what
+was answered elsewhere.
 A student's grade is unaffected either way: the item carries no
 points, grading and teaching run identically regardless of the
 answer, and the research extraction filters by consent after the
 fact.
-An application for ethical review of the course's data collection has
-been drafted (the working draft accompanies this paper's source as
-[[ethics-application-prgi26.md]]) but not yet filed; no collected
-data is used for research before the review is decided.
-% XXX(#34) Ethics application for the prgi26 data collection: drafted, not
-% yet filed; add the reference number and its terms once decided, and
-% align the consent wording with the approved application.
+The collection was assessed against the Swedish Ethics Review Act
+\autocite{Etikprovningslagen} with the institution's checklist and found
+not to require review---only ordinary personal data is processed, there
+is no intervention, and the teaching is not manipulated for
+research---and the institution's research-ethics advisor confirmed the
+assessment on 2026-09-01; the assessment accompanies this paper's source
+as [[ethics-application-prgi26.md]].
+The item therefore links to the participant information page in the
+course's learning platform, which describes the purpose, the data, its
+handling and the students' rights, and its wording names every source
+the two studies use---the parallel debugging study's programming logs
+and platform activity included---so that the consent is informed in the
+sense the GDPR requires.
 
 The item is a multiple-choice question rather than Canvas's
 true/false type because a Classic true/false question cannot relabel
@@ -221,7 +227,7 @@ preparation question below.
 <<consent question>>=
 {
   "question_name": "Consent",
-  "question_text": "<p>I consent to my answers in these quizzes, and my submissions in the course, being used pseudonymised in computing education research. My participation does not affect my grade.</p>",
+  "question_text": "<p>I consent to my answers in the course's quizzes and questionnaires, my course submissions, the logs of my programming work that the course's tools record, and my activity in the course's learning platform, being used pseudonymised in computing education research. Recorded sessions happen only if I separately agree to them. My participation is voluntary, does not affect my grade, and I can withdraw at any time by contacting the responsible researcher. I have read <a href='https://canvas.kth.se/courses/63874/pages/information-om-forskningsstudien'>the information page about the study</a>.</p>",
   "question_type": "multiple_choice_question",
   "points_possible": 0,
   "answers": [
