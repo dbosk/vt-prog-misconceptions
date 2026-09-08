@@ -116,11 +116,19 @@ The method section has a short `\subsection{Ethics}` (the study proper is
 a literature review; the deployed instruments are the part that collects
 personal data — see `diagnostics.nw`, subsection "The consent and
 preparation items").  `ethics-application-prgi26.md` in the repo root is
-the English working draft of the ethics review application for the prgi26
-data collection (drafted, **not filed**; no reference number exists yet).
-It is a byte-identical synchronised copy shared with vt-debug: edit one
-copy, propagate to the other in the same round, and verify with
-`md5sum ../vt-{debug,prog-misconceptions}/ethics-application-prgi26.md`.
-The consent wording is deliberately identical across all the vt- papers'
-instruments — never change it unilaterally, nor before the ethics
-application is decided.
+the ethics assessment of the prgi26 data collection: assessed 2026-09-01
+as **not subject to the Ethics Review Act** (nothing is filed; no
+reference number will ever exist), kept as the internal self-assessment
+and data-protection documentation.  `participant-information-prgi26.md`
+(students; Swedish + English; YAML front matter for `canvaslms pages edit
+-f`) is published as the Canvas page "Information om forskningsstudien" in
+DD1317 HT26 and linked from the consent item;
+`participant-information-prgi26-staff.md` is the teacher/TA variant.  All
+three files are byte-identical synchronised copies shared with vt-debug:
+edit one copy, propagate to the other in the same round, and verify with
+`md5sum ../vt-{debug,prog-misconceptions}/{ethics-application,participant-information,participant-information-*-staff}-prgi26.md`
+(or simply `md5sum ../vt-{debug,prog-misconceptions}/*prgi26*.md`).
+The consent wording is deliberately identical to vt-debug's background
+quiz (the fuller wording of §6 of the assessment, with the information
+page's URL) — never change it unilaterally; it differs from the datintro26
+quizzes' frozen wording on purpose.
