@@ -121,8 +121,10 @@ as **not subject to the Ethics Review Act** (nothing is filed; no
 reference number will ever exist), kept as the internal self-assessment
 and data-protection documentation.  `participant-information-prgi26.md`
 (students; Swedish + English; YAML front matter for `canvaslms pages edit
--f`) is published as the Canvas page "Information om forskningsstudien" in
-DD1317 HT26 and linked from the consent item;
+-f`) is the Canvas page "Information om forskningsstudien" in DD1317 HT26,
+placed in the Python-part overview module right before the consent quiz
+and linked from the consent item; the file carries no `published` key, so
+the page is created unpublished and the teacher publishes it;
 `participant-information-prgi26-staff.md` is the teacher/TA variant.  All
 three files are byte-identical synchronised copies shared with vt-debug:
 edit one copy, propagate to the other in the same round, and verify with
