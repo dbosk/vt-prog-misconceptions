@@ -1697,4 +1697,151 @@ series = {L@S '20}
   year      = {2018},
   pages     = {169--177},
   doi       = {10.1145/3230977.3231005},
+
+% === provenance: RashkovitsLavy2012 ===
+% CLAIM: Students commonly fail to grasp that when an exception is thrown,
+%   control leaves the rest of the protected block, jumps to the matching
+%   handler and continues from there; flow of control around exceptions and
+%   handling exceptions further up the calling chain are among the aspects
+%   they find hardest.  (files.tex, closing and missing-file analyses;
+%   diagnostics.nw aspects 91 and 92.)
+% FOUND-VIA: reused from the intropy course's deck "Inmatning och
+%   felhantering" (ltnotes.bib), where it was found as a known document in
+%   scholar session exceptions-novice (2026-09-03).  Re-retrieved here: the
+%   OpenAlex record (api.openalex.org/works?filter=title.search:advanced
+%   properties of java exceptions) gives DOI 10.28945/1726 and the OA copy
+%   http://www.jite.org/documents/Vol11/JITEv11IIPp327-352Rashkovits1157.pdf
+%   (scholar's downloader got HTTP 412; fetched with curl).  Note: the
+%   earlier note that no provider indexes the journal is wrong for OpenAlex.
+% PICKED: the only source found that measures the specific step the items
+%   probe -- what happens to the statements after the failing one inside the
+%   protected block, and propagation to the caller.  Primary study with a
+%   graded questionnaire.
+% QUOTE (p. 343): "They had not assimilated the fact that once an exception
+%   is thrown, the program jumps to the closest catch clause that is
+%   appropriate for the exception and continues from there. They could not
+%   cope properly with try-catch blocks containing more than one command."
+% QUOTE (p. 350): "The students had difficulty exhibiting high levels of
+%   understanding concerning the following: use of multiple exceptions; flow
+%   of control in the context of exceptions; handling exceptions further up
+%   the calling chain; catching and handling hierarchically related
+%   exceptions; and overriding methods that throw exceptions."
+% VERIFIED: full text read 2026-10-04 (pdftotext of the jite.org PDF, 26
+%   pages = pp. 327--352, so PDF page n is p. 326+n; quotes on PDF pages 17
+%   and 24).  Scope caveat stated in files.tex: Java, students near
+%   graduation, not first-year Python; the transfer to Python is our
+%   inference.
+% COUNTER: scholar session bank-files, S5/M2: '("exception handling" OR
+%   exceptions) AND (file OR "resource management" OR "with statement" OR
+%   close) AND (novice OR students OR CS1) AND (misconception OR error OR
+%   difficulties)' and '(newline OR "line break" OR "file mode" OR overwrite
+%   OR "type conversion" OR "exception handling") AND (novice OR students OR
+%   CS1) AND programming AND (slip OR typo OR "not a misconception" OR "no
+%   difficulty" OR overstated OR mastered)' on openalex, ieee, wos (TS=),
+%   scopus (TITLE-ABS-KEY); dblp blocked by a bot check (0, not run).  No
+%   result argues that students master exception flow of control.
+% DATE: 2026-10-04
+@article{RashkovitsLavy2012,
+  author  = {Rashkovits, Rami and Lavy, Ilana},
+  title   = {Students' Understanding of Advanced Properties of Java
+             Exceptions},
+  journal = {Journal of Information Technology Education: Innovations in
+             Practice},
+  volume  = {11},
+  pages   = {327--352},
+  year    = {2012},
+  doi     = {10.28945/1726},
+}
+
+% === provenance: AlzahraniVahid2021 ===
+% CLAIM: A three-decade survey of the CS1 logic-error literature (47
+%   publications, 1985--2018) classifies 166 errors into eleven categories,
+%   none of which concerns files -- evidence, together with our own empty
+%   search, that file handling is scarcely covered by the misconception
+%   literature.  (files.tex, introduction.)
+% FOUND-VIA: scholar session bank-files, counter-query M2 on openalex:
+%   '(newline OR "line break" OR "file mode" OR overwrite OR "type
+%   conversion" OR "exception handling") AND (novice OR students OR CS1) AND
+%   programming AND (slip OR typo OR "not a misconception" OR "no
+%   difficulty" OR overstated OR mastered)'.
+% PICKED: the broadest survey of CS1 error catalogues that surfaced; its
+%   category list is the most direct evidence of what the literature
+%   covers.  Used only for the absence of a file category, not for any
+%   positive claim.
+% QUOTE (abstract): "The publications described 166 common logic errors,
+%   which we classified into 11 error categories: input (2 errors), output
+%   (1 error), variable (7 errors), computation (21 errors), condition (18
+%   errors), branch (14 errors), loop (27 errors), array (5 errors),
+%   function (24 errors), conceptual (43 errors), and miscellaneous (4
+%   errors)."
+% VERIFIED: full text read 2026-10-04 (ASEE PEER PDF via scholar's cache);
+%   the survey excludes exception handling, OOP, recursion and pointers
+%   explicitly, but not files, so the absence of a file category is a
+%   finding of the survey, not of its scope.  Its scope is logic errors,
+%   not misconceptions in general -- the prose says "logic errors".
+% COUNTER: the claim is an absence; its counter-search is the support
+%   search for file misconceptions (session bank-files S1--S4, S6, all live
+%   providers), which found no study of novice conceptions of opening,
+%   reading or writing files.  Grey literature (WebSearch "students
+%   misconceptions \"file handling\" programming \"write mode\" overwrite OR
+%   \"trailing newline\" OR \"closing files\" empirical", 2026-10-04)
+%   returned only tutorials and exam-preparation pages with unsourced
+%   figures; none cited.
+% DATE: 2026-10-04
+@inproceedings{AlzahraniVahid2021,
+  author    = {Alzahrani, Nabeel and Vahid, Frank},
+  title     = {Common Logic Errors for Programming Learners: A Three-decade
+               Literature Survey},
+  booktitle = {2021 ASEE Virtual Annual Conference Content Access},
+  publisher = {ASEE},
+  year      = {2021},
+  doi       = {10.18260/1-2--36814},
+}
+
+% === provenance: PythonTutorialFiles ===
+% CLAIM: Python's tutorial documents that a line read from a file keeps its
+%   newline character, that mode 'w' erases an existing file, and that
+%   `with` closes the file even when an exception is raised.  (files.tex.)
+% FOUND-VIA: primary documentation of the behaviour, the same section the
+%   course's files deck cites (intropy modules/files, ltnotes.bib); fetched
+%   https://docs.python.org/3/tutorial/inputoutput.html on 2026-10-04.
+% PICKED: the language's own tutorial is the authoritative source for what
+%   the operations do, and it is what the course points students to.
+% QUOTE (7.2): "'w' for only writing (an existing file with the same name
+%   will be erased)"
+% QUOTE (7.2.1): "f.readline() reads a single line from the file; a newline
+%   character (\n) is left at the end of the string, and is only omitted on
+%   the last line of the file if the file doesn't end in a newline."
+% QUOTE (7.2): "The advantage is that the file is properly closed after its
+%   suite finishes, even if an exception is raised at some point."
+% VERIFIED: page fetched and searched 2026-10-04.  The newline sentence is
+%   stated for readline; the same section's loop over the file object prints
+%   each line with end='', and our items verify the loop's behaviour by
+%   running it (Python 3.14.4).
+% DATE: 2026-10-04
+@online{PythonTutorialFiles,
+  author  = {{Python Software Foundation}},
+  title   = {The {Python} Tutorial, section 7.2: Reading and Writing Files},
+  year    = {2026},
+  url     = {https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files},
+  urldate = {2026-10-04},
+}
+
+% === provenance: PythonExceptions ===
+% CLAIM: FileNotFoundError is the exception raised when a requested file
+%   does not exist.  (files.tex, missing-file analysis.)
+% FOUND-VIA: primary documentation; fetched
+%   https://docs.python.org/3/library/exceptions.html on 2026-10-04.
+% PICKED: the authoritative definition of the built-in exception.
+% QUOTE: "Raised when a file or directory is requested but doesn't exist.
+%   Corresponds to errno ENOENT."
+% VERIFIED: page fetched and searched 2026-10-04; behaviour also run (items
+%   92A/B, Python 3.14.4).
+% DATE: 2026-10-04
+@online{PythonExceptions,
+  author  = {{Python Software Foundation}},
+  title   = {Built-in Exceptions},
+  year    = {2026},
+  url     = {https://docs.python.org/3/library/exceptions.html},
+  urldate = {2026-10-04},
 }

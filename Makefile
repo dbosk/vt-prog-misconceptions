@@ -23,6 +23,7 @@ SRC+=types.tex
 SRC+=classes.tex
 SRC+=dictionaries.tex
 SRC+=containers.tex
+SRC+=files.tex
 SRC+=findings.tex
 SRC+=related-work.tex
 SRC+=conclusions.tex

@@ -1,0 +1,265 @@
+\mode*
+\subsection{Files}
+\label{files}
+
+In our course, files come late, after strings, containers and error
+handling, and a file program reuses all three: a file is opened, read into strings, and its
+failures arrive as exceptions.
+The literature on novice misconceptions says little about files as such.
+A survey of three decades of publications on the logic errors of CS1
+students sorts the errors it found into eleven categories ---
+\textcquote{AlzahraniVahid2021}{input (2 errors), output (1 error),
+variable (7 errors), computation (21 errors), condition (18 errors), branch
+(14 errors), loop (27 errors), array (5 errors), function (24 errors),
+conceptual (43 errors), and miscellaneous (4 errors)} --- and none of them
+concerns files.
+Our own two-sided search found no study of novices' conceptions of opening,
+reading or writing files either.
+The analyses below therefore rest on two kinds of ground: misconceptions
+documented for the constructs a file program reuses (exceptions, and
+values read as strings), and, where we found no study, the critical
+aspects that our course material on files is designed around.
+We say which is which in each case.
+
+\paragraph{Closing a file when something goes wrong.}
+A file opened with \mintinline{python}{open} must be closed again, and
+the simplest program does so on the line after it has used the file.
+If anything between the two lines raises an exception, the closing line
+never runs.
+Seeing this requires what \textcite{RashkovitsLavy2012} found missing in
+students at the end of a Java programme: they
+\textcquote[343]{RashkovitsLavy2012}{had not assimilated the fact that once an
+exception is thrown, the program jumps to the closest catch clause that is appropriate for the exception and continues from there}, and
+\enquote{flow of control in the context of exceptions} was among the
+aspects they found hardest \autocite[350]{RashkovitsLavy2012}.
+The study concerns Java and students near graduation, not first-year
+Python students; that the mechanism is the same in both languages is our
+inference.
+
+The object of learning is \emph{why a file opened by hand may stay open}.
+The critical aspect is that the exception skips the rest of the protected
+block, including the \mintinline{python}{close}; the
+\mintinline{python}{with} statement closes the file however its block is
+left \autocite{PythonTutorialFiles}.
+We hold the file (it contains the word \texttt{forty-two}, so
+\mintinline{python}{int} fails), the handler and the final question
+invariant, and vary only how the file is closed.
+
+\begin{description}
+  \item[Contrast] The left program prints \mintinline{python}{False}: the
+    \mintinline{python}{close} after the failing \mintinline{python}{int}
+    never ran.
+    The right one prints \mintinline{python}{True}.
+    Since everything else is the same, only the way of closing can explain
+    the difference --- and it shows only when something goes wrong.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1,4}]{python}
+        f = open("data.txt")
+        try:
+            print(int(f.read()))
+            f.close()
+        except ValueError:
+            print("Not a number")
+        print(f.closed)
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        try:
+            with open("data.txt") as f:
+                print(int(f.read()))
+        except ValueError:
+            print("Not a number")
+        print(f.closed)
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+\paragraph{A file that does not exist.}
+Opening a file that does not exist raises
+\mintinline{python}{FileNotFoundError}, the exception Python raises
+\textcquote{PythonExceptions}{when a file or directory is requested but
+doesn't exist}, and it is \mintinline{python}{open} that raises it, before
+anything is read.
+Both parts carry a belief we found no study of: that a missing file reads
+as an empty one, as if \mintinline{python}{open} for reading created it the
+way opening for writing does.
+The useful response is to catch the exception where the program knows what
+to do instead --- typically to ask for another name --- which is usually not
+the function that opens the file.
+That step needs another of the aspects \textcite{RashkovitsLavy2012} found
+hard, \textcquote[350]{RashkovitsLavy2012}{handling exceptions further up the
+calling chain}.
+
+The object of learning is \emph{what happens when the file is missing}.
+The critical aspects are that the failure is an exception raised by
+\mintinline{python}{open}, not an empty file, and that it travels out of
+the reading function to whoever catches it.
+We hold the program invariant and vary only whether the file exists.
+
+\begin{description}
+  \item[Contrast] The same program, run once in a folder where
+    \texttt{notes.txt} exists and once where it does not.
+    With the file, it prints \texttt{Got the text}; without it,
+    \mintinline{python}{open} raises inside \mintinline{python}{read_text},
+    the rest of the \mintinline{python}{try} block is skipped, and the
+    caller's handler prints \texttt{No such file}.
+    Both runs end with \texttt{Done}.
+
+    \hfill
+    \begin{minipage}[t]{0.6\columnwidth}
+      \begin{minted}[highlightlines={2,8}]{python}
+        def read_text(filename):
+            with open(filename) as f:
+                return f.read()
+
+        try:
+            text = read_text("notes.txt")
+            print("Got the text")
+        except FileNotFoundError:
+            print("No such file")
+        print("Done")
+      \end{minted}
+    \end{minipage}
+    \hfill\null
+\end{description}
+
+\paragraph{The line keeps its line break.}
+Looping over a file gives its lines, and each line ends with the
+line-break character that separated it from the next: Python's tutorial
+notes that \textcquote{PythonTutorialFiles}{a newline character (\textbackslash
+n) is left at the end of the string}.
+A student who expects the line without it will find that
+\mintinline{python}{print(line)} double-spaces the output and that
+\mintinline{python}{line == "Pippi"} is never true.
+We found no study documenting this belief; it is the aspect our course
+material targets when it asks students to write the loop themselves before
+showing its output.
+
+The object of learning is \emph{what one step of the loop over a file
+gives}.
+The critical aspect is that the unit is the line \emph{including} its
+\mintinline{python}{"\n"} --- not the line without it, not the whole file,
+and not a single character as when looping over a string.
+We hold the file and the loop invariant and vary only whether
+\mintinline{python}{print} adds a line break of its own.
+
+\begin{description}
+  \item[Contrast] The file holds the two lines \texttt{tea} and
+    \texttt{jam}.
+    The left loop prints each line followed by an empty line, the right one
+    prints them as they stand in the file.
+    The only difference is \mintinline{python}{end=""}, so the empty lines
+    can only come from the line breaks the lines carry.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={3}]{python}
+        with open("food.txt") as f:
+            for line in f:
+                print(line)
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={3}]{python}
+        with open("food.txt") as f:
+            for line in f:
+                print(line, end="")
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+\paragraph{Writing replaces, appending adds.}
+Opening a file for writing empties it first: in the tutorial's words, with
+mode \mintinline{python}{"w"} \textcquote{PythonTutorialFiles}{an existing
+file with the same name will be erased}, whereas \mintinline{python}{"a"}
+adds to the end.
+A program that opens the same file for writing twice --- in a function
+called twice, or inside a loop --- therefore keeps only what the last call
+wrote.
+Again we found no study of how novices conceive of the modes; that the
+destruction is silent is what makes it worth a dedicated contrast.
+
+The object of learning is \emph{what opening a file does to what the file
+already holds}.
+The critical aspect is the mode: \mintinline{python}{"w"} discards the old
+content, \mintinline{python}{"a"} keeps it.
+We hold the writer, the two calls and the reading invariant and vary only
+the mode.
+
+\begin{description}
+  \item[Contrast] Starting without a \texttt{log.txt}, after the two calls
+    the left file holds one line, \texttt{two}, and the right one holds
+    \texttt{one} and \texttt{two}.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        def save(text):
+            with open("log.txt", "w") as f:
+                f.write(text + "\n")
+
+        save("one")
+        save("two")
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        def save(text):
+            with open("log.txt", "a") as f:
+                f.write(text + "\n")
+
+        save("one")
+        save("two")
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+\paragraph{What is read is text.}
+The data-types analysis showed that \mintinline{python}{input} returns a
+string even when the user types a number.
+The same holds for files, and the misconception is documented for both
+sources: \textcquote{GuoMarkelZhang2020}{When numerical data is read from
+files or terminal input, they often start as strings}, and
+\textcite{Bosse2021Antipatterns} catalogue the missing conversion as an
+antipattern in CS1 code.
+For files the error is easier to make, because the content looks like a
+number and nobody typed it.
+
+The object of learning, as for \mintinline{python}{input}, is \emph{that a
+value's type is independent of how the value looks}.
+The critical aspect is that reading a file gives strings, so the program
+must convert what it reads.
+We hold the file (it contains \texttt{42}) and the operation invariant and
+vary only whether \mintinline{python}{int} is applied --- the
+generalisation, from the terminal to the file, of the contrast in the
+data-types analysis.
+
+\begin{description}
+  \item[Generalisation] The left program prints \texttt{4242}, the right
+    one \texttt{84}.
+    The source of the string has changed from the keyboard to a file; the
+    critical aspect, and the conversion it requires, has not.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        with open("number.txt") as f:
+            value = f.read().strip()
+        print(value * 2)
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        with open("number.txt") as f:
+            value = int(f.read().strip())
+        print(value * 2)
+      \end{minted}
+    \end{minipage}
+\end{description}
