@@ -1596,16 +1596,17 @@ ends of the list.
 }
 @
 
-\subsection{Classes and objects (aspects 51--53)}
+\subsection{Classes and objects (aspects 51--54)}
 
-Three aspects from the classes analyses.
+Four aspects from the classes analyses.
 The class used by the items is defined in the question stem, since the
 students may not have met our examples.
 
 <<classes groups>>=
 <<group 51: a class is a template, not a container>>,
 <<group 52: equal attributes do not make one object>>,
-<<group 53: a method is defined once but acts per object>>
+<<group 53: a method is defined once but acts per object>>,
+<<group 54: equality is defined, identity is not>>
 @
 
 \paragraph{Aspect 51: a class is a template, not a container.}
@@ -1749,6 +1750,302 @@ class's methods have power over all its instances
     {"answer_text": "1 1", "answer_weight": 0},
     {"answer_text": "2 1", "answer_weight": 100},
     {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 54: equality is defined, identity is not.}
+The critical aspect separates the two comparisons that aspect~52's
+objects invite: \mintinline{python}{==} asks whatever the class's
+\mintinline{python}{__eq__} says it asks --- and, without one, falls
+back on identity --- whereas \mintinline{python}{is} always asks
+whether the two names refer to one and the same object.
+Each form defines an \mintinline{python}{__eq__} that compares
+\emph{one} attribute and makes two objects that agree on that
+attribute but differ in another, so the two comparisons must come
+apart: \mintinline{python}{True False}.
+A student who answers that way has discerned both halves at once.
+The three distractors are the three other ways the pair can fall.
+\mintinline{python}{False False} encodes ignoring the user-defined
+equality: either \mintinline{python}{==} is taken to compare every
+attribute, or the \mintinline{python}{__eq__} is taken to have no
+effect, so that \mintinline{python}{==} falls back on identity;
+both readings give \mintinline{python}{False}.
+\mintinline{python}{True True} encodes aspect~52's misconception
+from the other side: that objects which are equal are one object,
+the attributes being the identity \autocite{Holland1997}.
+\mintinline{python}{False True} encodes swapping the two operators,
+reading \mintinline{python}{is} as the comparison of contents and
+\mintinline{python}{==} as the comparison of identity.
+The course teaches exactly this contrast: the lecture compares two
+persons with identical attributes, with and without
+\mintinline{python}{__eq__}, and the tutorial prints both
+\mintinline{python}{==} and \mintinline{python}{is} for two copies of
+one book whose bookmarks differ.
+
+<<group 54: equality is defined, identity is not>>=
+{
+  "group": {"name": "Aspect 54: equality is defined, identity is not",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 54A: two equal objects>>,
+    <<item 54B: two equal objects>>
+  ]
+}
+<<item 54A: two equal objects>>=
+{
+  "question_name": "Two equal objects (A)",
+  "question_text": "<p>What does the following program print?</p><pre>class Book:\n    def __init__(self, title, page):\n        self.title = title\n        self.page = page\n    def __eq__(self, other):\n        return self.title == other.title\n\na = Book('Emil', 50)\nb = Book('Emil', 0)\nprint(a == b, a is b)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "False False", "answer_weight": 0},
+    {"answer_text": "True False", "answer_weight": 100},
+    {"answer_text": "True True", "answer_weight": 0},
+    {"answer_text": "False True", "answer_weight": 0}
+  ]
+}
+<<item 54B: two equal objects>>=
+{
+  "question_name": "Two equal objects (B)",
+  "question_text": "<p>What does the following program print?</p><pre>class Player:\n    def __init__(self, name, score):\n        self.name = name\n        self.score = score\n    def __eq__(self, other):\n        return self.name == other.name\n\np = Player('Ida', 3)\nq = Player('Ida', 7)\nprint(p == q, p is q)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "True True", "answer_weight": 0},
+    {"answer_text": "False True", "answer_weight": 0},
+    {"answer_text": "False False", "answer_weight": 0},
+    {"answer_text": "True False", "answer_weight": 100}
+  ]
+}
+@
+
+\subsection{Dictionaries (aspects 81--84)}
+
+Four aspects from the dictionaries analyses (\cref{dictionaries}).
+The course meets dictionaries after lists and tuples, and the items
+lean on that order on purpose: a dictionary is written with the same
+square brackets as a list, so the list is both what the students can
+already predict and where their misconceptions about dictionaries come
+from.
+Every dictionary in the stems holds one or two entries, so the answer
+turns on the rule for keys, not on keeping track of many values.
+
+<<dicts groups>>=
+<<group 81: a key is not an index>>,
+<<group 82: assigning to a key replaces or adds>>,
+<<group 83: a missing key is an error, unless [[get]] is asked>>,
+<<group 84: a loop over a dictionary gets the keys>>
+@
+
+\paragraph{Aspect 81: a key is not an index.}
+The critical aspect is that an entry is reached by its key, not by a
+position: \mintinline{python}{ages[0]} on a dictionary whose keys are
+strings looks up the \emph{key}~0, which is not there, and the program
+stops with a [[KeyError]].
+The two positional distractors, the first value and the first key,
+encode the misconception that the course material itself targets: that
+a dictionary is a list that happens to accept strings as indices, so
+that its entries lie in an order reachable with 0, 1, 2.
+The [[None]] distractor encodes a student who has discerned that 0 is
+not a key but takes a missing key to give nothing rather than an
+error --- aspect~83's misconception --- so the item keeps the two
+apart.
+Both forms index with 0 rather than 1, so that a positional reading
+gives one unambiguous answer whether the student counts from zero or
+from one.
+
+<<group 81: a key is not an index>>=
+{
+  "group": {"name": "Aspect 81: a key is not an index",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 81A: indexing a dictionary>>,
+    <<item 81B: indexing a dictionary>>
+  ]
+}
+<<item 81A: indexing a dictionary>>=
+{
+  "question_name": "Indexing a dictionary (A)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>ages = {'anna': 19, 'bo': 21}\nprint(ages[0])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints 19", "answer_weight": 0},
+    {"answer_text": "It prints anna", "answer_weight": 0},
+    {"answer_text": "It reports a KeyError", "answer_weight": 100},
+    {"answer_text": "It prints None", "answer_weight": 0}
+  ]
+}
+<<item 81B: indexing a dictionary>>=
+{
+  "question_name": "Indexing a dictionary (B)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>stock = {'pears': 9, 'plums': 4}\nprint(stock[0])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It reports a KeyError", "answer_weight": 100},
+    {"answer_text": "It prints None", "answer_weight": 0},
+    {"answer_text": "It prints pears", "answer_weight": 0},
+    {"answer_text": "It prints 9", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 82: assigning to a key replaces or adds.}
+The critical aspect is that one and the same assignment does two
+things depending on the key: to a key that is there it
+\emph{replaces} the value, and to a key that is not there it
+\emph{adds} an entry --- so a misspelt key raises no error but silently
+adds an entry of its own.
+The stem prints after each of the two assignments, which crosses the
+two halves of the aspect: a student may get either half wrong
+independently, and the four choices are the four combinations.
+The duplicated entry encodes taking assignment for appending, so that
+the old value stays beside the new one; the [[KeyError]] encodes
+carrying the list's behaviour over, where an assignment to an index
+that does not exist is an error and the list grows only by
+[[append]] --- exactly the contrast the course material draws between
+the two containers.
+The misspelling is a transposition of two letters in both forms, so
+that the new key is plainly a mistake and not a second name.
+
+<<group 82: assigning to a key replaces or adds>>=
+{
+  "group": {"name": "Aspect 82: assigning to a key replaces or adds",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 82A: assigning to keys>>,
+    <<item 82B: assigning to keys>>
+  ]
+}
+<<item 82A: assigning to keys>>=
+{
+  "question_name": "Assigning to keys (A)",
+  "question_text": "<p>What does the following program print?</p><pre>stock = {'pears': 9}\nstock['pears'] = 5\nprint(stock)\nstock['paers'] = 2\nprint(stock)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "{'pears': 9, 'pears': 5} and then {'pears': 9, 'pears': 5, 'paers': 2}", "answer_weight": 0},
+    {"answer_text": "{'pears': 5} and then {'pears': 5, 'paers': 2}", "answer_weight": 100},
+    {"answer_text": "{'pears': 5} and then it reports a KeyError", "answer_weight": 0},
+    {"answer_text": "{'pears': 9, 'pears': 5} and then it reports a KeyError", "answer_weight": 0}
+  ]
+}
+<<item 82B: assigning to keys>>=
+{
+  "question_name": "Assigning to keys (B)",
+  "question_text": "<p>What does the following program print?</p><pre>ages = {'anna': 19}\nages['anna'] = 20\nprint(ages)\nages['anan'] = 30\nprint(ages)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "{'anna': 20} and then it reports a KeyError", "answer_weight": 0},
+    {"answer_text": "{'anna': 19, 'anna': 20} and then it reports a KeyError", "answer_weight": 0},
+    {"answer_text": "{'anna': 19, 'anna': 20} and then {'anna': 19, 'anna': 20, 'anan': 30}", "answer_weight": 0},
+    {"answer_text": "{'anna': 20} and then {'anna': 20, 'anan': 30}", "answer_weight": 100}
+  ]
+}
+@
+
+\paragraph{Aspect 83: a missing key is an error, unless [[get]] is asked.}
+The course material teaches three ways to handle a missing key ---
+test with [[in]], catch the [[KeyError]], or ask [[get]] for a
+fallback --- and the items take the one that most directly contrasts
+with the plain lookup: [[get]] with a fallback value, followed by the
+plain lookup of the same missing key.
+The critical aspect is that the square brackets treat a missing key as
+an error while [[get]] returns the fallback instead; the order of the
+two lines matters, since the error must come last for both lines to
+be seen.
+The [[None]]-after-the-fallback distractor encodes the misconception
+that a missing key is silently nothing, also for the square brackets;
+the error-at-the-first-line distractor encodes not having discerned
+what [[get]] is for, reading it as another spelling of the same
+lookup; and the [[None]]-before-the-error distractor encodes confusing
+[[get]]'s two documented results, [[None]] without a fallback and the
+fallback with one.
+
+<<group 83: a missing key is an error, unless [[get]] is asked>>=
+{
+  "group": {"name": "Aspect 83: a missing key is an error, unless get is asked",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 83A: a missing key>>,
+    <<item 83B: a missing key>>
+  ]
+}
+<<item 83A: a missing key>>=
+{
+  "question_name": "A missing key (A)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>ages = {'anna': 19}\nprint(ages.get('bo', 0))\nprint(ages['bo'])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints 0 and then None", "answer_weight": 0},
+    {"answer_text": "It prints 0 and then reports a KeyError", "answer_weight": 100},
+    {"answer_text": "It reports a KeyError at the first print, and prints nothing", "answer_weight": 0},
+    {"answer_text": "It prints None and then reports a KeyError", "answer_weight": 0}
+  ]
+}
+<<item 83B: a missing key>>=
+{
+  "question_name": "A missing key (B)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>stock = {'pears': 9}\nprint(stock.get('plums', 0))\nprint(stock['plums'])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It reports a KeyError at the first print, and prints nothing", "answer_weight": 0},
+    {"answer_text": "It prints None and then reports a KeyError", "answer_weight": 0},
+    {"answer_text": "It prints 0 and then reports a KeyError", "answer_weight": 100},
+    {"answer_text": "It prints 0 and then None", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 84: a loop over a dictionary gets the keys.}
+The critical aspect is what a dictionary hands out when it is looped
+over: its keys, and nothing else --- the values and the key--value
+pairs must be asked for, with [[values]] and [[items]].
+The three wrong values in that dimension are the distractors: the
+values, the pairs (printed as the tuples [[items]] would give), and an
+error, which encodes believing that a dictionary, having no positions,
+cannot be looped over at all.
+The loop variable is named [[x]] and [[y]], since a name such as
+[[name]] or [[key]] would give the answer away.
+
+<<group 84: a loop over a dictionary gets the keys>>=
+{
+  "group": {"name": "Aspect 84: a loop over a dictionary gets the keys",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 84A: looping over a dictionary>>,
+    <<item 84B: looping over a dictionary>>
+  ]
+}
+<<item 84A: looping over a dictionary>>=
+{
+  "question_name": "Looping over a dictionary (A)",
+  "question_text": "<p>What does the following program print?</p><pre>ages = {'anna': 19, 'bo': 21}\nfor x in ages:\n    print(x)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "19 and then 21", "answer_weight": 0},
+    {"answer_text": "anna and then bo", "answer_weight": 100},
+    {"answer_text": "('anna', 19) and then ('bo', 21)", "answer_weight": 0},
+    {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+<<item 84B: looping over a dictionary>>=
+{
+  "question_name": "Looping over a dictionary (B)",
+  "question_text": "<p>What does the following program print?</p><pre>stock = {'pears': 9, 'plums': 4}\nfor y in stock:\n    print(y)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "('pears', 9) and then ('plums', 4)", "answer_weight": 0},
+    {"answer_text": "It reports an error", "answer_weight": 0},
+    {"answer_text": "pears and then plums", "answer_weight": 100},
+    {"answer_text": "9 and then 4", "answer_weight": 0}
   ]
 }
 @
