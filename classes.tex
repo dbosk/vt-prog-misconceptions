@@ -187,7 +187,22 @@ objects to be equal}. The critical aspect is that equality is \emph{defined}
 \mintinline{python}{__eq__} says it asks --- whereas identity is not:
 \mintinline{python}{is} always asks whether two names refer to one and the
 same object, and a class without an \mintinline{python}{__eq__} lets
-\mintinline{python}{==} fall back on that same question.%LIT-54%
+\mintinline{python}{==} fall back on that same question.
+The misconception at stake is the one \textcite{Holland1997} found behind
+object identity, seen from the side of equality: that
+\textcquote{Holland1997}{two objects of the same class with the same state are
+the same object}.
+The two comparisons are confused in practice too. In Java, where
+\mintinline{java}{==} asks about identity and \mintinline{java}{equals} about
+equality, comparing strings with \mintinline{java}{==} was a mistake made by
+almost 30\,000 of the more than 250\,000 novices in a year of compilation data,
+and more than half of its instances took over 1000 seconds to fix or were never
+fixed \autocite{AltadmriBrown2015}.
+For Python, \textcite{Gama2018PythonAntipatterns} hypothesised the converse
+mistake: comparing two objects with \mintinline{python}{==} when their class
+defines no comparison method, so that only the references are compared. They
+observed it only once in 204 exam papers, however, and dropped it from their
+candidate misconceptions.
 We hold the objects and the two comparisons invariant and vary only whether
 the class defines its equality.
 

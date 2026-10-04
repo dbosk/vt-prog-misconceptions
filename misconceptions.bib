@@ -601,6 +601,33 @@ Summative Assessments},
 %   functions-variables.tex:1141 (unused return value), mistake I backs :1240
 %   (wrong argument at a call).
 % DATE: 2026-06-29
+% UPDATE 2026-10-04 -- new use, classes.tex equality analysis (aspect 54):
+% CLAIM: In Java, comparing strings with == (identity) instead of .equals
+%   (equality) was made by almost 30,000 of more than 250,000 novices in a
+%   year of Blackbox data, and more than half of its instances took over
+%   1000 s to fix or were never fixed.
+% FOUND-VIA: scholar session bank-dicts-identity (previous agent) query
+%   C1-S4 ((novice OR student OR CS1 OR introductory) AND Java AND
+%   ("string comparison" OR "equals method" OR "reference equality" OR
+%   "== operator") AND (error OR mistake OR misconception)) and redo
+%   lit-dicts-identity I-S7 surfaced the Java ==/equals strand; this paper is
+%   the known item already in the bib. Full text re-fetched 2026-10-04 via
+%   the Wayback copy of kar.kent.ac.uk/46742/1/fp1187-altadmri.pdf (Kent
+%   answered 504) into the scholar PDF cache.
+% PICKED: primary, largest data set on the ==/equals mistake; Hristova et
+%   al. 2003 (doi 10.1145/611892.611956), the origin of the mistake list, is
+%   closed (ACM 403) and an educator survey, so not cited.
+% QUOTE (sec. 3.1): "B: Use of == instead of .equals to compare strings. For
+%   example: if (a == "start") ..."; (Table 1): "B* 121172 29627 >= 1000
+%   Semantic" (frequency, distinct users, median time to fix); (Fig. 3
+%   caption): "Mistakes N, B and D have a median equal to the cap value of
+%   1000, which means that more than half of the instances appeared took
+%   >= 1000 seconds to fix or were not fixed at all."; (abstract): "over
+%   250,000 students".
+% VERIFIED: full text read. Scope: Java, a mistake in code, not an elicited
+%   belief; the prose says "confused in practice" and names Java.
+% COUNTER: lit-dicts-identity I-C4 (see Gama2018PythonAntipatterns) found
+%   nothing contradicting.
 @inproceedings{AltadmriBrown2015,
   author = {Altadmri, Amjad and Brown, Neil C.C.},
   title = {37 Million Compilations: Investigating Novice Programming Mistakes 
@@ -777,6 +804,29 @@ series = {SIGCSE '10}
 %   stored separately; object-as-variable/record at classes.tex:60-62,131,141)
 %   need a full-text pass to quote verbatim.
 % DATE: 2026-06-29
+% UPDATE 2026-10-04 (full text): accepted manuscript from Open Research
+%   Online (oro.open.ac.uk/60134/1/Avoid%20Object%20Miscon%20ms.pdf, listed
+%   as a location by api.openalex.org/works/doi:10.1145/268084.268132; ORO
+%   itself answers 403 to scripts, so retrieved via the Wayback Machine
+%   snapshot 20240415203709) and read in the scholar PDF cache.
+% CLAIM (classes.tex, equality analysis for aspect 54; diagnostics.nw
+%   aspect 54 "True True" distractor): students take two objects with the
+%   same state to be the same object.
+% QUOTE (section "Identity/attribute confusion", manuscript without folios):
+%   "There is a tendency to confuse the name instance variable with the
+%   identity of the object" ... misconceptions "itemized below" include
+%   "two objects of the same class with the same state are the same object;"
+%   and "two objects with the same value for the name attribute are the same
+%   object."
+% QUOTE (qualification, same manuscript): links between practices and
+%   misconceptions "are based on personal experience of teaching and broad
+%   support from the results of developmental tests" -- i.e. teaching
+%   observation, not a controlled study.
+% VERIFIED: full text (accepted manuscript) read; the identity/attribute
+%   items above are now quoted verbatim, closing the 2026-06-29 FLAG for
+%   them. Corroborated by Sorva2012Dissertation, Table A.1 nos. 70 and 76
+%   (p. 363), which list the same two items with Holland et al. (1997) as
+%   source. Page numbers in the published version not checked.
 @inproceedings{Holland1997,
 author = {Holland, Simon and Griffiths, Robert and Woodman, Mark},
 title = {Avoiding Object Misconceptions},
@@ -1846,3 +1896,184 @@ series = {L@S '20}
   url     = {https://docs.python.org/3/library/exceptions.html},
   urldate = {2026-10-04},
 }
+
+% === provenance: Stansbury2015Dictionaries ===
+% CLAIM: Students conflate Python lists and dictionaries; in think-aloud
+%   interviews one of two participants treated her dictionary as a list of
+%   two-element lists and accessed it as such (dictionaries.tex: aspect 81,
+%   the dictionary read as a list with positions; the section intro, as the
+%   one study found of students' understanding of dictionaries; and the
+%   aspect-84 remark that the list-of-pairs reading would predict pairs --
+%   stated in the prose as our inference, since the study did not ask about
+%   loops).
+% FOUND-VIA: scholar sessions bank-dicts-dicts (previous agent) and its redo
+%   lit-dicts-dicts (2026-10-04), query D-S1 on openalex, ieee, wos, scopus:
+%   (novice OR student* OR CS1 OR introductory) AND (dictionar* OR
+%   "hash table*" OR "hash map*" OR hashmap* OR "associative array*" OR
+%   "key-value") AND (misconception* OR difficult* OR error* OR mistake*) AND
+%   programming; also returned by D-S4 and D-S9. Text retrieved via
+%   api.openalex.org/works/doi:10.1145/2676723.2691937; metadata via
+%   api.crossref.org.
+% PICKED: the only study surfaced by any dictionary query (8 support and 5
+%   counter queries on the four live providers, plus WebSearch) that examines how
+%   students understand Python dictionaries as used in a program; the
+%   hash-table studies (Karpierz2014HashTables; Patitsas et al. 2013,
+%   doi 10.1145/2445196.2445443) concern implementation.
+% QUOTE (abstract): "This research found that some students conflate Python
+%   lists and dictionaries." ... "When coding, one student treated her
+%   dictionary as if it were a literal list of two-element lists and could be
+%   accessed as such."
+% VERIFIED: the publication is itself an abstract (SIGCSE '15, p. 682,
+%   "Abstract Only"), so its whole text was read. Small scope (two
+%   participants, one showing the model): the prose calls it the "closest
+%   documented case", not a prevalence finding, and says that the model
+%   observed is a list of pairs, not a list indexed by strings.
+% COUNTER: lit-dicts-dicts D-C1 (... AND (understand* OR intuitive OR easy OR
+%   success* OR "no difficult*") ...), D-C3 (misconception/mental model x
+%   data structure/dictionary x list/array/sequence x index/key), D-C4 and
+%   D-C5 on the same four providers: no study reporting that novices find
+%   dictionaries unproblematic or refuting list--dictionary conflation; none
+%   found.
+% DATE: 2026-10-04
+@inproceedings{Stansbury2015Dictionaries,
+  author    = {Stansbury, Emily},
+  title     = {Students' (Mis)Understanding of Dictionaries (Abstract Only)},
+  booktitle = {Proceedings of the 46th ACM Technical Symposium on Computer
+               Science Education},
+  series    = {SIGCSE '15},
+  pages     = {682},
+  year      = {2015},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/2676723.2691937},
+}
+
+% === provenance: Karpierz2014HashTables ===
+% CLAIM: The documented hash-table misconceptions concern implementation
+%   (resizing), not how a program uses a map (dictionaries.tex intro).
+% FOUND-VIA: scholar sessions bank-dicts-dicts and lit-dicts-dicts, query
+%   D-S4: (misconception* OR "mental model*") AND ("data structure*" OR
+%   dictionar* OR "hash table*" OR "associative array*") AND (student* OR
+%   novice*) on openalex, ieee, wos, scopus; author copy located by
+%   WebSearch "Karpierz Wolfman \"Misconceptions and concept inventory
+%   questions for binary search trees and hash tables\" pdf" (2026-10-04),
+%   www.cs.ubc.ca/~wolf/work/tnp/pot-packet/resources/sigcse-2014-dsci.pdf,
+%   fetched into the scholar PDF cache.
+% PICKED: the validated (concept-inventory) hash-table misconceptions; it
+%   represents the hash-table strand and shows that the strand does not
+%   cover dictionary use.
+% QUOTE (sec. 3.3): "NoRehash: The misconception that, when resizing, the hash
+%   table leaves keys at their existing indexes." / "ResizeInPlace: The
+%   misconception that, when resizing, the table is extended in place by
+%   appending slots."
+% VERIFIED: full text (author copy) read; both hash-table misconceptions are
+%   about resizing, i.e. implementation.
+% COUNTER: D-C3, D-C4, D-C5 (above): no hash-table or map study of key
+%   lookup, assignment or iteration from a user's point of view found.
+% DATE: 2026-10-04
+@inproceedings{Karpierz2014HashTables,
+  author    = {Karpierz, Kuba and Wolfman, Steven A.},
+  title     = {Misconceptions and Concept Inventory Questions for Binary
+               Search Trees and Hash Tables},
+  booktitle = {Proceedings of the 45th ACM Technical Symposium on Computer
+               Science Education},
+  series    = {SIGCSE '14},
+  pages     = {109--114},
+  year      = {2014},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/2538862.2538902},
+}
+
+% === provenance: Cosman2020PABLO ===
+% CLAIM: KeyError is one of the five most common uncaught exceptions in
+%   novice Python programs on Python Tutor, at 3% the least common of them
+%   (dictionaries.tex, aspect 83: shows that missing keys stop novices'
+%   programs; explicitly NOT cited for what students expect).
+% FOUND-VIA: WebSearch "\"KeyError\" novice programmers runtime errors Python
+%   frequency study introductory course" (2026-10-04) -> author copy
+%   web.eecs.umich.edu/~weimerw/p/weimer-sigcse2020.pdf (curl; the host's
+%   certificate chain is incomplete); metadata via api.crossref.org
+%   query.bibliographic. The scholar queries D-S6 ((Python OR novice OR
+%   student*) AND (KeyError OR "key error*" OR "missing key*" OR
+%   "nonexistent key*")) and D-C2 did not return it: KeyError is not in its
+%   title or abstract.
+% PICKED: the only source found that gives a frequency for KeyError in
+%   novice Python code, from a large multi-institution data set. Pritchard
+%   2015 (Frequency distribution of error messages, arXiv 1509.07238) was
+%   read and has no KeyError count.
+% QUOTE (sec. 3.5): "the five most common uncaught exceptions: TypeError,
+%   IndexError, AttributeError, ValueError, and KeyError. Together, these five
+%   exceptions are the most common faced by our novices, making up 97% of the
+%   errors in our dataset (54%, 23%, 11%, 7%, and 3%, respectively)."
+%   (sec. 3.1): "the dataset used in this evaluation contains 985,780 usable
+%   program pairs, representing students from dozens of universities".
+% VERIFIED: full text (author copy) read. Scope is crashes, not beliefs; the
+%   prose says so.
+% COUNTER: D-C2 (Python error distributions incl. KeyError) on the four
+%   providers: nothing contradicting. That KeyError is rare next to
+%   TypeError and IndexError is the qualification, stated in the prose.
+% DATE: 2026-10-04
+@inproceedings{Cosman2020PABLO,
+  author    = {Cosman, Benjamin and Endres, Madeline and Sakkas, Georgios and
+               Medvinsky, Leon and Yang, Yao-Yuan and Jhala, Ranjit and
+               Chaudhuri, Kamalika and Weimer, Westley},
+  title     = {{PABLO}: Helping Novices Debug Python Code Through Data-Driven
+               Fault Localization},
+  booktitle = {Proceedings of the 51st ACM Technical Symposium on Computer
+               Science Education},
+  series    = {SIGCSE '20},
+  pages     = {1047--1053},
+  year      = {2020},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/3328778.3366860},
+}
+
+% === provenance: Gama2018PythonAntipatterns ===
+% CLAIM: Comparing two objects with == when their class defines no comparison
+%   method (so the references are compared) was hypothesised as a Python CS1
+%   misconception, but observed only once in 204 exam papers and dropped
+%   (classes.tex, equality analysis for aspect 54: qualifying evidence).
+% FOUND-VIA: the scholar searches surfaced the one-page poster Gama et al.
+%   2019 (doi 10.20396/revpibic262018559; bank-dicts-dicts and
+%   lit-dicts-dicts D-S5), which does not include the list; WebSearch
+%   "Caceffo Gama Python misconceptions CS1 technical report Unicamp list
+%   dictionary" (2026-10-04) -> this technical report,
+%   ic.unicamp.br/~reltech/2018/18-19.pdf, fetched into the scholar PDF
+%   cache.
+% PICKED: the only Python-specific source found that names the
+%   ==-on-objects confusion; primary (exam analysis). Cited for what it
+%   found, including that it was rare.
+% QUOTE (Table 9, p. 12): "X.14 Comparing two referenced objects by their
+%   references when comparison methods have not been defined for that class."
+%   with the example "a = Dog(name = "Fido") / b = Dog(name = "Fido") /
+%   if a == b: # returns False". (p. 12): candidates kept only with "a count
+%   greater than or equal to 2 (out of 204)". (Table 10, p. 13): "X.14 1
+%   Rejected". (sec. 3.3.2.1, p. 15): "Misconception hypotheses X.8, X.10,
+%   X.11, X.12, X.14, X.16 were excluded from further consideration."
+% VERIFIED: full text read; the prose reports the single observation and the
+%   exclusion. The report lists no dictionary misconception (full text
+%   searched for dict/key).
+% COUNTER: lit-dicts-identity I-C4 ((novice OR student* OR CS1 OR
+%   introductory) AND ("string comparison" OR "equals method" OR
+%   "== operator" OR "is operator" OR "reference equality" OR
+%   "object equality" OR "object identity") AND (understand* OR correct* OR
+%   easy OR "no difficult*" OR rare)) on the four providers: no study
+%   reporting that novices do not confuse the two comparisons; this report's
+%   rarity count is itself the qualifying evidence and is cited as such.
+% DATE: 2026-10-04
+@techreport{Gama2018PythonAntipatterns,
+  author      = {Gama, Guilherme and Caceffo, Ricardo and Souza, Renan and
+                 Benatti, Raysa and Aparecida, Tales and Garcia, Islene and
+                 Azevedo, Rodolfo},
+  title       = {An Antipattern Documentation about Misconceptions related to
+                 an Introductory Programming Course in {Python}},
+  institution = {Institute of Computing, University of Campinas},
+  type        = {Technical Report},
+  number      = {IC-18-19},
+  year        = {2018},
+  month       = nov,
+  url         = {https://ic.unicamp.br/~reltech/2018/18-19.pdf},
+}
+

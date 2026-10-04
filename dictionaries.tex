@@ -2,7 +2,13 @@
 \subsection{Dictionaries}
 \label{dictionaries}
 
-%LITERATURE-INTRO%
+The literature has little to say about dictionaries. The one study we have
+found of how students understand them is a think-aloud study of two students
+learning Python \autocite{Stansbury2015Dictionaries}; the studies of hash
+tables concern how a table is implemented, for instance how it is resized
+\autocite{Karpierz2014HashTables}, not how a program uses one. The analyses
+below therefore rest mainly on the misconceptions that the course material
+itself targets, and each says what, if anything, the literature documents.
 
 A dictionary is written with the same square brackets as a list:
 \mintinline{python}{phone["ronja"]} looks like \mintinline{python}{names[0]}.
@@ -21,7 +27,13 @@ The first object of learning is \emph{how an entry of a dictionary is
 reached}. The critical aspect is that it is reached by its \emph{key}, not by a
 position: the entries of a dictionary lie in no order that can be counted with
 0, 1, 2. The misconception it targets is that a dictionary is a list that
-happens to accept strings as indices.%LIT-81%
+happens to accept strings as indices.
+The closest documented case is \citeauthor{Stansbury2015Dictionaries}'s:
+students who conflated Python's lists and dictionaries, one of whom
+\textcquote{Stansbury2015Dictionaries}{treated her dictionary as if it were a
+literal list of two-element lists and could be accessed as such}. Her list held
+pairs rather than values indexed by strings, but in both readings an entry has
+a position.
 
 \begin{description}
   \item[Contrast] The same index in a list and in a dictionary holding the
@@ -76,7 +88,9 @@ critical aspect is that the same assignment does one of two things depending on
 the key: to a key that is there it \emph{replaces} the value, to a key that is
 not there it \emph{adds} an entry. The practical consequence is that a misspelt
 key raises no error but quietly adds an entry of its own --- the fault
-students then hunt for in their programs.%LIT-82%
+students then hunt for in their programs.
+We have found no study documenting what students expect an assignment to a key
+to do; the misconception is the one the course material itself targets.
 
 \begin{description}
   \item[Contrast] We hold the assignment invariant and vary whether its key is
@@ -126,7 +140,14 @@ students then hunt for in their programs.%LIT-82%
 The third object of learning is \emph{what happens when a key is missing}. The
 critical aspect is that a lookup with the brackets treats a missing key as an
 error, a \mintinline{python}{KeyError}, and that a program which expects
-missing keys must say what it wants instead.%LIT-83%
+missing keys must say what it wants instead.
+We have found no study of what students expect a lookup of a missing key to
+give. That the error does stop novices' programs is documented: among nearly a
+million novice Python programs on Python Tutor that crashed and were then
+fixed, \mintinline{python}{KeyError} was one of the five most common uncaught
+exceptions, though, at 3\,\%, the least common of them
+\autocite{Cosman2020PABLO}. Those data show what the programs did, not what
+their authors expected.
 There is more than one way to say it, and the ways are values in one
 dimension: how the program learns that the key is missing.
 
@@ -175,7 +196,10 @@ dimension: how the program learns that the key is missing.
 
 The fourth object of learning is \emph{what a loop over a dictionary goes
 through}. The critical aspect is that the loop variable gets the \emph{keys},
-and nothing else; the values and the key--value pairs must be asked for.%LIT-84%
+and nothing else; the values and the key--value pairs must be asked for.
+We have found no study of what students expect such a loop to give. The
+list-of-pairs reading that \textcite{Stansbury2015Dictionaries} observed would
+predict the pairs, but that study did not ask about loops.
 
 \begin{description}
   \item[Contrast] We hold the dictionary and the form of the loop invariant and
