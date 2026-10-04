@@ -133,6 +133,7 @@ The course groups are the union of the topic banks.
 <<classes groups>>,
 <<dicts groups>>,
 <<debugging groups>>,
+<<containers groups>>,
 <<tracing groups>>
 @
 
@@ -455,7 +456,8 @@ function-and-list aspects of the debugging chapter included.
   },
   "questions": [
     <<debugging groups>>,
-    <<dicts groups>>
+    <<dicts groups>>,
+    <<containers groups>>
   ]
 }
 
@@ -473,7 +475,8 @@ function-and-list aspects of the debugging chapter included.
   "questions": [
     <<preparation question>>,
     <<debugging groups>>,
-    <<dicts groups>>
+    <<dicts groups>>,
+    <<containers groups>>
   ]
 }
 
