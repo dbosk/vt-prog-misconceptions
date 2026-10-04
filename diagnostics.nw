@@ -13,7 +13,7 @@ Sixteen files are tangled from this section: the course-level pair
 start--end pair per topic
 ([[quiz-funcvars-start.json]]/[[quiz-funcvars-end.json]] and
 correspondingly for [[conditionals]], [[repetitions]], [[types]],
-[[classes]], [[debugging]] and [[tracing]]).
+[[classes]], [[containers]] and [[tracing]]).
 The learning platform of the course is Canvas, and the [[canvaslms]]
 command-line tool creates the quizzes from their JSON descriptions,
 for example:
@@ -93,6 +93,7 @@ itself.
   "settings": {
     "title": "Programming concepts quiz: start of course",
     "description": "<p>This quiz checks which programming concepts you already know, so that we can adapt the course. You will see your score afterwards, but not the correct answers&mdash;the course will teach you those. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
+    <<course start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -109,7 +110,8 @@ itself.
   "quiz_type": "classic",
   "settings": {
     "title": "Programming concepts quiz: end of course",
-    "description": "<p>This quiz mirrors the concept quiz from the start of the course, so that we can see what you have learned during the course. You will see your score and the correct answers afterwards, so you can use the quiz to review. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+    "description": "<p>This quiz covers the programming concepts of the whole course, so that we can see what you have learned. Take it before you start preparing for the computer exam, on your own and without help or tools. Afterwards you will see your score and the correct answers, so you can use the quiz to practise for the exam. The score does not affect your grade.</p>",
+    <<course end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -144,7 +146,6 @@ where [[assignment]] means a graded quiz.
 <<scheduling settings>>=
 "time_limit": null,
 "due_at": null,
-"unlock_at": null,
 "lock_at": null,
 @
 
@@ -266,7 +267,12 @@ The topic banks \emph{are} the course groups, reused by reference, so
 the two levels cannot drift apart: an item improved for a topic quiz
 is improved for the course quiz, automatically.
 The seven pairs are identical in structure, so we define them together;
-only the bank differs.
+only the bank and the placement in the course differ, and the placement
+is the subject of \cref{app:diagnostics-placement}.
+Two pairs bank more than one analysis, because the course teaches the
+topics together: dictionaries arrive in the same week as classes, and
+the containers pair revisits every container of the course, the
+function-and-list aspects of the debugging chapter included.
 
 <<[[quiz-funcvars-start.json]]>>=
 {
@@ -274,6 +280,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: functions and variables (before)",
     <<start-quiz boilerplate>>
+    <<funcvars start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -282,7 +289,6 @@ only the bank differs.
     <<funcvars groups>>
   ]
 }
-@
 
 <<[[quiz-funcvars-end.json]]>>=
 {
@@ -290,6 +296,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: functions and variables (after)",
     <<end-quiz boilerplate>>
+    <<funcvars end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -299,7 +306,6 @@ only the bank differs.
     <<funcvars groups>>
   ]
 }
-@
 
 <<[[quiz-conditionals-start.json]]>>=
 {
@@ -307,6 +313,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: conditionals (before)",
     <<start-quiz boilerplate>>
+    <<conditionals start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -315,7 +322,6 @@ only the bank differs.
     <<conditionals groups>>
   ]
 }
-@
 
 <<[[quiz-conditionals-end.json]]>>=
 {
@@ -323,6 +329,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: conditionals (after)",
     <<end-quiz boilerplate>>
+    <<conditionals end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -332,7 +339,6 @@ only the bank differs.
     <<conditionals groups>>
   ]
 }
-@
 
 <<[[quiz-repetitions-start.json]]>>=
 {
@@ -340,6 +346,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: repetitions (before)",
     <<start-quiz boilerplate>>
+    <<repetitions start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -348,7 +355,6 @@ only the bank differs.
     <<repetitions groups>>
   ]
 }
-@
 
 <<[[quiz-repetitions-end.json]]>>=
 {
@@ -356,6 +362,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: repetitions (after)",
     <<end-quiz boilerplate>>
+    <<repetitions end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -365,7 +372,6 @@ only the bank differs.
     <<repetitions groups>>
   ]
 }
-@
 
 <<[[quiz-types-start.json]]>>=
 {
@@ -373,6 +379,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: data types (before)",
     <<start-quiz boilerplate>>
+    <<types start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -381,7 +388,6 @@ only the bank differs.
     <<types groups>>
   ]
 }
-@
 
 <<[[quiz-types-end.json]]>>=
 {
@@ -389,6 +395,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: data types (after)",
     <<end-quiz boilerplate>>
+    <<types end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -398,14 +405,14 @@ only the bank differs.
     <<types groups>>
   ]
 }
-@
 
 <<[[quiz-classes-start.json]]>>=
 {
   "quiz_type": "classic",
   "settings": {
-    "title": "Topic quiz: classes and objects (before)",
+    "title": "Topic quiz: classes and dictionaries (before)",
     <<start-quiz boilerplate>>
+    <<classes start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -414,14 +421,14 @@ only the bank differs.
     <<classes groups>>
   ]
 }
-@
 
 <<[[quiz-classes-end.json]]>>=
 {
   "quiz_type": "classic",
   "settings": {
-    "title": "Topic quiz: classes and objects (after)",
+    "title": "Topic quiz: classes and dictionaries (after)",
     <<end-quiz boilerplate>>
+    <<classes end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -431,14 +438,14 @@ only the bank differs.
     <<classes groups>>
   ]
 }
-@
 
-<<[[quiz-debugging-start.json]]>>=
+<<[[quiz-containers-start.json]]>>=
 {
   "quiz_type": "classic",
   "settings": {
-    "title": "Topic quiz: functions and lists, revisited (before)",
+    "title": "Topic quiz: containers (before)",
     <<start-quiz boilerplate>>
+    <<containers start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -447,14 +454,14 @@ only the bank differs.
     <<debugging groups>>
   ]
 }
-@
 
-<<[[quiz-debugging-end.json]]>>=
+<<[[quiz-containers-end.json]]>>=
 {
   "quiz_type": "classic",
   "settings": {
-    "title": "Topic quiz: functions and lists, revisited (after)",
+    "title": "Topic quiz: containers (after)",
     <<end-quiz boilerplate>>
+    <<containers end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -464,7 +471,6 @@ only the bank differs.
     <<debugging groups>>
   ]
 }
-@
 
 <<[[quiz-tracing-start.json]]>>=
 {
@@ -472,6 +478,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: reading programs (before)",
     <<start-quiz boilerplate>>
+    <<tracing start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -480,7 +487,6 @@ only the bank differs.
     <<tracing groups>>
   ]
 }
-@
 
 <<[[quiz-tracing-end.json]]>>=
 {
@@ -488,6 +494,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: reading programs (after)",
     <<end-quiz boilerplate>>
+    <<tracing end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -499,15 +506,140 @@ only the bank differs.
 }
 @
 
-The description shown to the students differs only in tense between the before- and
-after-quiz of every topic, so they are shared.
+The description shown to the students is shared by all before-quizzes
+and by all after-quizzes.
+The after-quiz description deliberately does not claim that the
+quiz mirrors an earlier one: in the first cohort several after-quizzes
+run without their before-quiz (\cref{app:diagnostics-placement}), and
+a description promising a comparison the student never had would
+mislead.
 
 <<start-quiz boilerplate>>=
 "description": "<p>This quiz checks what you already know about this topic, before we work on it. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
+<<end-quiz boilerplate>>=
+"description": "<p>This quiz checks what you have learned about this topic. You will see your score and the correct answers afterwards, so you can use the quiz to review the topic. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
 @
 
-<<end-quiz boilerplate>>=
-"description": "<p>This quiz mirrors the questions from before this topic's unit, so that we can see what the unit taught you. You will see your score and the correct answers afterwards, so you can use the quiz to review the topic. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+\subsection{Placement in the first cohort}
+\label{app:diagnostics-placement}
+
+The quizzes reached the first cohort (the course's autumn 2026
+instance) late: by the time they were deployed, the course had
+already taught functions and variables, conditionals and data types,
+and repetitions, and the course-level start quiz and those topics'
+before-quizzes could no longer run before their units.
+We therefore deploy the cohort's quizzes in three shapes, and each
+quiz's placement lives in its own chunk so that a later cohort
+changes only these chunks.
+
+\begin{description}
+\item[Catch-up diagnostic] The after-quizzes of the four topics
+  already taught, and of reading programs, which the course practises
+  from the first week, form one module of their own,
+  \enquote{Diagnostiskt prov: det du lärt dig hittills}.
+  It sits right before the classes week, every quiz must be
+  submitted, and the classes module requires it, so every student
+  takes stock of the course so far before continuing.
+  These five topics have no before-measure in this cohort: their
+  after-quizzes measure the level reached, not the gain.
+\item[Bracketing pairs] The remaining three topics --- classes and
+  dictionaries, containers, and files --- get the design as planned:
+  the before-quiz opens the topic's module, and the after-quiz closes
+  it.
+  The after-quiz is locked until the end of the week the unit is
+  taught, so a student cannot take it before the unit; locking the
+  quiz itself is needed because a module's items are open together.
+\item[Course quiz as practice] The course-level end quiz forms a
+  module of its own, \enquote{Repetitionsprov inför datorprovet},
+  right before the course's summative computer exam.
+  It reveals the correct answers afterwards, so it doubles as
+  practice for the exam; the description asks the students to take
+  it \emph{before} they start preparing, and the preparation question
+  flags those who did not.
+\end{description}
+
+The placement uses the [[modules]] setting of [[canvaslms]]: a
+regular expression for the module's name, the item's position, and
+what completes the item.
+The positions count the items already in the modules when the quizzes
+were deployed; Canvas renumbers should the modules change.
+The before-quizzes of the five catch-up topics and the course-level
+start quiz keep an empty placement and are not deployed to this
+cohort.
+
+<<funcvars start-quiz placement>>=
+<<not deployed in the first cohort>>
+<<conditionals start-quiz placement>>=
+<<not deployed in the first cohort>>
+<<repetitions start-quiz placement>>=
+<<not deployed in the first cohort>>
+<<types start-quiz placement>>=
+<<not deployed in the first cohort>>
+<<tracing start-quiz placement>>=
+<<not deployed in the first cohort>>
+<<not deployed in the first cohort>>=
+"unlock_at": null,
+@
+
+The catch-up quizzes follow the order in which the course taught
+their topics, with reading programs last, since it draws on all of
+them.
+
+<<funcvars end-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 1, "completion_requirement": "must_submit"}],
+<<conditionals end-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 2, "completion_requirement": "must_submit"}],
+<<types end-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 3, "completion_requirement": "must_submit"}],
+<<repetitions end-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 4, "completion_requirement": "must_submit"}],
+<<tracing end-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 5, "completion_requirement": "must_submit"}],
+@
+
+Each bracketing before-quiz comes right after the week's overview
+page, the first thing a student opens in the module; each after-quiz
+is the module's last item and unlocks on the Friday of the teaching
+week, when the week's lecture, exercise and lab are behind the
+students.
+
+<<classes start-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Klasser och objekt$",
+             "position": 2, "completion_requirement": "must_submit"}],
+<<classes end-quiz placement>>=
+"unlock_at": "2026-10-09T08:00:00+02:00",
+"modules": [{"module": "^Klasser och objekt$",
+             "position": 12, "completion_requirement": "must_submit"}],
+<<containers start-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Fler behållare och mer om klasser$",
+             "position": 2, "completion_requirement": "must_submit"}],
+<<containers end-quiz placement>>=
+"unlock_at": "2026-10-30T08:00:00+01:00",
+"modules": [{"module": "^Fler behållare och mer om klasser$",
+             "position": 14, "completion_requirement": "must_submit"}],
+@
+
+The course-level end quiz is the only item of its module, so the
+module, not the quiz, decides when it opens.
+
+<<course start-quiz placement>>=
+<<not deployed in the first cohort>>
+<<course end-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Repetitionsprov inför datorprovet$",
+             "position": 1, "completion_requirement": "must_submit"}],
 @
 
 \subsection{Functions and variables (aspects 11--19)}
@@ -1481,8 +1613,12 @@ The critical aspect is that a class is a template from which
 independent objects are made --- not a container that holds its
 instances, and not a database \autocite{Holland1997,Ragonis2005OOP}.
 The container distractor encodes the class-holds-its-objects
-misconception; form B asks the same of a built-in type, per the
-catalogue's generalisation.
+misconception.
+Form B varies only the surface, with another user-defined class.
+An earlier form B asked the same of the built-in [[str]], following the
+catalogue's generalisation; but the course never draws that parallel,
+so the built-in form tested the generalisation on top of the aspect,
+and the two forms were no longer interchangeable.
 
 <<group 51: a class is a template, not a container>>=
 {
@@ -1509,14 +1645,14 @@ catalogue's generalisation.
 <<item 51B: what a class holds>>=
 {
   "question_name": "What a class holds (B)",
-  "question_text": "<p>Consider this program.</p><pre>s = str(7)\nt = str(9)</pre><p>Which statement is true after it runs?</p>",
+  "question_text": "<p>Consider this program.</p><pre>class Book:\n    def __init__(self, title):\n        self.title = title\n\nx = Book('Emil')\ny = Book('Ronja')</pre><p>Which statement is true after it runs?</p>",
   "question_type": "multiple_choice_question",
   "points_possible": 1,
   "answers": [
-    {"answer_text": "There are two independent string objects; str stores neither", "answer_weight": 100},
-    {"answer_text": "The type str now contains '7' and '9'", "answer_weight": 0},
-    {"answer_text": "t replaced s inside str", "answer_weight": 0},
-    {"answer_text": "The program reports an error", "answer_weight": 0}
+    {"answer_text": "There are two independent Book objects; the class stores neither", "answer_weight": 100},
+    {"answer_text": "The class Book now contains two books", "answer_weight": 0},
+    {"answer_text": "y replaced x inside the class Book", "answer_weight": 0},
+    {"answer_text": "The program reports an error: a class can only make one object", "answer_weight": 0}
   ]
 }
 @
@@ -1528,8 +1664,12 @@ object's identifier \autocite{Holland1997,Ragonis2005OOP}.
 The same-object distractor encodes equal-attributes-same-object; the
 error distractor encodes the catalogued belief that one attribute of
 every object must be unique.
-Form B probes the same aspect from the other side: two names bound to
-\emph{one} object.
+Form B varies only the surface and which of the two objects is
+changed.
+An earlier form B probed the aspect from the other side, with two
+names bound to \emph{one} object; we dropped it, because aliasing is an
+aspect of its own, which the course does not teach in the classes
+week, and the two forms of a pair must be interchangeable.
 
 <<group 52: equal attributes do not make one object>>=
 {
@@ -1555,15 +1695,15 @@ Form B probes the same aspect from the other side: two names bound to
 }
 <<item 52B: two objects with equal attributes>>=
 {
-  "question_name": "Two names for an object (B)",
-  "question_text": "<p>What does the following program print?</p><pre>class Cat:\n    def __init__(self, name):\n        self.name = name\n\nc = Cat('Mio')\nd = c\nc.name = 'Tim'\nprint(c.name, d.name)</pre>",
+  "question_name": "Two objects with equal attributes (B)",
+  "question_text": "<p>What does the following program print?</p><pre>class Cat:\n    def __init__(self, name):\n        self.name = name\n\nc = Cat('Mio')\nd = Cat('Mio')\nd.name = 'Tim'\nprint(c.name, d.name)</pre>",
   "question_type": "multiple_choice_question",
   "points_possible": 1,
   "answers": [
-    {"answer_text": "Tim Mio", "answer_weight": 0},
-    {"answer_text": "Tim Tim", "answer_weight": 100},
+    {"answer_text": "Mio Tim", "answer_weight": 100},
+    {"answer_text": "Tim Tim", "answer_weight": 0},
     {"answer_text": "Mio Mio", "answer_weight": 0},
-    {"answer_text": "It reports an error", "answer_weight": 0}
+    {"answer_text": "It reports an error: two objects cannot have the same name", "answer_weight": 0}
   ]
 }
 @
@@ -1617,9 +1757,10 @@ class's methods have power over all its instances
 
 Two aspects from the debugging chapter's worked example: default
 arguments are evaluated once, and mutation differs from rebinding.
-The quiz pair is titled \enquote{functions and lists, revisited}
-towards the students, since \enquote{debugging} would give away that
-something is wrong in the programs.
+Their items enter the containers pair, which revisits every container
+of the course; the chunk keeps the chapter's name, but towards the
+students the items are simply about lists, since \enquote{debugging}
+would give away that something is wrong in the programs.
 
 <<debugging groups>>=
 <<group 61: a default argument is evaluated once>>,
