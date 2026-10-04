@@ -131,6 +131,7 @@ The course groups are the union of the topic banks.
 <<repetitions groups>>,
 <<types groups>>,
 <<classes groups>>,
+<<dicts groups>>,
 <<debugging groups>>,
 <<tracing groups>>
 @
@@ -418,7 +419,8 @@ function-and-list aspects of the debugging chapter included.
     <<score-only result view>>
   },
   "questions": [
-    <<classes groups>>
+    <<classes groups>>,
+    <<dicts groups>>
   ]
 }
 
@@ -435,7 +437,8 @@ function-and-list aspects of the debugging chapter included.
   },
   "questions": [
     <<preparation question>>,
-    <<classes groups>>
+    <<classes groups>>,
+    <<dicts groups>>
   ]
 }
 
@@ -451,7 +454,8 @@ function-and-list aspects of the debugging chapter included.
     <<score-only result view>>
   },
   "questions": [
-    <<debugging groups>>
+    <<debugging groups>>,
+    <<dicts groups>>
   ]
 }
 
@@ -468,7 +472,8 @@ function-and-list aspects of the debugging chapter included.
   },
   "questions": [
     <<preparation question>>,
-    <<debugging groups>>
+    <<debugging groups>>,
+    <<dicts groups>>
   ]
 }
 
