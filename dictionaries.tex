@@ -1,0 +1,244 @@
+\mode*
+\subsection{Dictionaries}
+\label{dictionaries}
+
+%LITERATURE-INTRO%
+
+A dictionary is written with the same square brackets as a list:
+\mintinline{python}{phone["ronja"]} looks like \mintinline{python}{names[0]}.
+The likeness is useful, since the students can already predict what the
+brackets do on a list, but it is also where the misconceptions come from.
+The four analyses below share one source: a student who reads the dictionary
+as a list --- with positions, growing only on request, failing quietly or not
+at all --- predicts the dictionary wrongly in four different places. Each
+analysis keeps the brackets invariant and varies what they hold or what is
+done through them, so that the difference between the two containers, not
+their shared notation, is what is discerned.
+The analyses follow the course's lecture on dictionaries, whose programs
+the code below abridges.
+
+The first object of learning is \emph{how an entry of a dictionary is
+reached}. The critical aspect is that it is reached by its \emph{key}, not by a
+position: the entries of a dictionary lie in no order that can be counted with
+0, 1, 2. The misconception it targets is that a dictionary is a list that
+happens to accept strings as indices.%LIT-81%
+
+\begin{description}
+  \item[Contrast] The same index in a list and in a dictionary holding the
+    same two persons. The brackets and their contents are invariant; only the
+    kind of container varies. The list gives its first element; the dictionary
+    stops the program with \mintinline{python}{KeyError: 0}, since 0 is not a
+    key in it --- there is no \emph{first} entry to give.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        names = ["ronja", "pippi"]
+        print(names[0])
+        # ronja
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={3}]{python}
+        phone = {"ronja": "0701234567",
+                 "pippi": "0721234567"}
+        print(phone[0])
+        # KeyError: 0
+      \end{minted}
+    \end{minipage}
+    \newline
+    The contrast is not complete until it is turned round: holding the list
+    invariant and varying what stands in the brackets,
+    \mintinline{python}{names["ronja"]} fails too, with a
+    \mintinline{python}{TypeError}. That
+    \mintinline{python}{phone["ronja"]} works is compatible with the
+    misconception; that each container rejects the other's lookup is not.
+
+  \item[Generalisation] Keeping the critical value invariant --- the brackets
+    hold a key --- we vary the type of the keys. With integer keys the key
+    \emph{looks} like an index, and still is not one: the lookup finds the
+    entry whose key is 0, wherever it stands.
+
+    \hfill
+    \begin{minipage}[t]{0.55\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        floors = {1: "hall", 0: "cellar"}
+        print(floors[0])
+        # cellar
+      \end{minted}
+    \end{minipage}
+    \hfill\null
+\end{description}
+
+The second object of learning is \emph{what an assignment to a key does}. The
+critical aspect is that the same assignment does one of two things depending on
+the key: to a key that is there it \emph{replaces} the value, to a key that is
+not there it \emph{adds} an entry. The practical consequence is that a misspelt
+key raises no error but quietly adds an entry of its own --- the fault
+students then hunt for in their programs.%LIT-82%
+
+\begin{description}
+  \item[Contrast] We hold the assignment invariant and vary whether its key is
+    already in the dictionary. The first assignment adds, the second replaces;
+    nothing in the statement tells them apart, only the dictionary does.
+
+    \hfill
+    \begin{minipage}[t]{0.55\columnwidth}
+      \begin{minted}[highlightlines={2,4}]{python}
+        phone = {"ronja": "0701234567"}
+        phone["pippi"] = "0721234567"
+        # {'ronja': ..., 'pippi': ...}
+        phone["ronja"] = "08-790 00 00"
+        # {'ronja': '08-790 00 00', 'pippi': ...}
+      \end{minted}
+    \end{minipage}
+    \hfill\null
+
+  \item[Contrast] We then hold the assignment to a place that does not exist
+    invariant and vary the container. The list does not grow by assignment:
+    it stops the program with an \mintinline{python}{IndexError} and grows
+    only when asked, with \mintinline{python}{append}. The dictionary grows by
+    itself.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        phone = {"ronja": "0701234567"}
+        phone["pippi"] = "0721234567"
+        # adds an entry
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        numbers = ["0701234567"]
+        numbers[1] = "0721234567"
+        # IndexError
+      \end{minted}
+    \end{minipage}
+    \newline
+    Together the two contrasts explain the misspelt key:
+    \mintinline{python}{phone["rnoja"] = ...} is an assignment to a key that is
+    not there, so it adds.
+\end{description}
+
+The third object of learning is \emph{what happens when a key is missing}. The
+critical aspect is that a lookup with the brackets treats a missing key as an
+error, a \mintinline{python}{KeyError}, and that a program which expects
+missing keys must say what it wants instead.%LIT-83%
+There is more than one way to say it, and the ways are values in one
+dimension: how the program learns that the key is missing.
+
+\begin{description}
+  \item[Contrast] We hold the dictionary, the question to the user and the
+    answer (a name that is not in the dictionary) invariant, and vary how the
+    missing key is handled: test first with \mintinline{python}{in}, look up
+    and catch the \mintinline{python}{KeyError}, or ask
+    \mintinline{python}{get} for a fallback. The three values are shown
+    side by side rather than one at a time, since it is their simultaneous
+    difference against the invariant program that lets the dimension itself
+    be discerned \autocite[pp.~45--47]{NCOL}.
+
+    \hfill
+    \begin{minipage}[t]{0.3\columnwidth}
+      \begin{minted}[fontsize=\footnotesize]{python}
+        if name in phone:
+            print(phone[name])
+        else:
+            print("unknown")
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\columnwidth}
+      \begin{minted}[fontsize=\footnotesize]{python}
+        try:
+            print(phone[name])
+        except KeyError:
+            print("unknown")
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\columnwidth}
+      \begin{minted}[fontsize=\footnotesize]{python}
+        print(phone.get(
+            name, "unknown"))
+      \end{minted}
+    \end{minipage}
+    \newline
+    All three print the same; they differ in what they say about the program
+    --- whether a missing key is an expected case or something that should not
+    happen. Without a fallback, \mintinline{python}{get} returns
+    \mintinline{python}{None}, the value the brackets never give: they give
+    the value or an error.
+\end{description}
+
+The fourth object of learning is \emph{what a loop over a dictionary goes
+through}. The critical aspect is that the loop variable gets the \emph{keys},
+and nothing else; the values and the key--value pairs must be asked for.%LIT-84%
+
+\begin{description}
+  \item[Contrast] We hold the dictionary and the form of the loop invariant and
+    vary only what the loop goes through: the dictionary itself, its
+    \mintinline{python}{values()}, or its \mintinline{python}{items()}, which
+    gives a tuple at a time, unpacked in the loop header as with
+    \mintinline{python}{enumerate}.
+
+    \hfill
+    \begin{minipage}[t]{0.3\columnwidth}
+      \begin{minted}{python}
+        for x in phone:
+            print(x)
+        # ronja
+        # pippi
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\columnwidth}
+      \begin{minted}{python}
+        for x in phone.values():
+            print(x)
+        # 0701234567
+        # 0721234567
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\columnwidth}
+      \begin{minted}{python}
+        for k, v in phone.items():
+            print(k, v)
+        # ronja 0701234567
+        # pippi 0721234567
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+The four analyses come together when a dictionary is built up rather than
+written out, as when counting words. Predicting the result requires attending
+at once to the key as the way in (the word, not a position), to assignment
+adding a new key and replacing an old one's count, to the missing key that
+\mintinline{python}{get} turns into a zero instead of an error, and to the loop
+that hands out the words.
+
+\begin{description}
+  \item[Fusion] The same line counts the first occurrence of a word and every
+    later one: for a new word \mintinline{python}{get} gives the fallback and
+    the assignment adds the key, for a known word it gives the count and the
+    assignment replaces it. The loop then goes through the keys.
+
+    \hfill
+    \begin{minipage}[t]{0.8\columnwidth}
+      \begin{minted}[highlightlines={3}]{python}
+        counts = {}
+        for word in ["to", "be", "or", "not", "to", "be"]:
+            counts[word] = counts.get(word, 0) + 1
+        for word in counts:
+            print(word, counts[word])
+        # to 2
+        # be 2
+        # or 1
+        # not 1
+      \end{minted}
+    \end{minipage}
+    \hfill\null
+\end{description}
