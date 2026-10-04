@@ -46,7 +46,7 @@ noweb_lexer.py:
 article.pdf: noweb_lexer.py
 
 QUIZ_TOPICS=	course funcvars conditionals repetitions types classes \
-		containers tracing
+		containers files tracing
 QUIZZES=	$(foreach t,${QUIZ_TOPICS},quiz-$(t)-start.json quiz-$(t)-end.json)
 
 .PHONY: programs

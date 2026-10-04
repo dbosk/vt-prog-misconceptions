@@ -8,12 +8,12 @@ It implements the diagnostic instruments for the learning-study
 evaluation motivated in \cref{conclusions}: pre- and post-tests at the
 level of the whole course, and pre- and post-tests around each taught
 topic.
-Sixteen files are tangled from this section: the course-level pair
+Eighteen files are tangled from this section: the course-level pair
 [[quiz-course-start.json]] and [[quiz-course-end.json]], and a
 start--end pair per topic
 ([[quiz-funcvars-start.json]]/[[quiz-funcvars-end.json]] and
 correspondingly for [[conditionals]], [[repetitions]], [[types]],
-[[classes]], [[containers]] and [[tracing]]).
+[[classes]], [[containers]], [[files]] and [[tracing]]).
 The learning platform of the course is Canvas, and the [[canvaslms]]
 command-line tool creates the quizzes from their JSON descriptions,
 for example:
@@ -76,14 +76,14 @@ Each quiz of the pair opens with an ungraded question of its own.
 The start quiz opens with the consent item
 (\cref{app:diagnostics-ethics}): the quizzes collect research data,
 consent must precede collection, and the start quiz is the first of
-the sixteen a student meets.
+the eighteen a student meets.
 The end quiz opens with whether the student prepared for the quiz.
 We ask because preparation would confound the gain measure --- a
 student who reviews the material the night before measures
 preparation, not what the course left behind.
 Each group's name numbers its aspect, with the topic in the tens
 digit and the aspect within the topic in the ones digit, so aspects
-stay identifiable and stable across all sixteen quizzes and in the
+stay identifiable and stable across all eighteen quizzes and in the
 analysis; Canvas orders the groups as listed and sums their points
 itself.
 
@@ -134,6 +134,7 @@ The course groups are the union of the topic banks.
 <<dicts groups>>,
 <<debugging groups>>,
 <<containers groups>>,
+<<files groups>>,
 <<tracing groups>>
 @
 
@@ -191,12 +192,12 @@ confounding it.
 The quizzes collect research data, so participation in the study is
 opt-in: the consent item below opens the course-level start quiz,
 which runs in the first week, before any topic quiz, so the one asked
-consent covers all sixteen quizzes and none of the others asks again.
+consent covers all eighteen quizzes and none of the others asks again.
 The wording is the same as the parallel debugging study's background
 quiz, which opens with it too, so a student who has answered one
 recognises the next; each study still filters its extraction by the
 consent its own instrument collected (\cref{app:diagnostics-analysis}),
-so a \enquote{No} here excludes these sixteen quizzes regardless of what
+so a \enquote{No} here excludes these eighteen quizzes regardless of what
 was answered elsewhere.
 A student's grade is unaffected either way: the item carries no
 points, grading and teaching run identically regardless of the
@@ -268,7 +269,7 @@ after.
 The topic banks \emph{are} the course groups, reused by reference, so
 the two levels cannot drift apart: an item improved for a topic quiz
 is improved for the course quiz, automatically.
-The seven pairs are identical in structure, so we define them together;
+The eight pairs are identical in structure, so we define them together;
 only the bank and the placement in the course differ, and the placement
 is the subject of \cref{app:diagnostics-placement}.
 Two pairs bank more than one analysis, because the course teaches the
@@ -480,6 +481,39 @@ function-and-list aspects of the debugging chapter included.
   ]
 }
 
+<<[[quiz-files-start.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: files (before)",
+    <<start-quiz boilerplate>>
+    <<files start-quiz placement>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<score-only result view>>
+  },
+  "questions": [
+    <<files groups>>
+  ]
+}
+
+<<[[quiz-files-end.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: files (after)",
+    <<end-quiz boilerplate>>
+    <<files end-quiz placement>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<revealing result view>>
+  },
+  "questions": [
+    <<preparation question>>,
+    <<files groups>>
+  ]
+}
+
 <<[[quiz-tracing-start.json]]>>=
 {
   "quiz_type": "classic",
@@ -637,6 +671,14 @@ students.
 "unlock_at": "2026-10-30T08:00:00+01:00",
 "modules": [{"module": "^Fler behållare och mer om klasser$",
              "position": 14, "completion_requirement": "must_submit"}],
+<<files start-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Filhantering$",
+             "position": 2, "completion_requirement": "must_submit"}],
+<<files end-quiz placement>>=
+"unlock_at": "2026-11-06T08:00:00+01:00",
+"modules": [{"module": "^Filhantering$",
+             "position": 11, "completion_requirement": "must_submit"}],
 @
 
 The course-level end quiz is the only item of its module, so the
@@ -2949,7 +2991,7 @@ def column_for(question, fieldnames):
 \subsubsection{Who a row belongs to}
 
 The question text joins the report's columns to the pools; what joins
-the report's \emph{rows} --- across the sixteen quizzes and the two
+the report's \emph{rows} --- across the eighteen quizzes and the two
 administrations --- is the student, and there a name will not do.
 Two students can share a name, and one course is enough for that.
 The identifier we use instead is the student's \emph{login ID}: an
@@ -3125,8 +3167,8 @@ def fetch_results(course_name, quiz_title):
 \subsubsection{Consent}
 
 Consent is asked once, in the course-level start quiz
-(\cref{app:diagnostics-ethics}), and covers all sixteen quizzes; the
-other fifteen carry no consent item of their own, so every quiz's
+(\cref{app:diagnostics-ethics}), and covers all eighteen quizzes; the
+other seventeen carry no consent item of their own, so every quiz's
 rows are filtered by the students who answered yes at the start.
 The program reads the consent question from the tangled quiz files,
 like the answer key, so the filter cannot drift from the instrument
