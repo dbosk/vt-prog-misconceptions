@@ -2159,6 +2159,259 @@ apart.
 }
 @
 
+\subsection{More containers (aspects 85--88)}
+\label{app:diagnostics-containers}
+
+Four aspects from the analyses of tuples, dictionary keys, sets,
+stacks and queues (\cref{containers}).
+All four share one difficulty: Python writes the containers alike ---
+the same brackets for indexing, the same [[append]], the same
+[[for]] --- so the surface does not show which container a program
+holds, and every item therefore makes the student predict what the
+container \emph{does} rather than recognise how it is written.
+The catalogue's fifth aspect, choosing a container by the operations
+a program needs, has no item: the course's own choice exercise has no
+single key --- the same students can be defensibly kept in a list, a
+set or as dictionary keys --- so a multiple-choice item with one
+keyed answer would mark wrong what the course accepts.
+
+<<containers groups>>=
+<<group 85: a key must be immutable>>,
+<<group 86: a tuple cannot be changed>>,
+<<group 87: a set keeps one of each and no order>>,
+<<group 88: a stack and a queue take from different ends>>
+@
+
+\paragraph{Aspect 85: a key must be immutable.}
+The critical aspect fuses two earlier ones: a dictionary finds an
+entry by its key's value, so the key must be a value that cannot
+change afterwards --- a tuple serves, a list does not.
+Both forms store one entry under a tuple, read it back, and then try
+the same with a list; the program prints once and then stops with a
+[[TypeError]] at the list key.
+The distractor in which both entries work encodes taking a key to be
+as unrestricted as a value, which is also what the belief that a tuple
+is merely a list with other brackets predicts.
+The distractor in which the tuple fails as well encodes the belief
+that only plain values such as strings can be keys, as if a
+dictionary were a list indexed by strings.
+The [[KeyError]] distractor encodes not discerning a value that
+\emph{cannot} be a key from a key that is \emph{absent}, the two
+failures the course material sets side by side.
+None of the three is documented in the literature we searched; they
+are observed in our course material's design, which is why
+\cref{containers} analyses them without citations of their own.
+
+<<group 85: a key must be immutable>>=
+{
+  "group": {"name": "Aspect 85: a key must be immutable",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 85A: a list as a key>>,
+    <<item 85B: a list as a key>>
+  ]
+}
+<<item 85A: a list as a key>>=
+{
+  "question_name": "A list as a key (A)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>d = {}\nd[('x', 'y')] = 1\nprint(d[('x', 'y')])\nd[['x', 'z']] = 2\nprint(d[['x', 'z']])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints 1 and then 2", "answer_weight": 0},
+    {"answer_text": "It prints 1 and then reports a TypeError", "answer_weight": 100},
+    {"answer_text": "It reports a TypeError before printing anything", "answer_weight": 0},
+    {"answer_text": "It prints 1 and then reports a KeyError", "answer_weight": 0}
+  ]
+}
+<<item 85B: a list as a key>>=
+{
+  "question_name": "A list as a key (B)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>m = {}\nm[('a', 'b')] = 'yes'\nprint(m[('a', 'b')])\nm[['c', 'd']] = 'no'\nprint(m[['c', 'd']])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It reports a TypeError before printing anything", "answer_weight": 0},
+    {"answer_text": "It prints yes and then reports a KeyError", "answer_weight": 0},
+    {"answer_text": "It prints yes and then no", "answer_weight": 0},
+    {"answer_text": "It prints yes and then reports a TypeError", "answer_weight": 100}
+  ]
+}
+@
+
+\paragraph{Aspect 86: a tuple cannot be changed.}
+The critical aspect is that a tuple is immutable: indexing, [[len]]
+and [[for]] work on it as on a list, but assigning to an element
+raises a [[TypeError]].
+Both forms hold the same pair in a list and in a tuple and assign to
+the same index of each, so that only the kind of container varies ---
+the course material's own contrast.
+Placing a [[print]] between the two assignments separates the
+outcomes in time: the list's change is printed before the tuple's
+assignment fails.
+The changed-tuple distractor encodes the tuple as a list with other
+brackets; the unchanged-tuple distractor encodes the tuple as a
+\enquote{frozen list} whose writes are silently ignored rather than
+refused --- both observed in our course material's design, not yet
+documented in the literature.
+The error-before-printing distractor encodes reading the program as
+a static whole that is checked before it runs, the failure to see that
+a program has a dynamic existence besides its static text
+\autocite[p.~235]{Sorva2012Dissertation}.
+
+<<group 86: a tuple cannot be changed>>=
+{
+  "group": {"name": "Aspect 86: a tuple cannot be changed",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 86A: assigning into a tuple>>,
+    <<item 86B: assigning into a tuple>>
+  ]
+}
+<<item 86A: assigning into a tuple>>=
+{
+  "question_name": "Assigning into a tuple (A)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>a = [4, 8]\nb = (4, 8)\na[0] = 5\nprint(a)\nb[0] = 5\nprint(b)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints [5, 8] and then (5, 8)", "answer_weight": 0},
+    {"answer_text": "It prints [5, 8] and then (4, 8)", "answer_weight": 0},
+    {"answer_text": "It prints [5, 8] and then reports a TypeError", "answer_weight": 100},
+    {"answer_text": "It reports a TypeError before printing anything", "answer_weight": 0}
+  ]
+}
+<<item 86B: assigning into a tuple>>=
+{
+  "question_name": "Assigning into a tuple (B)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>x = ['m', 'n']\ny = ('m', 'n')\nx[1] = 'k'\nprint(x)\ny[1] = 'k'\nprint(y)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints ['m', 'k'] and then reports a TypeError", "answer_weight": 100},
+    {"answer_text": "It reports a TypeError before printing anything", "answer_weight": 0},
+    {"answer_text": "It prints ['m', 'k'] and then ('m', 'k')", "answer_weight": 0},
+    {"answer_text": "It prints ['m', 'k'] and then ('m', 'n')", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 87: a set keeps one of each and no order.}
+The critical aspect is what a set \emph{is}: it holds each value once,
+and it has no order, so two sets are equal when they hold the same
+values.
+The item crosses the two features: it prints the size of a set
+written with a duplicate, and whether it equals a set written with
+the same values, the same duplicate, in another order.
+The four answers are then the four combinations of discerning or not
+discerning each feature, and which one a student picks tells which
+feature they miss.
+The ordered distractor (right size, unequal) encodes the set as a list
+that happens to drop duplicates, the misconception the course
+material's contrast is built against; the counted-duplicate
+distractor (wrong size, equal) encodes the set as an unordered heap
+that keeps every copy; the list distractor (wrong size, unequal)
+encodes not telling the set from a list at all.
+None of the three is documented in the computing-education literature
+we searched; they are observed in our course material's design.
+The forms print a size and a truth value rather than the set itself,
+since the order in which a set of strings prints can vary from run to
+run.
+
+<<group 87: a set keeps one of each and no order>>=
+{
+  "group": {"name": "Aspect 87: a set keeps one of each and no order",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 87A: a set with a duplicate>>,
+    <<item 87B: a set with a duplicate>>
+  ]
+}
+<<item 87A: a set with a duplicate>>=
+{
+  "question_name": "A set with a duplicate (A)",
+  "question_text": "<p>What does the following program print?</p><pre>a = {3, 1, 3, 2}\nb = {2, 3, 1, 3}\nprint(len(a), a == b)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "3 True", "answer_weight": 100},
+    {"answer_text": "3 False", "answer_weight": 0},
+    {"answer_text": "4 True", "answer_weight": 0},
+    {"answer_text": "4 False", "answer_weight": 0}
+  ]
+}
+<<item 87B: a set with a duplicate>>=
+{
+  "question_name": "A set with a duplicate (B)",
+  "question_text": "<p>What does the following program print?</p><pre>x = {'b', 'a', 'b'}\ny = {'a', 'b', 'b'}\nprint(len(x), x == y)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "3 False", "answer_weight": 0},
+    {"answer_text": "2 False", "answer_weight": 0},
+    {"answer_text": "3 True", "answer_weight": 0},
+    {"answer_text": "2 True", "answer_weight": 100}
+  ]
+}
+@
+
+\paragraph{Aspect 88: a stack and a queue take from different ends.}
+The critical aspect is which element is taken next: a stack gives back
+the element added last, a queue the element added first.
+The course builds the stack from a list with [[append]] and [[pop]],
+and the queue from a [[collections.deque]] with [[append]] and
+[[popleft]], so both forms do exactly that, with the same elements
+added in the same order to both, and take one element from each.
+The containers are named neutrally, as in the course material, since
+names like [[stack]] and [[queue]] would say which order to expect.
+The swapped distractor encodes confusing the two orders; the
+same-end distractors encode carrying one order over to both
+containers --- the newest first, or the oldest first.
+Choosing a structure without the last-in, first-out property for an
+undo function is documented \autocite[p.~173]{Zingaro2018DataStructures},
+but as a rare error (7\,\% of the students), and the same authors
+report an earlier finding that students do best on questions about
+stack and queue interfaces
+\autocite[p.~170]{Zingaro2018DataStructures}; the item may therefore
+be easy, and its value is in the start quiz, before the unit.
+
+<<group 88: a stack and a queue take from different ends>>=
+{
+  "group": {"name": "Aspect 88: a stack and a queue take from different ends",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 88A: taking from a stack and a queue>>,
+    <<item 88B: taking from a stack and a queue>>
+  ]
+}
+<<item 88A: taking from a stack and a queue>>=
+{
+  "question_name": "Taking from a stack and a queue (A)",
+  "question_text": "<p>What does the following program print?</p><pre>import collections\n\na = []\nb = collections.deque()\nfor x in [1, 2, 3]:\n    a.append(x)\n    b.append(x)\nprint(a.pop(), b.popleft())</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "1 1", "answer_weight": 0},
+    {"answer_text": "3 3", "answer_weight": 0},
+    {"answer_text": "3 1", "answer_weight": 100},
+    {"answer_text": "1 3", "answer_weight": 0}
+  ]
+}
+<<item 88B: taking from a stack and a queue>>=
+{
+  "question_name": "Taking from a stack and a queue (B)",
+  "question_text": "<p>What does the following program print?</p><pre>import collections\n\nu = []\nv = collections.deque()\nfor c in ['p', 'q', 'r']:\n    u.append(c)\n    v.append(c)\nprint(u.pop(), v.popleft())</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "p r", "answer_weight": 0},
+    {"answer_text": "r p", "answer_weight": 100},
+    {"answer_text": "r r", "answer_weight": 0},
+    {"answer_text": "p p", "answer_weight": 0}
+  ]
+}
+@
+
 \subsection{Reading programs (aspect 71)}
 
 One aspect from the problem-solving analyses

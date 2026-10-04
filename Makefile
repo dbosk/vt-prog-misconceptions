@@ -22,6 +22,7 @@ SRC+=repetitions.tex
 SRC+=types.tex
 SRC+=classes.tex
 SRC+=dictionaries.tex
+SRC+=containers.tex
 SRC+=findings.tex
 SRC+=related-work.tex
 SRC+=conclusions.tex

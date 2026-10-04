@@ -1594,3 +1594,107 @@ series = {L@S '20}
   note={Consolidated text; scope in 3--4 §§},
 }
 
+
+% === provenance: Johnson2020PythonMisconceptions ===
+% CLAIM: Python's overloading (one surface for many data structures) hides
+%   their complexity and leads novices into mutability, sharing and copying
+%   before they can understand them -- the framing of the "More containers"
+%   section, where the containers are written alike.
+% FOUND-VIA: scholar session "bank-containers" (2026-10-04), query
+%   "mutability misconceptions novice programmers" -p openalex -p dblp -p wos
+%   -p ieee -p scopus -p arxiv; again by WoS TS=((misconception* OR
+%   difficult*) AND (mutab* OR immutab*) AND (student* OR novice*) AND
+%   programming) and the same TITLE-ABS-KEY on Scopus.
+% PICKED: the only hit, on every provider, that studies Python novices'
+%   misconceptions about mutability and data structures; primary empirical
+%   source (student survey + analysis against a notional machine), not a
+%   survey. Lu & Krishnamurthi 2024 (PACMPL, mutable compound data) is
+%   adjacent (aliasing of mutable data), not about immutable containers.
+% QUOTE (abstract, p. 1): "Overloading hides the complexity of algorithms and
+%   data structures, often leading students to write code that involves
+%   mutability, sharing, copying, side effects, coroutines, concurrency, and
+%   lazy evaluation – and none of those topics are accessible to students
+%   who haven't yet mastered basic assignments, conditionals, and looping."
+% VERIFIED: full text read (author's accepted version, eprints.gla.ac.uk
+%   203059, via scholar's PDF cache); the quote is verbatim. The study's
+%   evidence concerns lists (+ vs += and aliasing), so the containers section
+%   cites it only for the framing, not for tuple, set or key misconceptions.
+% COUNTER: same session, "mutability students understand immutable
+%   correctly" and the field-syntax queries above: no study found that
+%   novices handle immutable containers without difficulty, and none
+%   documenting specific misconceptions about tuples, sets or dictionary
+%   keys either; the section says so plainly.
+% DATE: 2026-10-04
+@inproceedings{Johnson2020PythonMisconceptions,
+  author    = {Johnson, Fionnuala and McQuistin, Stephen and O'Donnell, John},
+  title     = {Analysis of Student Misconceptions using {Python} as an
+               Introductory Programming Language},
+  booktitle = {Proceedings of the 4th Conference on Computing Education
+               Practice},
+  series    = {CEP '20},
+  publisher = {ACM},
+  year      = {2020},
+  pages     = {1--4},
+  doi       = {10.1145/3372356.3372360},
+}
+
+% === provenance: Zingaro2018DataStructures ===
+% CLAIM: (a) In a CS2 study, 7% of students chose structures without the
+%   LIFO property for an undo function; (b) the authors report an earlier
+%   finding (Tenenberg and Murphy) that students did best on stack, queue
+%   and tree interface questions; (c) students who included a slow
+%   structure when choosing an implementation for a generalised array
+%   (12%) justified it by what could be built, not by performance.
+% FOUND-VIA: not returned by the scholar session "bank-containers" (its
+%   stack/queue queries surfaced the companion BDSI paper, Porter et al.
+%   2019, and the 2026 SLR by Tilanterä & Korhonen); retrieved by WebSearch
+%   "Danielsiek Paul Vahrenhold 2012 \"Detecting and understanding
+%   students' misconceptions related to algorithms and data structures\"
+%   pdf" (2026-10-04), which listed the authors' copy at
+%   cs.swarthmore.edu/~kwebb/papers/DataStructuresDifficulties.pdf;
+%   metadata checked against Crossref.
+% PICKED: primary empirical study of student difficulties with basic data
+%   structures (interviews + 249-student questions) that reports stack/LIFO
+%   and choice-of-structure results with percentages; BDSI (Porter et al.
+%   2019) reports no item-level stack/queue misconceptions, and the 2026
+%   SLR is paywalled (not read, not cited).
+% QUOTE (p. 173, sec. 4.6): "The correct answer to this problem is d, to add
+%   and remove from the head, as this will maintain a LIFO ordering [...]
+%   Seven percent chose a or b, choices that do not provide a LIFO
+%   property."
+% QUOTE (p. 170, sec. 2): "Tenenberg and Murphy tested students on data
+%   structures as part of a project on student self-assessment, and found
+%   that students performed best on questions about stack, queue and tree
+%   interfaces, and worst on questions concerning the runtime efficiency of
+%   different searches [24]."
+% QUOTE (p. 173, sec. 4.5.3): "Twelve percent of students' answers included
+%   either of the linked list responses (c or d) [...] The justifications
+%   for these answers generally did not mention performance, and focused on
+%   the fact that an implementation could be built using any of the data
+%   structures. (A sample student answer is "All three data structures
+%   should work as long as they arrange the elements by subscript [...]")"
+% VERIFIED: full-text PDF read (authors' copy, 9 pp.); page numbers mapped
+%   from the proceedings range 169--177 (PDF p. 2 = p. 170, PDF p. 5 =
+%   p. 173). Claim (b) is cited as the authors' report of Tenenberg and
+%   Murphy, whose paper was not read.
+% COUNTER: scholar "bank-containers": "stack queue students understand
+%   correctly no misconceptions" and WoS TS=(misconception* AND (stack* OR
+%   queue*) AND (student* OR novice*) AND (programming OR "data
+%   structure*")) / Scopus TITLE-ABS-KEY(same): hits concern the runtime
+%   (call) stack, recursion and Dijkstra, none refuting; the qualifying
+%   evidence is the source's own (b): stack/queue order is comparatively
+%   easy, so the catalogue says the item may be easy.
+% DATE: 2026-10-04
+@inproceedings{Zingaro2018DataStructures,
+  author    = {Zingaro, Daniel and Taylor, Cynthia and Porter, Leo and
+               Clancy, Michael and Lee, Cynthia and Nam Liao, Soohyun and
+               Webb, Kevin C.},
+  title     = {Identifying Student Difficulties with Basic Data Structures},
+  booktitle = {Proceedings of the 2018 ACM Conference on International
+               Computing Education Research},
+  series    = {ICER '18},
+  publisher = {ACM},
+  year      = {2018},
+  pages     = {169--177},
+  doi       = {10.1145/3230977.3231005},
+}
