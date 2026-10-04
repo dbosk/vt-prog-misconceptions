@@ -1893,14 +1893,20 @@ The critical aspect is that an entry is reached by its key, not by a
 position: \mintinline{python}{ages[0]} on a dictionary whose keys are
 strings looks up the \emph{key}~0, which is not there, and the program
 stops with a [[KeyError]].
-The two positional distractors, the first value and the first key,
-encode the misconception that the course material itself targets: that
-a dictionary is a list that happens to accept strings as indices, so
-that its entries lie in an order reachable with 0, 1, 2.
-The [[None]] distractor encodes a student who has discerned that 0 is
-not a key but takes a missing key to give nothing rather than an
-error --- aspect~83's misconception --- so the item keeps the two
-apart.
+All three distractors are positional readings, each giving the first
+entry in another guise: the first value, the first key, and the first
+key--value pair.
+The first two encode the misconception that the course material itself
+targets: that a dictionary is a list that happens to accept strings as
+indices, so that its entries lie in an order reachable with 0, 1, 2.
+The pair encodes the closest documented case, a student who treated her
+dictionary as a list of two-element lists and accessed it as such
+\autocite{Stansbury2015Dictionaries}.
+An earlier version offered [[None]] instead of the pair, for a student
+who has discerned that 0 is not a key but takes a missing key to give
+nothing; we replaced it, since no study documents that belief here and
+it is aspect~83's misconception, which a wrong answer to this item
+should not be charged with.
 Both forms index with 0 rather than 1, so that a positional reading
 gives one unambiguous answer whether the student counts from zero or
 from one.
@@ -1924,7 +1930,7 @@ from one.
     {"answer_text": "It prints 19", "answer_weight": 0},
     {"answer_text": "It prints anna", "answer_weight": 0},
     {"answer_text": "It reports a KeyError", "answer_weight": 100},
-    {"answer_text": "It prints None", "answer_weight": 0}
+    {"answer_text": "It prints ('anna', 19)", "answer_weight": 0}
   ]
 }
 <<item 81B: indexing a dictionary>>=
@@ -1935,7 +1941,7 @@ from one.
   "points_possible": 1,
   "answers": [
     {"answer_text": "It reports a KeyError", "answer_weight": 100},
-    {"answer_text": "It prints None", "answer_weight": 0},
+    {"answer_text": "It prints ('pears', 9)", "answer_weight": 0},
     {"answer_text": "It prints pears", "answer_weight": 0},
     {"answer_text": "It prints 9", "answer_weight": 0}
   ]
