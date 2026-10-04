@@ -180,7 +180,82 @@ whether we have one object or two.
     to be stored.
 \end{description}
 
-The three analyses come together in a single fusion: a method is defined once,
+Identity has a counterpart that students meet as soon as they compare two
+objects: equality. The object of learning is \emph{what it means for two
+objects to be equal}. The critical aspect is that equality is \emph{defined}
+--- \mintinline{python}{==} asks whatever the class's
+\mintinline{python}{__eq__} says it asks --- whereas identity is not:
+\mintinline{python}{is} always asks whether two names refer to one and the
+same object, and a class without an \mintinline{python}{__eq__} lets
+\mintinline{python}{==} fall back on that same question.
+The misconception at stake is the one \textcite{Holland1997} found behind
+object identity, seen from the side of equality: that
+\textcquote{Holland1997}{two objects of the same class with the same state are
+the same object}.
+The two comparisons are confused in practice too. In Java, where
+\mintinline{java}{==} asks about identity and \mintinline{java}{equals} about
+equality, comparing strings with \mintinline{java}{==} was a mistake made by
+almost 30\,000 of the more than 250\,000 novices in a year of compilation data,
+and more than half of its instances took over 1000 seconds to fix or were never
+fixed \autocite{AltadmriBrown2015}.
+For Python, \textcite{Gama2018PythonAntipatterns} hypothesised the converse
+mistake: comparing two objects with \mintinline{python}{==} when their class
+defines no comparison method, so that only the references are compared. They
+observed it only once in 204 exam papers, however, and dropped it from their
+candidate misconceptions.
+We hold the objects and the two comparisons invariant and vary only whether
+the class defines its equality.
+
+\begin{description}
+  \item[Contrast] The same two books, equal in title but with their bookmarks
+    at different pages, compared in the same two ways. On the left the class
+    has no \mintinline{python}{__eq__}, so both comparisons ask about identity
+    and both are \mintinline{python}{False}. On the right the class says that
+    books with the same title are equal, and the two comparisons come apart.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        class Book:
+            def __init__(self, title, page):
+                self.title = title
+                self.page = page
+
+
+
+        a = Book("Emil", 50)
+        b = Book("Emil", 0)
+        print(a == b, a is b)
+        # False False
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={5,6}]{python}
+        class Book:
+            def __init__(self, title, page):
+                self.title = title
+                self.page = page
+            def __eq__(self, other):
+                return self.title == other.title
+
+        a = Book("Emil", 50)
+        b = Book("Emil", 0)
+        print(a == b, a is b)
+        # True False
+      \end{minted}
+    \end{minipage}
+    \newline
+    What varies with \mintinline{python}{__eq__} is only
+    \mintinline{python}{==}; \mintinline{python}{is} stays
+    \mintinline{python}{False} on both sides, since there are two objects on
+    both sides. Which attributes make two objects equal is a choice the class
+    makes --- here the title, not the bookmark --- and two objects can be
+    equal without being one, the case the identity analysis above could not
+    show.
+\end{description}
+
+The first three analyses come together in a single fusion: a method is defined once,
 in the template, yet acts on the instance it is called on. Predicting the output
 requires attending simultaneously to what a method is (a function bound to the
 class, reaching the object through \mintinline{python}{self}), to the class as a

@@ -8,12 +8,12 @@ It implements the diagnostic instruments for the learning-study
 evaluation motivated in \cref{conclusions}: pre- and post-tests at the
 level of the whole course, and pre- and post-tests around each taught
 topic.
-Sixteen files are tangled from this section: the course-level pair
+Eighteen files are tangled from this section: the course-level pair
 [[quiz-course-start.json]] and [[quiz-course-end.json]], and a
 start--end pair per topic
 ([[quiz-funcvars-start.json]]/[[quiz-funcvars-end.json]] and
 correspondingly for [[conditionals]], [[repetitions]], [[types]],
-[[classes]], [[debugging]] and [[tracing]]).
+[[classes]], [[containers]], [[files]] and [[tracing]]).
 The learning platform of the course is Canvas, and the [[canvaslms]]
 command-line tool creates the quizzes from their JSON descriptions,
 for example:
@@ -72,14 +72,18 @@ the first week, the end quiz in the last.
 The titles name the course level explicitly, since the parallel
 debugging study runs same-shaped concept quizzes in the same course
 and the two must stay distinguishable for students and analysis alike.
-The end quiz opens with a question of its own: whether the student
-prepared for the quiz.
+Each quiz of the pair opens with an ungraded question of its own.
+The start quiz opens with the consent item
+(\cref{app:diagnostics-ethics}): the quizzes collect research data,
+consent must precede collection, and the start quiz is the first of
+the eighteen a student meets.
+The end quiz opens with whether the student prepared for the quiz.
 We ask because preparation would confound the gain measure --- a
 student who reviews the material the night before measures
 preparation, not what the course left behind.
 Each group's name numbers its aspect, with the topic in the tens
 digit and the aspect within the topic in the ones digit, so aspects
-stay identifiable and stable across all sixteen quizzes and in the
+stay identifiable and stable across all eighteen quizzes and in the
 analysis; Canvas orders the groups as listed and sums their points
 itself.
 
@@ -89,11 +93,13 @@ itself.
   "settings": {
     "title": "Programming concepts quiz: start of course",
     "description": "<p>This quiz checks which programming concepts you already know, so that we can adapt the course. You will see your score afterwards, but not the correct answers&mdash;the course will teach you those. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
+    <<course start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
   },
   "questions": [
+    <<consent question>>,
     <<aspect groups>>
   ]
 }
@@ -104,7 +110,8 @@ itself.
   "quiz_type": "classic",
   "settings": {
     "title": "Programming concepts quiz: end of course",
-    "description": "<p>This quiz mirrors the concept quiz from the start of the course, so that we can see what you have learned during the course. You will see your score and the correct answers afterwards, so you can use the quiz to review. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+    "description": "<p>This quiz covers the programming concepts of the whole course, so that we can see what you have learned. Take it before you start preparing for the computer exam, on your own and without help or tools. Afterwards you will see your score and the correct answers, so you can use the quiz to practise for the exam. The score does not affect your grade.</p>",
+    <<course end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -124,7 +131,10 @@ The course groups are the union of the topic banks.
 <<repetitions groups>>,
 <<types groups>>,
 <<classes groups>>,
+<<dicts groups>>,
 <<debugging groups>>,
+<<containers groups>>,
+<<files groups>>,
 <<tracing groups>>
 @
 
@@ -139,7 +149,6 @@ where [[assignment]] means a graded quiz.
 <<scheduling settings>>=
 "time_limit": null,
 "due_at": null,
-"unlock_at": null,
 "lock_at": null,
 @
 
@@ -177,6 +186,61 @@ confounding it.
 "hide_results": null
 @
 
+\subsection{The consent and preparation items}
+\label{app:diagnostics-ethics}
+
+The quizzes collect research data, so participation in the study is
+opt-in: the consent item below opens the course-level start quiz,
+which runs in the first week, before any topic quiz, so the one asked
+consent covers all eighteen quizzes and none of the others asks again.
+The wording is the same as the parallel debugging study's background
+quiz, which opens with it too, so a student who has answered one
+recognises the next; each study still filters its extraction by the
+consent its own instrument collected (\cref{app:diagnostics-analysis}),
+so a \enquote{No} here excludes these eighteen quizzes regardless of what
+was answered elsewhere.
+A student's grade is unaffected either way: the item carries no
+points, grading and teaching run identically regardless of the
+answer, and the research extraction filters by consent after the
+fact.
+The collection was assessed against the Swedish Ethics Review Act
+\autocite{Etikprovningslagen} with the institution's checklist and found
+not to require review---only ordinary personal data is processed, there
+is no intervention, and the teaching is not manipulated for
+research---and the institution's research-ethics advisor confirmed the
+assessment on 2026-09-01; the assessment accompanies this paper's source
+as [[ethics-application-prgi26.md]].
+The item therefore links to the participant information page in the
+course's learning platform, which describes the purpose, the data, its
+handling and the students' rights, and its wording names every source
+the two studies use---the parallel debugging study's programming logs
+and platform activity included---so that the consent is informed in the
+sense the GDPR requires.
+
+The item is a multiple-choice question rather than Canvas's
+true/false type because a Classic true/false question cannot relabel
+its choices, and the student should answer \enquote{Yes} or
+\enquote{No}, not \enquote{True} or \enquote{False} --- the same two
+choices the sibling studies' New-Quiz consent item offers, so the
+item reads identically wherever a student meets it.
+Canvas wants some choice marked correct; the weight on \enquote{Yes}
+is that requirement and nothing else --- the item carries no points,
+so no answer is more correct than the other, exactly as for the
+preparation question below.
+
+<<consent question>>=
+{
+  "question_name": "Consent",
+  "question_text": "<p>I consent to my answers in the course's quizzes and questionnaires, my course submissions, the logs of my programming work that the course's tools record, and my activity in the course's learning platform, being used pseudonymised in computing education research. Recorded sessions happen only if I separately agree to them. My participation is voluntary, does not affect my grade, and I can withdraw at any time by contacting the responsible researcher. I have read <a href='https://canvas.kth.se/courses/63874/pages/information-om-forskningsstudien'>the information page about the study</a>.</p>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 0,
+  "answers": [
+    {"answer_text": "Yes", "answer_weight": 100},
+    {"answer_text": "No", "answer_weight": 0}
+  ]
+}
+@
+
 The preparation question is ungraded and sits first in every end
 quiz, outside any group so that every student gets it.
 Canvas wants some choice marked correct even here; the mark on
@@ -205,8 +269,13 @@ after.
 The topic banks \emph{are} the course groups, reused by reference, so
 the two levels cannot drift apart: an item improved for a topic quiz
 is improved for the course quiz, automatically.
-The seven pairs are identical in structure, so we define them together;
-only the bank differs.
+The eight pairs are identical in structure, so we define them together;
+only the bank and the placement in the course differ, and the placement
+is the subject of \cref{app:diagnostics-placement}.
+Two pairs bank more than one analysis, because the course teaches the
+topics together: dictionaries arrive in the same week as classes, and
+the containers pair revisits every container of the course, the
+function-and-list aspects of the debugging chapter included.
 
 <<[[quiz-funcvars-start.json]]>>=
 {
@@ -214,6 +283,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: functions and variables (before)",
     <<start-quiz boilerplate>>
+    <<funcvars start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -222,7 +292,6 @@ only the bank differs.
     <<funcvars groups>>
   ]
 }
-@
 
 <<[[quiz-funcvars-end.json]]>>=
 {
@@ -230,6 +299,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: functions and variables (after)",
     <<end-quiz boilerplate>>
+    <<funcvars end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -239,7 +309,6 @@ only the bank differs.
     <<funcvars groups>>
   ]
 }
-@
 
 <<[[quiz-conditionals-start.json]]>>=
 {
@@ -247,6 +316,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: conditionals (before)",
     <<start-quiz boilerplate>>
+    <<conditionals start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -255,7 +325,6 @@ only the bank differs.
     <<conditionals groups>>
   ]
 }
-@
 
 <<[[quiz-conditionals-end.json]]>>=
 {
@@ -263,6 +332,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: conditionals (after)",
     <<end-quiz boilerplate>>
+    <<conditionals end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -272,7 +342,6 @@ only the bank differs.
     <<conditionals groups>>
   ]
 }
-@
 
 <<[[quiz-repetitions-start.json]]>>=
 {
@@ -280,6 +349,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: repetitions (before)",
     <<start-quiz boilerplate>>
+    <<repetitions start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -288,7 +358,6 @@ only the bank differs.
     <<repetitions groups>>
   ]
 }
-@
 
 <<[[quiz-repetitions-end.json]]>>=
 {
@@ -296,6 +365,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: repetitions (after)",
     <<end-quiz boilerplate>>
+    <<repetitions end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -305,7 +375,6 @@ only the bank differs.
     <<repetitions groups>>
   ]
 }
-@
 
 <<[[quiz-types-start.json]]>>=
 {
@@ -313,6 +382,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: data types (before)",
     <<start-quiz boilerplate>>
+    <<types start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -321,7 +391,6 @@ only the bank differs.
     <<types groups>>
   ]
 }
-@
 
 <<[[quiz-types-end.json]]>>=
 {
@@ -329,6 +398,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: data types (after)",
     <<end-quiz boilerplate>>
+    <<types end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -338,73 +408,111 @@ only the bank differs.
     <<types groups>>
   ]
 }
-@
 
 <<[[quiz-classes-start.json]]>>=
 {
   "quiz_type": "classic",
   "settings": {
-    "title": "Topic quiz: classes and objects (before)",
+    "title": "Topic quiz: classes and dictionaries (before)",
     <<start-quiz boilerplate>>
+    <<classes start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
   },
   "questions": [
-    <<classes groups>>
+    <<classes groups>>,
+    <<dicts groups>>
   ]
 }
-@
 
 <<[[quiz-classes-end.json]]>>=
 {
   "quiz_type": "classic",
   "settings": {
-    "title": "Topic quiz: classes and objects (after)",
+    "title": "Topic quiz: classes and dictionaries (after)",
     <<end-quiz boilerplate>>
+    <<classes end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
   },
   "questions": [
     <<preparation question>>,
-    <<classes groups>>
+    <<classes groups>>,
+    <<dicts groups>>
   ]
 }
-@
 
-<<[[quiz-debugging-start.json]]>>=
+<<[[quiz-containers-start.json]]>>=
 {
   "quiz_type": "classic",
   "settings": {
-    "title": "Topic quiz: functions and lists, revisited (before)",
+    "title": "Topic quiz: containers (before)",
     <<start-quiz boilerplate>>
+    <<containers start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
   },
   "questions": [
-    <<debugging groups>>
+    <<debugging groups>>,
+    <<dicts groups>>,
+    <<containers groups>>
   ]
 }
-@
 
-<<[[quiz-debugging-end.json]]>>=
+<<[[quiz-containers-end.json]]>>=
 {
   "quiz_type": "classic",
   "settings": {
-    "title": "Topic quiz: functions and lists, revisited (after)",
+    "title": "Topic quiz: containers (after)",
     <<end-quiz boilerplate>>
+    <<containers end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
   },
   "questions": [
     <<preparation question>>,
-    <<debugging groups>>
+    <<debugging groups>>,
+    <<dicts groups>>,
+    <<containers groups>>
   ]
 }
-@
+
+<<[[quiz-files-start.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: files (before)",
+    <<start-quiz boilerplate>>
+    <<files start-quiz placement>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<score-only result view>>
+  },
+  "questions": [
+    <<files groups>>
+  ]
+}
+
+<<[[quiz-files-end.json]]>>=
+{
+  "quiz_type": "classic",
+  "settings": {
+    "title": "Topic quiz: files (after)",
+    <<end-quiz boilerplate>>
+    <<files end-quiz placement>>
+    <<scheduling settings>>
+    <<interaction settings>>
+    <<revealing result view>>
+  },
+  "questions": [
+    <<preparation question>>,
+    <<files groups>>
+  ]
+}
 
 <<[[quiz-tracing-start.json]]>>=
 {
@@ -412,6 +520,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: reading programs (before)",
     <<start-quiz boilerplate>>
+    <<tracing start-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -420,7 +529,6 @@ only the bank differs.
     <<tracing groups>>
   ]
 }
-@
 
 <<[[quiz-tracing-end.json]]>>=
 {
@@ -428,6 +536,7 @@ only the bank differs.
   "settings": {
     "title": "Topic quiz: reading programs (after)",
     <<end-quiz boilerplate>>
+    <<tracing end-quiz placement>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -439,15 +548,148 @@ only the bank differs.
 }
 @
 
-The description shown to the students differs only in tense between the before- and
-after-quiz of every topic, so they are shared.
+The description shown to the students is shared by all before-quizzes
+and by all after-quizzes.
+The after-quiz description deliberately does not claim that the
+quiz mirrors an earlier one: in the first cohort several after-quizzes
+run without their before-quiz (\cref{app:diagnostics-placement}), and
+a description promising a comparison the student never had would
+mislead.
 
 <<start-quiz boilerplate>>=
 "description": "<p>This quiz checks what you already know about this topic, before we work on it. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
+<<end-quiz boilerplate>>=
+"description": "<p>This quiz checks what you have learned about this topic. You will see your score and the correct answers afterwards, so you can use the quiz to review the topic. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
 @
 
-<<end-quiz boilerplate>>=
-"description": "<p>This quiz mirrors the questions from before this topic's unit, so that we can see what the unit taught you. You will see your score and the correct answers afterwards, so you can use the quiz to review the topic. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+\subsection{Placement in the first cohort}
+\label{app:diagnostics-placement}
+
+The quizzes reached the first cohort (the course's autumn 2026
+instance) late: by the time they were deployed, the course had
+already taught functions and variables, conditionals and data types,
+and repetitions, and the course-level start quiz and those topics'
+before-quizzes could no longer run before their units.
+We therefore deploy the cohort's quizzes in three shapes, and each
+quiz's placement lives in its own chunk so that a later cohort
+changes only these chunks.
+
+\begin{description}
+\item[Catch-up diagnostic] The after-quizzes of the four topics
+  already taught, and of reading programs, which the course practises
+  from the first week, form one module of their own,
+  \enquote{Diagnostiskt prov: det du lärt dig hittills}.
+  It sits right before the classes week, every quiz must be
+  submitted, and the classes module requires it, so every student
+  takes stock of the course so far before continuing.
+  These five topics have no before-measure in this cohort: their
+  after-quizzes measure the level reached, not the gain.
+\item[Bracketing pairs] The remaining three topics --- classes and
+  dictionaries, containers, and files --- get the design as planned:
+  the before-quiz opens the topic's module, and the after-quiz closes
+  it.
+  The after-quiz is locked until the end of the week the unit is
+  taught, so a student cannot take it before the unit; locking the
+  quiz itself is needed because a module's items are open together.
+\item[Course quiz as practice] The course-level end quiz forms a
+  module of its own, \enquote{Repetitionsprov inför datorprovet},
+  right before the course's summative computer exam.
+  It reveals the correct answers afterwards, so it doubles as
+  practice for the exam; the description asks the students to take
+  it \emph{before} they start preparing, and the preparation question
+  flags those who did not.
+\end{description}
+
+The placement uses the [[modules]] setting of [[canvaslms]]: a
+regular expression for the module's name, the item's position, and
+what completes the item.
+The positions count the items already in the modules when the quizzes
+were deployed; Canvas renumbers should the modules change.
+The before-quizzes of the five catch-up topics and the course-level
+start quiz keep an empty placement and are not deployed to this
+cohort.
+
+<<funcvars start-quiz placement>>=
+<<not deployed in the first cohort>>
+<<conditionals start-quiz placement>>=
+<<not deployed in the first cohort>>
+<<repetitions start-quiz placement>>=
+<<not deployed in the first cohort>>
+<<types start-quiz placement>>=
+<<not deployed in the first cohort>>
+<<tracing start-quiz placement>>=
+<<not deployed in the first cohort>>
+<<not deployed in the first cohort>>=
+"unlock_at": null,
+@
+
+The catch-up quizzes follow the order in which the course taught
+their topics, with reading programs last, since it draws on all of
+them.
+
+<<funcvars end-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 1, "completion_requirement": "must_submit"}],
+<<conditionals end-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 2, "completion_requirement": "must_submit"}],
+<<types end-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 3, "completion_requirement": "must_submit"}],
+<<repetitions end-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 4, "completion_requirement": "must_submit"}],
+<<tracing end-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 5, "completion_requirement": "must_submit"}],
+@
+
+Each bracketing before-quiz comes right after the week's overview
+page, the first thing a student opens in the module; each after-quiz
+is the module's last item and unlocks on the Friday of the teaching
+week, when the week's lecture, exercise and lab are behind the
+students.
+
+<<classes start-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Klasser och objekt$",
+             "position": 2, "completion_requirement": "must_submit"}],
+<<classes end-quiz placement>>=
+"unlock_at": "2026-10-09T08:00:00+02:00",
+"modules": [{"module": "^Klasser och objekt$",
+             "position": 12, "completion_requirement": "must_submit"}],
+<<containers start-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Fler behållare och mer om klasser$",
+             "position": 2, "completion_requirement": "must_submit"}],
+<<containers end-quiz placement>>=
+"unlock_at": "2026-10-30T08:00:00+01:00",
+"modules": [{"module": "^Fler behållare och mer om klasser$",
+             "position": 14, "completion_requirement": "must_submit"}],
+<<files start-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Filhantering$",
+             "position": 2, "completion_requirement": "must_submit"}],
+<<files end-quiz placement>>=
+"unlock_at": "2026-11-06T08:00:00+01:00",
+"modules": [{"module": "^Filhantering$",
+             "position": 11, "completion_requirement": "must_submit"}],
+@
+
+The course-level end quiz is the only item of its module, so the
+module, not the quiz, decides when it opens.
+
+<<course start-quiz placement>>=
+<<not deployed in the first cohort>>
+<<course end-quiz placement>>=
+"unlock_at": null,
+"modules": [{"module": "^Repetitionsprov inför datorprovet$",
+             "position": 1, "completion_requirement": "must_submit"}],
 @
 
 \subsection{Functions and variables (aspects 11--19)}
@@ -1404,16 +1646,17 @@ ends of the list.
 }
 @
 
-\subsection{Classes and objects (aspects 51--53)}
+\subsection{Classes and objects (aspects 51--54)}
 
-Three aspects from the classes analyses.
+Four aspects from the classes analyses.
 The class used by the items is defined in the question stem, since the
 students may not have met our examples.
 
 <<classes groups>>=
 <<group 51: a class is a template, not a container>>,
 <<group 52: equal attributes do not make one object>>,
-<<group 53: a method is defined once but acts per object>>
+<<group 53: a method is defined once but acts per object>>,
+<<group 54: equality is defined, identity is not>>
 @
 
 \paragraph{Aspect 51: a class is a template, not a container.}
@@ -1421,8 +1664,12 @@ The critical aspect is that a class is a template from which
 independent objects are made --- not a container that holds its
 instances, and not a database \autocite{Holland1997,Ragonis2005OOP}.
 The container distractor encodes the class-holds-its-objects
-misconception; form B asks the same of a built-in type, per the
-catalogue's generalisation.
+misconception.
+Form B varies only the surface, with another user-defined class.
+An earlier form B asked the same of the built-in [[str]], following the
+catalogue's generalisation; but the course never draws that parallel,
+so the built-in form tested the generalisation on top of the aspect,
+and the two forms were no longer interchangeable.
 
 <<group 51: a class is a template, not a container>>=
 {
@@ -1449,14 +1696,14 @@ catalogue's generalisation.
 <<item 51B: what a class holds>>=
 {
   "question_name": "What a class holds (B)",
-  "question_text": "<p>Consider this program.</p><pre>s = str(7)\nt = str(9)</pre><p>Which statement is true after it runs?</p>",
+  "question_text": "<p>Consider this program.</p><pre>class Book:\n    def __init__(self, title):\n        self.title = title\n\nx = Book('Emil')\ny = Book('Ronja')</pre><p>Which statement is true after it runs?</p>",
   "question_type": "multiple_choice_question",
   "points_possible": 1,
   "answers": [
-    {"answer_text": "There are two independent string objects; str stores neither", "answer_weight": 100},
-    {"answer_text": "The type str now contains '7' and '9'", "answer_weight": 0},
-    {"answer_text": "t replaced s inside str", "answer_weight": 0},
-    {"answer_text": "The program reports an error", "answer_weight": 0}
+    {"answer_text": "There are two independent Book objects; the class stores neither", "answer_weight": 100},
+    {"answer_text": "The class Book now contains two books", "answer_weight": 0},
+    {"answer_text": "y replaced x inside the class Book", "answer_weight": 0},
+    {"answer_text": "The program reports an error: a class can only make one object", "answer_weight": 0}
   ]
 }
 @
@@ -1468,8 +1715,12 @@ object's identifier \autocite{Holland1997,Ragonis2005OOP}.
 The same-object distractor encodes equal-attributes-same-object; the
 error distractor encodes the catalogued belief that one attribute of
 every object must be unique.
-Form B probes the same aspect from the other side: two names bound to
-\emph{one} object.
+Form B varies only the surface and which of the two objects is
+changed.
+An earlier form B probed the aspect from the other side, with two
+names bound to \emph{one} object; we dropped it, because aliasing is an
+aspect of its own, which the course does not teach in the classes
+week, and the two forms of a pair must be interchangeable.
 
 <<group 52: equal attributes do not make one object>>=
 {
@@ -1495,15 +1746,15 @@ Form B probes the same aspect from the other side: two names bound to
 }
 <<item 52B: two objects with equal attributes>>=
 {
-  "question_name": "Two names for an object (B)",
-  "question_text": "<p>What does the following program print?</p><pre>class Cat:\n    def __init__(self, name):\n        self.name = name\n\nc = Cat('Mio')\nd = c\nc.name = 'Tim'\nprint(c.name, d.name)</pre>",
+  "question_name": "Two objects with equal attributes (B)",
+  "question_text": "<p>What does the following program print?</p><pre>class Cat:\n    def __init__(self, name):\n        self.name = name\n\nc = Cat('Mio')\nd = Cat('Mio')\nd.name = 'Tim'\nprint(c.name, d.name)</pre>",
   "question_type": "multiple_choice_question",
   "points_possible": 1,
   "answers": [
-    {"answer_text": "Tim Mio", "answer_weight": 0},
-    {"answer_text": "Tim Tim", "answer_weight": 100},
+    {"answer_text": "Mio Tim", "answer_weight": 100},
+    {"answer_text": "Tim Tim", "answer_weight": 0},
     {"answer_text": "Mio Mio", "answer_weight": 0},
-    {"answer_text": "It reports an error", "answer_weight": 0}
+    {"answer_text": "It reports an error: two objects cannot have the same name", "answer_weight": 0}
   ]
 }
 @
@@ -1553,13 +1804,316 @@ class's methods have power over all its instances
 }
 @
 
+\paragraph{Aspect 54: equality is defined, identity is not.}
+The critical aspect separates the two comparisons that aspect~52's
+objects invite: \mintinline{python}{==} asks whatever the class's
+\mintinline{python}{__eq__} says it asks --- and, without one, falls
+back on identity --- whereas \mintinline{python}{is} always asks
+whether the two names refer to one and the same object.
+Each form defines an \mintinline{python}{__eq__} that compares
+\emph{one} attribute and makes two objects that agree on that
+attribute but differ in another, so the two comparisons must come
+apart: \mintinline{python}{True False}.
+A student who answers that way has discerned both halves at once.
+The three distractors are the three other ways the pair can fall.
+\mintinline{python}{False False} encodes ignoring the user-defined
+equality: either \mintinline{python}{==} is taken to compare every
+attribute, or the \mintinline{python}{__eq__} is taken to have no
+effect, so that \mintinline{python}{==} falls back on identity;
+both readings give \mintinline{python}{False}.
+\mintinline{python}{True True} encodes aspect~52's misconception
+from the other side: that objects which are equal are one object,
+the attributes being the identity \autocite{Holland1997}.
+\mintinline{python}{False True} encodes swapping the two operators,
+reading \mintinline{python}{is} as the comparison of contents and
+\mintinline{python}{==} as the comparison of identity.
+The course teaches exactly this contrast: the lecture compares two
+persons with identical attributes, with and without
+\mintinline{python}{__eq__}, and the tutorial prints both
+\mintinline{python}{==} and \mintinline{python}{is} for two copies of
+one book whose bookmarks differ.
+
+<<group 54: equality is defined, identity is not>>=
+{
+  "group": {"name": "Aspect 54: equality is defined, identity is not",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 54A: two equal objects>>,
+    <<item 54B: two equal objects>>
+  ]
+}
+<<item 54A: two equal objects>>=
+{
+  "question_name": "Two equal objects (A)",
+  "question_text": "<p>What does the following program print?</p><pre>class Book:\n    def __init__(self, title, page):\n        self.title = title\n        self.page = page\n    def __eq__(self, other):\n        return self.title == other.title\n\na = Book('Emil', 50)\nb = Book('Emil', 0)\nprint(a == b, a is b)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "False False", "answer_weight": 0},
+    {"answer_text": "True False", "answer_weight": 100},
+    {"answer_text": "True True", "answer_weight": 0},
+    {"answer_text": "False True", "answer_weight": 0}
+  ]
+}
+<<item 54B: two equal objects>>=
+{
+  "question_name": "Two equal objects (B)",
+  "question_text": "<p>What does the following program print?</p><pre>class Player:\n    def __init__(self, name, score):\n        self.name = name\n        self.score = score\n    def __eq__(self, other):\n        return self.name == other.name\n\np = Player('Ida', 3)\nq = Player('Ida', 7)\nprint(p == q, p is q)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "True True", "answer_weight": 0},
+    {"answer_text": "False True", "answer_weight": 0},
+    {"answer_text": "False False", "answer_weight": 0},
+    {"answer_text": "True False", "answer_weight": 100}
+  ]
+}
+@
+
+\subsection{Dictionaries (aspects 81--84)}
+
+Four aspects from the dictionaries analyses (\cref{dictionaries}).
+The course meets dictionaries after lists and tuples, and the items
+lean on that order on purpose: a dictionary is written with the same
+square brackets as a list, so the list is both what the students can
+already predict and where their misconceptions about dictionaries come
+from.
+Every dictionary in the stems holds one or two entries, so the answer
+turns on the rule for keys, not on keeping track of many values.
+
+<<dicts groups>>=
+<<group 81: a key is not an index>>,
+<<group 82: assigning to a key replaces or adds>>,
+<<group 83: a missing key is an error, unless [[get]] is asked>>,
+<<group 84: a loop over a dictionary gets the keys>>
+@
+
+\paragraph{Aspect 81: a key is not an index.}
+The critical aspect is that an entry is reached by its key, not by a
+position: \mintinline{python}{ages[0]} on a dictionary whose keys are
+strings looks up the \emph{key}~0, which is not there, and the program
+stops with a [[KeyError]].
+All three distractors are positional readings, each giving the first
+entry in another guise: the first value, the first key, and the first
+key--value pair.
+The first two encode the misconception that the course material itself
+targets: that a dictionary is a list that happens to accept strings as
+indices, so that its entries lie in an order reachable with 0, 1, 2.
+The pair encodes the closest documented case, a student who treated her
+dictionary as a list of two-element lists and accessed it as such
+\autocite{Stansbury2015Dictionaries}.
+An earlier version offered [[None]] instead of the pair, for a student
+who has discerned that 0 is not a key but takes a missing key to give
+nothing; we replaced it, since no study documents that belief here and
+it is aspect~83's misconception, which a wrong answer to this item
+should not be charged with.
+Both forms index with 0 rather than 1, so that a positional reading
+gives one unambiguous answer whether the student counts from zero or
+from one.
+
+<<group 81: a key is not an index>>=
+{
+  "group": {"name": "Aspect 81: a key is not an index",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 81A: indexing a dictionary>>,
+    <<item 81B: indexing a dictionary>>
+  ]
+}
+<<item 81A: indexing a dictionary>>=
+{
+  "question_name": "Indexing a dictionary (A)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>ages = {'anna': 19, 'bo': 21}\nprint(ages[0])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints 19", "answer_weight": 0},
+    {"answer_text": "It prints anna", "answer_weight": 0},
+    {"answer_text": "It reports a KeyError", "answer_weight": 100},
+    {"answer_text": "It prints ('anna', 19)", "answer_weight": 0}
+  ]
+}
+<<item 81B: indexing a dictionary>>=
+{
+  "question_name": "Indexing a dictionary (B)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>stock = {'pears': 9, 'plums': 4}\nprint(stock[0])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It reports a KeyError", "answer_weight": 100},
+    {"answer_text": "It prints ('pears', 9)", "answer_weight": 0},
+    {"answer_text": "It prints pears", "answer_weight": 0},
+    {"answer_text": "It prints 9", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 82: assigning to a key replaces or adds.}
+The critical aspect is that one and the same assignment does two
+things depending on the key: to a key that is there it
+\emph{replaces} the value, and to a key that is not there it
+\emph{adds} an entry --- so a misspelt key raises no error but silently
+adds an entry of its own.
+The stem prints after each of the two assignments, which crosses the
+two halves of the aspect: a student may get either half wrong
+independently, and the four choices are the four combinations.
+The duplicated entry encodes taking assignment for appending, so that
+the old value stays beside the new one; the [[KeyError]] encodes
+carrying the list's behaviour over, where an assignment to an index
+that does not exist is an error and the list grows only by
+[[append]] --- exactly the contrast the course material draws between
+the two containers.
+The misspelling is a transposition of two letters in both forms, so
+that the new key is plainly a mistake and not a second name.
+
+<<group 82: assigning to a key replaces or adds>>=
+{
+  "group": {"name": "Aspect 82: assigning to a key replaces or adds",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 82A: assigning to keys>>,
+    <<item 82B: assigning to keys>>
+  ]
+}
+<<item 82A: assigning to keys>>=
+{
+  "question_name": "Assigning to keys (A)",
+  "question_text": "<p>What does the following program print?</p><pre>stock = {'pears': 9}\nstock['pears'] = 5\nprint(stock)\nstock['paers'] = 2\nprint(stock)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "{'pears': 9, 'pears': 5} and then {'pears': 9, 'pears': 5, 'paers': 2}", "answer_weight": 0},
+    {"answer_text": "{'pears': 5} and then {'pears': 5, 'paers': 2}", "answer_weight": 100},
+    {"answer_text": "{'pears': 5} and then it reports a KeyError", "answer_weight": 0},
+    {"answer_text": "{'pears': 9, 'pears': 5} and then it reports a KeyError", "answer_weight": 0}
+  ]
+}
+<<item 82B: assigning to keys>>=
+{
+  "question_name": "Assigning to keys (B)",
+  "question_text": "<p>What does the following program print?</p><pre>ages = {'anna': 19}\nages['anna'] = 20\nprint(ages)\nages['anan'] = 30\nprint(ages)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "{'anna': 20} and then it reports a KeyError", "answer_weight": 0},
+    {"answer_text": "{'anna': 19, 'anna': 20} and then it reports a KeyError", "answer_weight": 0},
+    {"answer_text": "{'anna': 19, 'anna': 20} and then {'anna': 19, 'anna': 20, 'anan': 30}", "answer_weight": 0},
+    {"answer_text": "{'anna': 20} and then {'anna': 20, 'anan': 30}", "answer_weight": 100}
+  ]
+}
+@
+
+\paragraph{Aspect 83: a missing key is an error, unless [[get]] is asked.}
+The course material teaches three ways to handle a missing key ---
+test with [[in]], catch the [[KeyError]], or ask [[get]] for a
+fallback --- and the items take the one that most directly contrasts
+with the plain lookup: [[get]] with a fallback value, followed by the
+plain lookup of the same missing key.
+The critical aspect is that the square brackets treat a missing key as
+an error while [[get]] returns the fallback instead; the order of the
+two lines matters, since the error must come last for both lines to
+be seen.
+The [[None]]-after-the-fallback distractor encodes the misconception
+that a missing key is silently nothing, also for the square brackets;
+the error-at-the-first-line distractor encodes not having discerned
+what [[get]] is for, reading it as another spelling of the same
+lookup; and the [[None]]-before-the-error distractor encodes confusing
+[[get]]'s two documented results, [[None]] without a fallback and the
+fallback with one.
+
+<<group 83: a missing key is an error, unless [[get]] is asked>>=
+{
+  "group": {"name": "Aspect 83: a missing key is an error, unless get is asked",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 83A: a missing key>>,
+    <<item 83B: a missing key>>
+  ]
+}
+<<item 83A: a missing key>>=
+{
+  "question_name": "A missing key (A)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>ages = {'anna': 19}\nprint(ages.get('bo', 0))\nprint(ages['bo'])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints 0 and then None", "answer_weight": 0},
+    {"answer_text": "It prints 0 and then reports a KeyError", "answer_weight": 100},
+    {"answer_text": "It reports a KeyError at the first print, and prints nothing", "answer_weight": 0},
+    {"answer_text": "It prints None and then reports a KeyError", "answer_weight": 0}
+  ]
+}
+<<item 83B: a missing key>>=
+{
+  "question_name": "A missing key (B)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>stock = {'pears': 9}\nprint(stock.get('plums', 0))\nprint(stock['plums'])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It reports a KeyError at the first print, and prints nothing", "answer_weight": 0},
+    {"answer_text": "It prints None and then reports a KeyError", "answer_weight": 0},
+    {"answer_text": "It prints 0 and then reports a KeyError", "answer_weight": 100},
+    {"answer_text": "It prints 0 and then None", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 84: a loop over a dictionary gets the keys.}
+The critical aspect is what a dictionary hands out when it is looped
+over: its keys, and nothing else --- the values and the key--value
+pairs must be asked for, with [[values]] and [[items]].
+The three wrong values in that dimension are the distractors: the
+values, the pairs (printed as the tuples [[items]] would give), and an
+error, which encodes believing that a dictionary, having no positions,
+cannot be looped over at all.
+The loop variable is named [[x]] and [[y]], since a name such as
+[[name]] or [[key]] would give the answer away.
+
+<<group 84: a loop over a dictionary gets the keys>>=
+{
+  "group": {"name": "Aspect 84: a loop over a dictionary gets the keys",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 84A: looping over a dictionary>>,
+    <<item 84B: looping over a dictionary>>
+  ]
+}
+<<item 84A: looping over a dictionary>>=
+{
+  "question_name": "Looping over a dictionary (A)",
+  "question_text": "<p>What does the following program print?</p><pre>ages = {'anna': 19, 'bo': 21}\nfor x in ages:\n    print(x)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "19 and then 21", "answer_weight": 0},
+    {"answer_text": "anna and then bo", "answer_weight": 100},
+    {"answer_text": "('anna', 19) and then ('bo', 21)", "answer_weight": 0},
+    {"answer_text": "It reports an error", "answer_weight": 0}
+  ]
+}
+<<item 84B: looping over a dictionary>>=
+{
+  "question_name": "Looping over a dictionary (B)",
+  "question_text": "<p>What does the following program print?</p><pre>stock = {'pears': 9, 'plums': 4}\nfor y in stock:\n    print(y)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "('pears', 9) and then ('plums', 4)", "answer_weight": 0},
+    {"answer_text": "It reports an error", "answer_weight": 0},
+    {"answer_text": "pears and then plums", "answer_weight": 100},
+    {"answer_text": "9 and then 4", "answer_weight": 0}
+  ]
+}
+@
+
 \subsection{Functions and lists, revisited (aspects 61--62)}
 
 Two aspects from the debugging chapter's worked example: default
 arguments are evaluated once, and mutation differs from rebinding.
-The quiz pair is titled \enquote{functions and lists, revisited}
-towards the students, since \enquote{debugging} would give away that
-something is wrong in the programs.
+Their items enter the containers pair, which revisits every container
+of the course; the chunk keeps the chapter's name, but towards the
+students the items are simply about lists, since \enquote{debugging}
+would give away that something is wrong in the programs.
 
 <<debugging groups>>=
 <<group 61: a default argument is evaluated once>>,
@@ -1656,6 +2210,259 @@ apart.
 }
 @
 
+\subsection{More containers (aspects 85--88)}
+\label{app:diagnostics-containers}
+
+Four aspects from the analyses of tuples, dictionary keys, sets,
+stacks and queues (\cref{containers}).
+All four share one difficulty: Python writes the containers alike ---
+the same brackets for indexing, the same [[append]], the same
+[[for]] --- so the surface does not show which container a program
+holds, and every item therefore makes the student predict what the
+container \emph{does} rather than recognise how it is written.
+The catalogue's fifth aspect, choosing a container by the operations
+a program needs, has no item: the course's own choice exercise has no
+single key --- the same students can be defensibly kept in a list, a
+set or as dictionary keys --- so a multiple-choice item with one
+keyed answer would mark wrong what the course accepts.
+
+<<containers groups>>=
+<<group 85: a key must be immutable>>,
+<<group 86: a tuple cannot be changed>>,
+<<group 87: a set keeps one of each and no order>>,
+<<group 88: a stack and a queue take from different ends>>
+@
+
+\paragraph{Aspect 85: a key must be immutable.}
+The critical aspect fuses two earlier ones: a dictionary finds an
+entry by its key's value, so the key must be a value that cannot
+change afterwards --- a tuple serves, a list does not.
+Both forms store one entry under a tuple, read it back, and then try
+the same with a list; the program prints once and then stops with a
+[[TypeError]] at the list key.
+The distractor in which both entries work encodes taking a key to be
+as unrestricted as a value, which is also what the belief that a tuple
+is merely a list with other brackets predicts.
+The distractor in which the tuple fails as well encodes the belief
+that only plain values such as strings can be keys, as if a
+dictionary were a list indexed by strings.
+The [[KeyError]] distractor encodes not discerning a value that
+\emph{cannot} be a key from a key that is \emph{absent}, the two
+failures the course material sets side by side.
+None of the three is documented in the literature we searched; they
+are observed in our course material's design, which is why
+\cref{containers} analyses them without citations of their own.
+
+<<group 85: a key must be immutable>>=
+{
+  "group": {"name": "Aspect 85: a key must be immutable",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 85A: a list as a key>>,
+    <<item 85B: a list as a key>>
+  ]
+}
+<<item 85A: a list as a key>>=
+{
+  "question_name": "A list as a key (A)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>d = {}\nd[('x', 'y')] = 1\nprint(d[('x', 'y')])\nd[['x', 'z']] = 2\nprint(d[['x', 'z']])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints 1 and then 2", "answer_weight": 0},
+    {"answer_text": "It prints 1 and then reports a TypeError", "answer_weight": 100},
+    {"answer_text": "It reports a TypeError before printing anything", "answer_weight": 0},
+    {"answer_text": "It prints 1 and then reports a KeyError", "answer_weight": 0}
+  ]
+}
+<<item 85B: a list as a key>>=
+{
+  "question_name": "A list as a key (B)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>m = {}\nm[('a', 'b')] = 'yes'\nprint(m[('a', 'b')])\nm[['c', 'd']] = 'no'\nprint(m[['c', 'd']])</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It reports a TypeError before printing anything", "answer_weight": 0},
+    {"answer_text": "It prints yes and then reports a KeyError", "answer_weight": 0},
+    {"answer_text": "It prints yes and then no", "answer_weight": 0},
+    {"answer_text": "It prints yes and then reports a TypeError", "answer_weight": 100}
+  ]
+}
+@
+
+\paragraph{Aspect 86: a tuple cannot be changed.}
+The critical aspect is that a tuple is immutable: indexing, [[len]]
+and [[for]] work on it as on a list, but assigning to an element
+raises a [[TypeError]].
+Both forms hold the same pair in a list and in a tuple and assign to
+the same index of each, so that only the kind of container varies ---
+the course material's own contrast.
+Placing a [[print]] between the two assignments separates the
+outcomes in time: the list's change is printed before the tuple's
+assignment fails.
+The changed-tuple distractor encodes the tuple as a list with other
+brackets; the unchanged-tuple distractor encodes the tuple as a
+\enquote{frozen list} whose writes are silently ignored rather than
+refused --- both observed in our course material's design, not yet
+documented in the literature.
+The error-before-printing distractor encodes reading the program as
+a static whole that is checked before it runs, the failure to see that
+a program has a dynamic existence besides its static text
+\autocite[p.~235]{Sorva2012Dissertation}.
+
+<<group 86: a tuple cannot be changed>>=
+{
+  "group": {"name": "Aspect 86: a tuple cannot be changed",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 86A: assigning into a tuple>>,
+    <<item 86B: assigning into a tuple>>
+  ]
+}
+<<item 86A: assigning into a tuple>>=
+{
+  "question_name": "Assigning into a tuple (A)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>a = [4, 8]\nb = (4, 8)\na[0] = 5\nprint(a)\nb[0] = 5\nprint(b)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints [5, 8] and then (5, 8)", "answer_weight": 0},
+    {"answer_text": "It prints [5, 8] and then (4, 8)", "answer_weight": 0},
+    {"answer_text": "It prints [5, 8] and then reports a TypeError", "answer_weight": 100},
+    {"answer_text": "It reports a TypeError before printing anything", "answer_weight": 0}
+  ]
+}
+<<item 86B: assigning into a tuple>>=
+{
+  "question_name": "Assigning into a tuple (B)",
+  "question_text": "<p>What happens when the following program runs?</p><pre>x = ['m', 'n']\ny = ('m', 'n')\nx[1] = 'k'\nprint(x)\ny[1] = 'k'\nprint(y)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "It prints ['m', 'k'] and then reports a TypeError", "answer_weight": 100},
+    {"answer_text": "It reports a TypeError before printing anything", "answer_weight": 0},
+    {"answer_text": "It prints ['m', 'k'] and then ('m', 'k')", "answer_weight": 0},
+    {"answer_text": "It prints ['m', 'k'] and then ('m', 'n')", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 87: a set keeps one of each and no order.}
+The critical aspect is what a set \emph{is}: it holds each value once,
+and it has no order, so two sets are equal when they hold the same
+values.
+The item crosses the two features: it prints the size of a set
+written with a duplicate, and whether it equals a set written with
+the same values, the same duplicate, in another order.
+The four answers are then the four combinations of discerning or not
+discerning each feature, and which one a student picks tells which
+feature they miss.
+The ordered distractor (right size, unequal) encodes the set as a list
+that happens to drop duplicates, the misconception the course
+material's contrast is built against; the counted-duplicate
+distractor (wrong size, equal) encodes the set as an unordered heap
+that keeps every copy; the list distractor (wrong size, unequal)
+encodes not telling the set from a list at all.
+None of the three is documented in the computing-education literature
+we searched; they are observed in our course material's design.
+The forms print a size and a truth value rather than the set itself,
+since the order in which a set of strings prints can vary from run to
+run.
+
+<<group 87: a set keeps one of each and no order>>=
+{
+  "group": {"name": "Aspect 87: a set keeps one of each and no order",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 87A: a set with a duplicate>>,
+    <<item 87B: a set with a duplicate>>
+  ]
+}
+<<item 87A: a set with a duplicate>>=
+{
+  "question_name": "A set with a duplicate (A)",
+  "question_text": "<p>What does the following program print?</p><pre>a = {3, 1, 3, 2}\nb = {2, 3, 1, 3}\nprint(len(a), a == b)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "3 True", "answer_weight": 100},
+    {"answer_text": "3 False", "answer_weight": 0},
+    {"answer_text": "4 True", "answer_weight": 0},
+    {"answer_text": "4 False", "answer_weight": 0}
+  ]
+}
+<<item 87B: a set with a duplicate>>=
+{
+  "question_name": "A set with a duplicate (B)",
+  "question_text": "<p>What does the following program print?</p><pre>x = {'b', 'a', 'b'}\ny = {'a', 'b', 'b'}\nprint(len(x), x == y)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "3 False", "answer_weight": 0},
+    {"answer_text": "2 False", "answer_weight": 0},
+    {"answer_text": "3 True", "answer_weight": 0},
+    {"answer_text": "2 True", "answer_weight": 100}
+  ]
+}
+@
+
+\paragraph{Aspect 88: a stack and a queue take from different ends.}
+The critical aspect is which element is taken next: a stack gives back
+the element added last, a queue the element added first.
+The course builds the stack from a list with [[append]] and [[pop]],
+and the queue from a [[collections.deque]] with [[append]] and
+[[popleft]], so both forms do exactly that, with the same elements
+added in the same order to both, and take one element from each.
+The containers are named neutrally, as in the course material, since
+names like [[stack]] and [[queue]] would say which order to expect.
+The swapped distractor encodes confusing the two orders; the
+same-end distractors encode carrying one order over to both
+containers --- the newest first, or the oldest first.
+Choosing a structure without the last-in, first-out property for an
+undo function is documented \autocite[p.~173]{Zingaro2018DataStructures},
+but as a rare error (7\,\% of the students), and the same authors
+report an earlier finding that students do best on questions about
+stack and queue interfaces
+\autocite[p.~170]{Zingaro2018DataStructures}; the item may therefore
+be easy, and its value is in the start quiz, before the unit.
+
+<<group 88: a stack and a queue take from different ends>>=
+{
+  "group": {"name": "Aspect 88: a stack and a queue take from different ends",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 88A: taking from a stack and a queue>>,
+    <<item 88B: taking from a stack and a queue>>
+  ]
+}
+<<item 88A: taking from a stack and a queue>>=
+{
+  "question_name": "Taking from a stack and a queue (A)",
+  "question_text": "<p>What does the following program print?</p><pre>import collections\n\na = []\nb = collections.deque()\nfor x in [1, 2, 3]:\n    a.append(x)\n    b.append(x)\nprint(a.pop(), b.popleft())</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "1 1", "answer_weight": 0},
+    {"answer_text": "3 3", "answer_weight": 0},
+    {"answer_text": "3 1", "answer_weight": 100},
+    {"answer_text": "1 3", "answer_weight": 0}
+  ]
+}
+<<item 88B: taking from a stack and a queue>>=
+{
+  "question_name": "Taking from a stack and a queue (B)",
+  "question_text": "<p>What does the following program print?</p><pre>import collections\n\nu = []\nv = collections.deque()\nfor c in ['p', 'q', 'r']:\n    u.append(c)\n    v.append(c)\nprint(u.pop(), v.popleft())</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "p r", "answer_weight": 0},
+    {"answer_text": "r p", "answer_weight": 100},
+    {"answer_text": "r r", "answer_weight": 0},
+    {"answer_text": "p p", "answer_weight": 0}
+  ]
+}
+@
+
 \subsection{Reading programs (aspect 71)}
 
 One aspect from the problem-solving analyses
@@ -1717,6 +2524,290 @@ position.
 }
 @
 
+\subsection{Files (aspects 91--95)}
+
+Five aspects from the files analyses (\cref{files}), in the order the
+course's files unit teaches them: closing, the missing file, reading,
+writing, and what is read.
+The literature documents misconceptions for the constructs a file
+program reuses --- the flow of control around exceptions, and values
+read as strings --- but we found none about files as such; where a
+distractor rests only on the aspect the course material is designed
+around, the paragraph says so.
+Every item states the contents of the files it reads, or writes them
+itself, so that the answer does not depend on how a file happens to end.
+
+<<files groups>>=
+<<group 91: an exception skips a close written by hand>>,
+<<group 92: a missing file is an exception from open>>,
+<<group 93: a line read keeps its line break>>,
+<<group 94: opening for writing empties the file>>,
+<<group 95: what is read from a file is a string>>
+@
+
+\paragraph{Aspect 91: an exception skips a close written by hand.}
+The critical aspect is that the exception leaves the protected block at
+the failing line, so a [[close]] written after it never runs and the
+file stays open; [[with]] would have closed it.
+The item lets the student ask the file itself, through [[f.closed]],
+as the course material does.
+The closed distractor encodes the belief that the rest of the
+[[try]] block still runs --- what \textcite{RashkovitsLavy2012} found
+students had \textcquote[343]{RashkovitsLavy2012}{not assimilated};
+the nothing-more distractor encodes the other half of the same
+sentence, that after the handler the program \enquote{continues from
+there}.
+The converted-word distractor credits [[int]] with understanding the
+word, in the spirit of what \textcite{Pea1986Superbug} calls the
+superbug; Pea does not report it for conversions, so this is our
+reading.
+Form B varies the file, its word and the message.
+
+<<group 91: an exception skips a close written by hand>>=
+{
+  "group": {"name": "Aspect 91: an exception skips a close written by hand",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 91A: a close after a failing conversion>>,
+    <<item 91B: a close after a failing conversion>>
+  ]
+}
+<<item 91A: a close after a failing conversion>>=
+{
+  "question_name": "A close after a failing conversion (A)",
+  "question_text": "<p>The file data.txt contains the single word forty-two. What does the following program print?</p><pre>f = open('data.txt', 'r')\ntry:\n    print(int(f.read()))\n    f.close()\nexcept ValueError:\n    print('Not a number')\nprint(f.closed)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "Not a number, then True", "answer_weight": 0},
+    {"answer_text": "Not a number, then False", "answer_weight": 100},
+    {"answer_text": "42, then True", "answer_weight": 0},
+    {"answer_text": "Not a number, and nothing more", "answer_weight": 0}
+  ]
+}
+<<item 91B: a close after a failing conversion>>=
+{
+  "question_name": "A close after a failing conversion (B)",
+  "question_text": "<p>The file age.txt contains the single word ten. What does the following program print?</p><pre>f = open('age.txt', 'r')\ntry:\n    print(int(f.read()))\n    f.close()\nexcept ValueError:\n    print('Bad age')\nprint(f.closed)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "Bad age, then False", "answer_weight": 100},
+    {"answer_text": "10, then True", "answer_weight": 0},
+    {"answer_text": "Bad age, and nothing more", "answer_weight": 0},
+    {"answer_text": "Bad age, then True", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 92: a missing file is an exception from open.}
+The critical aspect is that opening a file that does not exist raises
+[[FileNotFoundError]] in [[open]], before anything is read, and that
+the exception travels out of the reading function to the caller's
+handler --- where the course material catches it, since the caller
+knows what to do instead.
+The stuck-in-the-function distractor encodes the difficulty with
+\textcquote[350]{RashkovitsLavy2012}{handling exceptions further up the
+calling chain}; the nothing-more distractor encodes, as in aspect~91,
+not knowing that the program continues after the handler.
+The got-the-text distractor encodes reading a missing file as an empty
+one; we found no study of this belief, and it is in the bank because
+the course material contrasts the missing file with the existing one.
+Form B varies the names and the messages.
+
+<<group 92: a missing file is an exception from open>>=
+{
+  "group": {"name": "Aspect 92: a missing file is an exception from open",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 92A: reading a file that is not there>>,
+    <<item 92B: reading a file that is not there>>
+  ]
+}
+<<item 92A: reading a file that is not there>>=
+{
+  "question_name": "Reading a file that is not there (A)",
+  "question_text": "<p>There is no file notes.txt in the folder where the program runs. What does the following program print?</p><pre>def read_text(filename):\n    with open(filename, 'r') as f:\n        return f.read()\n\ntry:\n    text = read_text('notes.txt')\n    print('Got the text')\nexcept FileNotFoundError:\n    print('No such file')\nprint('Done')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "Got the text, then Done", "answer_weight": 0},
+    {"answer_text": "No such file, then Done", "answer_weight": 100},
+    {"answer_text": "Nothing: it reports FileNotFoundError and stops", "answer_weight": 0},
+    {"answer_text": "No such file, and nothing more", "answer_weight": 0}
+  ]
+}
+<<item 92B: reading a file that is not there>>=
+{
+  "question_name": "Reading a file that is not there (B)",
+  "question_text": "<p>There is no file scores.txt in the folder where the program runs. What does the following program print?</p><pre>def load(name):\n    with open(name, 'r') as f:\n        return f.read()\n\ntry:\n    scores = load('scores.txt')\n    print('Loaded')\nexcept FileNotFoundError:\n    print('Missing file')\nprint('Finished')</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "Nothing: it reports FileNotFoundError and stops", "answer_weight": 0},
+    {"answer_text": "Missing file, and nothing more", "answer_weight": 0},
+    {"answer_text": "Loaded, then Finished", "answer_weight": 0},
+    {"answer_text": "Missing file, then Finished", "answer_weight": 100}
+  ]
+}
+@
+
+\paragraph{Aspect 93: a line read keeps its line break.}
+The critical aspect is the unit one step of the loop over a file gives:
+the line \emph{with} its [[\n]].
+The program writes the file itself, so its contents --- line breaks
+included --- are in the stem, and prints the lines as Python prints a
+list, which shows the [[\n]] where [[print(line)]] would only show an
+empty line.
+The three distractors are the three other units a student may expect:
+the line without its break, the aspect the course material's
+try-first exercise is built to reveal; the whole file, which is what
+[[read]] gives and which the material contrasts with the loop; and the
+single character, carried over from looping over a string.
+We found no study documenting any of the three.
+Form B varies the file and its two words.
+
+<<group 93: a line read keeps its line break>>=
+{
+  "group": {"name": "Aspect 93: a line read keeps its line break",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 93A: collecting the lines of a file>>,
+    <<item 93B: collecting the lines of a file>>
+  ]
+}
+<<item 93A: collecting the lines of a file>>=
+{
+  "question_name": "Collecting the lines of a file (A)",
+  "question_text": "<p>What does the following program print?</p><pre>with open('food.txt', 'w') as f:\n    f.write('tea\\n')\n    f.write('jam\\n')\n\nlines = []\nwith open('food.txt', 'r') as f:\n    for line in f:\n        lines.append(line)\nprint(lines)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "['tea', 'jam']", "answer_weight": 0},
+    {"answer_text": "['tea\\n', 'jam\\n']", "answer_weight": 100},
+    {"answer_text": "['tea\\njam\\n']", "answer_weight": 0},
+    {"answer_text": "['t', 'e', 'a', '\\n', 'j', 'a', 'm', '\\n']", "answer_weight": 0}
+  ]
+}
+<<item 93B: collecting the lines of a file>>=
+{
+  "question_name": "Collecting the lines of a file (B)",
+  "question_text": "<p>What does the following program print?</p><pre>with open('colours.txt', 'w') as f:\n    f.write('red\\n')\n    f.write('blue\\n')\n\nlines = []\nwith open('colours.txt', 'r') as f:\n    for line in f:\n        lines.append(line)\nprint(lines)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "['red\\nblue\\n']", "answer_weight": 0},
+    {"answer_text": "['r', 'e', 'd', '\\n', 'b', 'l', 'u', 'e', '\\n']", "answer_weight": 0},
+    {"answer_text": "['red', 'blue']", "answer_weight": 0},
+    {"answer_text": "['red\\n', 'blue\\n']", "answer_weight": 100}
+  ]
+}
+@
+
+\paragraph{Aspect 94: opening for writing empties the file.}
+The critical aspect is the mode: [[open]] with [['w']] empties the file
+before anything is written, so a writer called twice leaves only what
+the second call wrote --- the run the course material shows before it
+introduces [['a']].
+The reading strips each line, so that aspect~93 cannot interfere.
+The distractors are the alternatives to emptying: the writes
+accumulate, as with [['a']]; the existing file is left as it was; and
+opening an existing file for writing is refused.
+We found no study of how novices conceive of the modes; the three
+alternatives are the outcomes the course material's contrast between
+[['w']] and [['a']] is designed to rule out.
+Form B varies the file and the two words.
+
+<<group 94: opening for writing empties the file>>=
+{
+  "group": {"name": "Aspect 94: opening for writing empties the file",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 94A: a writer called twice>>,
+    <<item 94B: a writer called twice>>
+  ]
+}
+<<item 94A: a writer called twice>>=
+{
+  "question_name": "A writer called twice (A)",
+  "question_text": "<p>What does the following program print?</p><pre>def save(text):\n    with open('log.txt', 'w') as f:\n        f.write(text + '\\n')\n\nsave('one')\nsave('two')\nwith open('log.txt', 'r') as f:\n    for line in f:\n        print(line.strip())</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "one and two, on two lines", "answer_weight": 0},
+    {"answer_text": "one", "answer_weight": 0},
+    {"answer_text": "two", "answer_weight": 100},
+    {"answer_text": "It reports an error: log.txt already exists", "answer_weight": 0}
+  ]
+}
+<<item 94B: a writer called twice>>=
+{
+  "question_name": "A writer called twice (B)",
+  "question_text": "<p>What does the following program print?</p><pre>def store(word):\n    with open('words.txt', 'w') as f:\n        f.write(word + '\\n')\n\nstore('sun')\nstore('moon')\nwith open('words.txt', 'r') as f:\n    for line in f:\n        print(line.strip())</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "moon", "answer_weight": 100},
+    {"answer_text": "It reports an error: words.txt already exists", "answer_weight": 0},
+    {"answer_text": "sun", "answer_weight": 0},
+    {"answer_text": "sun and moon, on two lines", "answer_weight": 0}
+  ]
+}
+@
+
+\paragraph{Aspect 95: what is read from a file is a string.}
+The critical aspect is aspect~42's, with the file in the place of the
+keyboard: what is read is a string, even when it looks like a number
+\autocite{GuoMarkelZhang2020,Bosse2021Antipatterns}.
+The program strips the line break, as the course material does, so that
+only the type is at stake.
+The numeric distractor encodes the automatic-conversion misconception;
+the type-error distractor encodes expecting the mistake to show as an
+error, where \textcite{GuoMarkelZhang2020} observe that the operators
+silently work on strings.
+The spaced-copies distractor has no source of its own: it mirrors
+aspect~42's \enquote{3 3} so that the two aspects stay comparable,
+which is what lets the analysis ask whether the conversion transfers
+from the terminal to files.
+Form B varies the file, the number and the factor.
+
+<<group 95: what is read from a file is a string>>=
+{
+  "group": {"name": "Aspect 95: what is read from a file is a string",
+            "pick_count": 1, "question_points": 1},
+  "questions": [
+    <<item 95A: a number read from a file>>,
+    <<item 95B: a number read from a file>>
+  ]
+}
+<<item 95A: a number read from a file>>=
+{
+  "question_name": "A number read from a file (A)",
+  "question_text": "<p>The file number.txt contains the single line 42. What does the following program print?</p><pre>with open('number.txt', 'r') as f:\n    value = f.read().strip()\nprint(value * 2)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "84", "answer_weight": 0},
+    {"answer_text": "4242", "answer_weight": 100},
+    {"answer_text": "It reports a type error", "answer_weight": 0},
+    {"answer_text": "42 42", "answer_weight": 0}
+  ]
+}
+<<item 95B: a number read from a file>>=
+{
+  "question_name": "A number read from a file (B)",
+  "question_text": "<p>The file count.txt contains the single line 15. What does the following program print?</p><pre>with open('count.txt', 'r') as f:\n    value = f.read().strip()\nprint(value * 3)</pre>",
+  "question_type": "multiple_choice_question",
+  "points_possible": 1,
+  "answers": [
+    {"answer_text": "151515", "answer_weight": 100},
+    {"answer_text": "45", "answer_weight": 0},
+    {"answer_text": "15 15 15", "answer_weight": 0},
+    {"answer_text": "It reports a type error", "answer_weight": 0}
+  ]
+}
+@
+
 \subsection{Analysing the results}
 \label{app:diagnostics-analysis}
 
@@ -1746,6 +2837,11 @@ The distribution over wrong answers is the diagnostic payoff: each
 distractor encodes a catalogued misconception, so the table shows
 \emph{which} misconceptions a cohort holds, not merely how many
 students err.
+Only consenting students' rows enter any of it: every quiz's report
+is filtered by the consent collected in the course-level start quiz
+(\cref{app:diagnostics-ethics}), and the student column carries the
+login ID rather than the name --- both arrangements have their own
+subsections below.
 % TODO(#29): add learnlog instrumentation (the vt-debug episodes.nw
 % pattern).
 
@@ -1755,7 +2851,8 @@ students err.
 The quizzes are defined in the quiz-*.json files tangled from the same
 literate source as this program (the appendix of the paper); those
 files are also this program's answer key.  The results come straight
-from Canvas via canvaslms.
+from Canvas via canvaslms.  Only rows of students who answered yes to
+the consent question of the course-level start quiz are extracted.
 
 Run --self-test to check the pure functions against the quiz files
 without touching Canvas.
@@ -1763,8 +2860,10 @@ without touching Canvas.
 
 import argparse
 import collections
+import contextlib
 import csv
 import glob
+import io
 import json
 import os
 import re
@@ -1773,7 +2872,10 @@ import sys
 <<the quiz files are the answer key>>
 <<recover the aspect and the form from the names>>
 <<match report columns to pool questions>>
+<<the student behind a row>>
+<<attach the login IDs>>
 <<fetch the results from Canvas>>
+<<the consent filter>>
 <<classify one student's answer to one question>>
 <<collect the tidy rows for one quiz>>
 <<summarise the aspects>>
@@ -1892,6 +2994,117 @@ def column_for(question, fieldnames):
     return None
 @
 
+\subsubsection{Who a row belongs to}
+
+The question text joins the report's columns to the pools; what joins
+the report's \emph{rows} --- across the eighteen quizzes and the two
+administrations --- is the student, and there a name will not do.
+Two students can share a name, and one course is enough for that.
+The identifier we use instead is the student's \emph{login ID}: an
+email address, unique across the institution, and the key the
+parallel debugging study joins these concept scores on as its control
+variable --- a join on names would not merely risk merging namesakes,
+it would not join at all.
+The student-analysis report does not carry the login ID, so the
+fetcher attaches it to every row from the course's own roster below.
+Every use goes through [[student_of]]; a row without the login column
+falls back to the course and the name, prefixed with the course so a
+fallback key is visibly not a login ID.
+
+<<the student behind a row>>=
+STUDENT = "name"
+LOGIN_COLUMN = "login"
+
+
+def student_of(row):
+    """Return the identifier of the student behind a row.
+
+    The login ID attached by the fetcher when available; rows without
+    it fall back to course and name.
+    """
+    return row.get(LOGIN_COLUMN) or f"{COURSE}/{row[STUDENT]}"
+@
+
+The report identifies its students by name and, in its [[id]] and
+[[sis_id]] columns, by the platform's and the institution's numbers;
+the login ID itself lives in the course roster, one API call away.
+Each row is looked up by the identifier it does carry: the platform
+ID first, since Canvas assigns it and builds the report from it, then
+the institutional ID, and only for a report carrying neither does the
+name come into it --- accepted then only when exactly one enrolled
+student bears it.
+A name borne by two is reported and left alone, so both rows keep the
+fallback and stay visibly unresolved, rather than both being handed
+the same login and silently merged into one student.
+
+<<attach the login IDs>>=
+def attach_logins(rows, course):
+    """Attach each row's student login ID from the course roster."""
+    <<index the roster by every identifier it offers>>
+    <<look each row up in that index>>
+@
+
+A roster we cannot read is a reason to fall back, not to stop: the
+summaries themselves do not need the identity, and a missing
+enrolment scope or an expired token should not cost us them.
+So the failure is announced and the rows are left as they came.
+A roster entry without a login ID is skipped rather than indexed
+under its name: indexing it would make a name that belongs to one
+usable student look ambiguous, and we would refuse a lookup we could
+have made.
+
+<<index the roster by every identifier it offers>>=
+by_id, by_sis, by_name = {}, {}, {}
+try:
+    students = list(course.get_users(enrollment_type=["student"]))
+except Exception as error:
+    print(f"warning: cannot read the roster of {COURSE}: {error}")
+    return
+for user in students:
+    login = getattr(user, "login_id", None)
+    if not login:
+        continue
+    by_id[str(user.id)] = login
+    sis = getattr(user, "sis_user_id", None)
+    if sis:
+        by_sis[str(sis)] = login
+    by_name.setdefault(user.name, []).append(login)
+@
+
+The report's column headings are Canvas's, so we find the two ID
+columns by name once and reuse them for every row.
+The three lookups are tried in turn and the first that answers wins,
+which is also the order of how much we trust them.
+A row that none of them answers is left without the column, which is
+exactly what [[student_of]] reads as \enquote{fall back}.
+
+<<look each row up in that index>>=
+if not rows:
+    return
+id_column = next((c for c in rows[0] if c.strip().lower() == "id"), None)
+sis_column = next((c for c in rows[0]
+                   if c.strip().lower() == "sis_id"), None)
+for row in rows:
+    login = None
+    if id_column and row.get(id_column):
+        login = by_id.get(str(row[id_column]).strip())
+    if not login and sis_column and row.get(sis_column):
+        login = by_sis.get(str(row[sis_column]).strip())
+    if not login:
+        candidates = by_name.get(row[STUDENT], [])
+        if len(candidates) == 1:
+            login = candidates[0]
+        elif len(candidates) > 1:
+            print(f"warning: several students in {COURSE} are named"
+                  f" {row[STUDENT]!r} and the report has no usable ID"
+                  f" column; falling back to the name, which cannot"
+                  f" tell them apart")
+    if login:
+        row[LOGIN_COLUMN] = login
+@
+
+\subsubsection{Fetching the results}
+
 Just as the quizzes are created with [[canvaslms]], the results are
 extracted with it: the package provides the credentials, the course
 lookup and the report machinery, so the program reuses them instead of
@@ -1900,6 +3113,9 @@ The report is generated on demand by Canvas, so we request it --- with
 all versions included, in case a quiz was edited after some students
 answered --- poll it until Canvas marks it complete, and download the
 CSV it points to.
+The fetcher also attaches each row's login ID while the [[course]]
+object is at hand, so every report the rest of the program sees
+already knows who its rows belong to.
 
 <<fetch the results from Canvas>>=
 def fetch_results(course_name, quiz_title):
@@ -1949,7 +3165,95 @@ def fetch_results(course_name, quiz_title):
         sys.exit("Canvas did not produce the student-analysis report")
     response = requests.get(url)
     response.raise_for_status()
-    return list(csv.DictReader(response.text.splitlines()))
+    rows = list(csv.DictReader(response.text.splitlines()))
+    attach_logins(rows, course)
+    return rows
+@
+
+\subsubsection{Consent}
+
+Consent is asked once, in the course-level start quiz
+(\cref{app:diagnostics-ethics}), and covers all eighteen quizzes; the
+other seventeen carry no consent item of their own, so every quiz's
+rows are filtered by the students who answered yes at the start.
+The program reads the consent question from the tangled quiz files,
+like the answer key, so the filter cannot drift from the instrument
+any more than the key can.
+When the course-start report is missing, or carries no consent
+column, there is nothing to filter by; the program then says so and
+keeps every row rather than guessing silently in either direction ---
+a state that only a dry run should ever see, since the start quiz
+runs before any quiz whose rows would need filtering.
+
+<<the consent filter>>=
+def load_consent(pattern="quiz-*.json"):
+    """Return (quiz title, consent question text) from the quiz files.
+
+    The consent question is the ungrouped question named `Consent`;
+    (None, None) when no tangled quiz carries one.
+    """
+    for path in sorted(glob.glob(pattern)):
+        quiz = json.load(open(path))
+        for entry in quiz["questions"]:
+            if "group" in entry:
+                continue
+            if entry.get("question_name") == "Consent":
+                return quiz["settings"]["title"], entry["question_text"]
+    return None, None
+@
+
+Finding the consent column repeats the normalise-and-contain matching
+of [[column_for]], but on a question text alone rather than a pool
+question, so it gets its own function instead of overloading that
+one's contract.
+One guard is added: the containment fallback exists for truncated
+headers, but a short metadata head must not pass it --- [[id]] is a
+substring of \enquote{pseudonymised} --- so heads shorter than the
+words \enquote{I consent} are out of the running.
+
+<<the consent filter>>=
+def consent_column(fieldnames, text):
+    """Return the report column carrying the consent question, or None."""
+    target = normalise(text)
+    heads = {
+        name: normalise(re.sub(r"^\d+: ", "", name or ""))
+        for name in fieldnames
+    }
+    for name, head in heads.items():
+        if head == target:
+            return name
+    for name, head in heads.items():
+        if len(head) >= len("I consent") and (head in target
+                                              or target in head):
+            return name
+    return None
+@
+
+The consent set holds the students who answered yes, keyed by
+[[student_of]] like every other join; [[None]] means the question was
+not found at all, which the caller must distinguish from an empty set
+--- nobody consenting filters everything, the question being absent
+filters nothing.
+
+<<the consent filter>>=
+def consenting(report, text):
+    """Return the students who answered yes, or None without the column."""
+    if not report or text is None:
+        return None
+    column = consent_column(report[0].keys(), text)
+    if column is None:
+        return None
+    return {
+        student_of(row) for row in report
+        if normalise(row[column] or "").lower() in ("yes", "true")
+    }
+
+
+def filter_consent(rows, students):
+    """Keep the rows of the consenting students; None keeps every row."""
+    if students is None:
+        return rows
+    return [row for row in rows if student_of(row) in students]
 @
 
 A student's cell in the report holds the chosen answer's text.
@@ -1986,10 +3290,10 @@ form: the student left it unanswered, and the report does not say
 which form they saw.
 
 <<collect the tidy rows for one quiz>>=
-def tidy_rows(quiz_title, aspects, report, student_column="name"):
+def tidy_rows(quiz_title, aspects, report):
     """Yield one dict per student and aspect in the report."""
     for row in report:
-        student = row.get(student_column, "")
+        student = student_of(row)
         for number, aspect in sorted(aspects.items()):
             chosen = correct = form = None
             answer = ""
@@ -2047,6 +3351,8 @@ one point; every question's correct answer text must classify back to
 its correct position; and the before- and after-quiz of every pair
 must hold the same pools, since the draw --- not the quiz --- decides
 which form a student meets.
+The identity and consent machinery is checked on stand-ins at the
+end, below.
 
 <<self-test against the quiz files>>=
 def self_test():
@@ -2086,15 +3392,81 @@ def self_test():
                 if sorted(aspect["forms"]) != sorted(other["forms"]):
                     failures += 1
                     print(f"FAIL {title} [{number}]: pools differ pre/post")
+    <<check identity and consent on stand-ins>>
     print(f"self-test: {'FAIL' if failures else 'OK'}")
     sys.exit(1 if failures else 0)
 @
 
-The main function ties the pieces together: load the key, fetch each
-quiz's report, accumulate the tidy rows, write them to the output CSV
-and print the summaries.
+The case the identity machinery exists for is two students who share a
+name: given an ID column the two rows must come out as two students,
+and given only the name the program must warn and resolve nothing.
+The consent checks build a one-question report from the tangled
+consent question itself: the consent set must hold exactly the
+yes-answers, filtering must keep exactly those rows, and a report
+without the consent column must yield [[None]] --- filter nothing ---
+rather than an empty set, which would filter everything.
+
+<<check identity and consent on stand-ins>>=
+class FakeUser:
+    """A roster entry with the attributes the lookup reads."""
+
+    def __init__(self, user_id, name, login_id):
+        self.id = user_id
+        self.name = name
+        self.login_id = login_id
+
+class FakeCourse:
+    """A course whose roster is a fixed list of users."""
+
+    def __init__(self, users):
+        self.users = users
+
+    def get_users(self, **kwargs):
+        return self.users
+
+namesakes = FakeCourse([FakeUser(1, "Ann Andersson", "ann@kth.se"),
+                        FakeUser(2, "Ann Andersson", "anna@kth.se")])
+rows = [{"id": "1", STUDENT: "Ann Andersson"},
+        {"id": "2", STUDENT: "Ann Andersson"}]
+attach_logins(rows, namesakes)
+if [student_of(row) for row in rows] != ["ann@kth.se", "anna@kth.se"]:
+    failures += 1
+    print("FAIL: the id column does not tell namesakes apart")
+rows = [{STUDENT: "Ann Andersson"}]
+notes = io.StringIO()
+with contextlib.redirect_stdout(notes):
+    attach_logins(rows, namesakes)
+if LOGIN_COLUMN in rows[0] or "warning" not in notes.getvalue():
+    failures += 1
+    print("FAIL: an ambiguous name resolved instead of warning")
+title, text = load_consent()
+if title is None:
+    failures += 1
+    print("FAIL: no consent question in the tangled quizzes")
+else:
+    head = f"1234: {strip_html(text)}"
+    report = [{STUDENT: "Ann", LOGIN_COLUMN: "ann@kth.se", head: "Yes"},
+              {STUDENT: "Bo", LOGIN_COLUMN: "bo@kth.se", head: "No"}]
+    students = consenting(report, text)
+    if students != {"ann@kth.se"}:
+        failures += 1
+        print("FAIL: the consent set is not exactly the yes-answers")
+    if filter_consent(report, students) != report[:1]:
+        failures += 1
+        print("FAIL: consent filtering keeps the wrong rows")
+    if consenting([{STUDENT: "Ann"}], text) is not None:
+        failures += 1
+        print("FAIL: a report without the consent column must be None")
+@
+
+The main function ties the pieces together: load the key, fetch every
+quiz's report, derive the consenting students from the course-start
+report, accumulate the tidy rows of those students only, write them to
+the output CSV and print the summaries.
 Quizzes without responses yet are reported and skipped, so the program
-can run mid-course.
+can run mid-course; the reports are all fetched before any is tidied,
+because the consent set must be in hand before the first row is kept
+or dropped.
 
 <<analysis main>>=
 def main():
@@ -2110,8 +3482,8 @@ def main():
     if args.self_test:
         self_test()
     key = load_key()
-    rows = []
-    for quiz_title, aspects in key.items():
+    reports = {}
+    for quiz_title in key:
         try:
             report = fetch_results(args.course, quiz_title)
         except StopIteration:
@@ -2120,7 +3492,15 @@ def main():
         if not report:
             print(f"skipping {quiz_title!r}: no responses yet")
             continue
-        rows.extend(tidy_rows(quiz_title, aspects, report))
+        reports[quiz_title] = report
+    consent_title, consent_text = load_consent()
+    students = consenting(reports.get(consent_title), consent_text)
+    if students is None:
+        print("note: no consent answers to filter by; keeping every row")
+    rows = []
+    for quiz_title, report in reports.items():
+        rows.extend(tidy_rows(quiz_title, key[quiz_title],
+                              filter_consent(report, students)))
     if not rows:
         sys.exit("no responses in any quiz")
     with open(args.output, "w", newline="") as f:

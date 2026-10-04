@@ -21,6 +21,9 @@ SRC+=conditionals.tex
 SRC+=repetitions.tex
 SRC+=types.tex
 SRC+=classes.tex
+SRC+=dictionaries.tex
+SRC+=containers.tex
+SRC+=files.tex
 SRC+=findings.tex
 SRC+=related-work.tex
 SRC+=conclusions.tex
@@ -43,7 +46,7 @@ noweb_lexer.py:
 article.pdf: noweb_lexer.py
 
 QUIZ_TOPICS=	course funcvars conditionals repetitions types classes \
-		debugging tracing
+		containers files tracing
 QUIZZES=	$(foreach t,${QUIZ_TOPICS},quiz-$(t)-start.json quiz-$(t)-end.json)
 
 .PHONY: programs

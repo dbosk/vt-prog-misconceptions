@@ -93,3 +93,44 @@ commented out.
   in this repo builds `didactic.sty` from it.
 
 Treat both as upstream: change them in their own repos, not here.
+
+## The instrument (`diagnostics.nw`)
+
+The appendix `diagnostics.tex` is woven, and sixteen quiz JSONs plus
+`analyze_diagnostics.py` are tangled, from `diagnostics.nw` (`make
+programs`): a course-level pre/post pair and seven topic pairs of Classic
+Quizzes for prgi26, each aspect a question group drawing one of two
+parallel forms (A/B) at random.  The course-level start quiz opens with
+the consent question (ungrouped, 0 points, Yes/No); none of the other
+fifteen quizzes asks again.  The analysis identifies students by login ID
+(attached from the roster; name-keyed fallback `prgi26/<name>` for saved
+reports), filters every quiz's rows by the consent collected in the
+course-start report, and `python3 analyze_diagnostics.py --self-test`
+checks the key, identity and consent machinery without Canvas.  As of
+2026-08-29 the quizzes are not yet created in Canvas; the create loop in
+the appendix picks the consent question up when they are.
+
+## Ethics
+
+The method section has a short `\subsection{Ethics}` (the study proper is
+a literature review; the deployed instruments are the part that collects
+personal data — see `diagnostics.nw`, subsection "The consent and
+preparation items").  `ethics-application-prgi26.md` in the repo root is
+the ethics assessment of the prgi26 data collection: assessed 2026-09-01
+as **not subject to the Ethics Review Act** (nothing is filed; no
+reference number will ever exist), kept as the internal self-assessment
+and data-protection documentation.  `participant-information-prgi26.md`
+(students; Swedish + English; YAML front matter for `canvaslms pages edit
+-f`) is the Canvas page "Information om forskningsstudien" in DD1317 HT26,
+placed in the Python-part overview module right before the consent quiz
+and linked from the consent item; the file carries no `published` key, so
+the page is created unpublished and the teacher publishes it;
+`participant-information-prgi26-staff.md` is the teacher/TA variant.  All
+three files are byte-identical synchronised copies shared with vt-debug:
+edit one copy, propagate to the other in the same round, and verify with
+`md5sum ../vt-{debug,prog-misconceptions}/{ethics-application,participant-information,participant-information-*-staff}-prgi26.md`
+(or simply `md5sum ../vt-{debug,prog-misconceptions}/*prgi26*.md`).
+The consent wording is deliberately identical to vt-debug's background
+quiz (the fuller wording of §6 of the assessment, with the information
+page's URL) — never change it unilaterally; it differs from the datintro26
+quizzes' frozen wording on purpose.
