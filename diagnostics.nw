@@ -8,16 +8,23 @@ It implements the diagnostic instruments for the learning-study
 evaluation motivated in \cref{conclusions}: pre- and post-tests at the
 level of the whole course, and pre- and post-tests around each taught
 topic.
-Eighteen files are tangled from this section: the course-level pair
+Eighteen quiz files are tangled from this section: the course-level pair
 [[quiz-course-start.json]] and [[quiz-course-end.json]], and a
 start--end pair per topic
 ([[quiz-funcvars-start.json]]/[[quiz-funcvars-end.json]] and
 correspondingly for [[conditionals]], [[repetitions]], [[types]],
 [[classes]], [[containers]], [[files]] and [[tracing]]).
-The learning platform of the course is Canvas, and the [[canvaslms]]
-command-line tool creates the quizzes from their JSON descriptions,
-for example:
+This section defines the instrument as designed, the same for every
+course that runs it.
+What differs between courses --- where in the course each quiz sits,
+when it opens, and what its description can truthfully promise --- is
+left to a deployment appendix per course
+(\cref{app:diagnostics-deployment}); the first cohort's is
+\cref{app:prgi26}.
+The learning platform is Canvas, and the [[canvaslms]] command-line
+tool creates the quizzes from their JSON descriptions, for example:
 \begin{minted}{bash}
+make programs COHORT=prgi26
 for f in quiz-*.json; do
   canvaslms quizzes create -c prgi26 -f "$f"
 done
@@ -93,7 +100,7 @@ itself.
   "settings": {
     "title": "Programming concepts quiz: start of course",
     "description": "<p>This quiz checks which programming concepts you already know, so that we can adapt the course. You will see your score afterwards, but not the correct answers&mdash;the course will teach you those. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
-    <<course start-quiz placement>>
+    <<course start-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -110,8 +117,7 @@ itself.
   "quiz_type": "classic",
   "settings": {
     "title": "Programming concepts quiz: end of course",
-    "description": "<p>This quiz covers the programming concepts of the whole course, so that we can see what you have learned. Take it before you start preparing for the computer exam, on your own and without help or tools. Afterwards you will see your score and the correct answers, so you can use the quiz to practise for the exam. The score does not affect your grade.</p>",
-    <<course end-quiz placement>>
+    <<course end-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -121,6 +127,18 @@ itself.
     <<aspect groups>>
   ]
 }
+@
+
+The end quiz's description is left to the deployment, unlike the start
+quiz's, because only the end quiz's description makes a promise about
+the past: that the student met the same questions at the start.
+Whether that promise holds is a fact about how a course ran the
+instrument, not about the instrument.
+The planned description, for a course where the start quiz ran, makes
+the promise:
+
+<<planned course end-quiz description>>=
+"description": "<p>This quiz mirrors the concept quiz from the start of the course, so that we can see what you have learned during the course. You will see your score and the correct answers afterwards, so you can use the quiz to review. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
 @
 
 The course groups are the union of the topic banks.
@@ -151,6 +169,9 @@ where [[assignment]] means a graded quiz.
 "due_at": null,
 "lock_at": null,
 @
+
+When a quiz opens is not among them: that depends on the course's
+calendar, so each deployment sets [[unlock_at]] itself.
 
 <<interaction settings>>=
 "quiz_type": "assignment",
@@ -270,8 +291,8 @@ The topic banks \emph{are} the course groups, reused by reference, so
 the two levels cannot drift apart: an item improved for a topic quiz
 is improved for the course quiz, automatically.
 The eight pairs are identical in structure, so we define them together;
-only the bank and the placement in the course differ, and the placement
-is the subject of \cref{app:diagnostics-placement}.
+only the bank differs, and where and when each quiz runs is left to the
+deployment (\cref{app:diagnostics-deployment}).
 Two pairs bank more than one analysis, because the course teaches the
 topics together: dictionaries arrive in the same week as classes, and
 the containers pair revisits every container of the course, the
@@ -283,7 +304,7 @@ function-and-list aspects of the debugging chapter included.
   "settings": {
     "title": "Topic quiz: functions and variables (before)",
     <<start-quiz boilerplate>>
-    <<funcvars start-quiz placement>>
+    <<funcvars start-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -298,8 +319,7 @@ function-and-list aspects of the debugging chapter included.
   "quiz_type": "classic",
   "settings": {
     "title": "Topic quiz: functions and variables (after)",
-    <<end-quiz boilerplate>>
-    <<funcvars end-quiz placement>>
+    <<funcvars end-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -316,7 +336,7 @@ function-and-list aspects of the debugging chapter included.
   "settings": {
     "title": "Topic quiz: conditionals (before)",
     <<start-quiz boilerplate>>
-    <<conditionals start-quiz placement>>
+    <<conditionals start-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -331,8 +351,7 @@ function-and-list aspects of the debugging chapter included.
   "quiz_type": "classic",
   "settings": {
     "title": "Topic quiz: conditionals (after)",
-    <<end-quiz boilerplate>>
-    <<conditionals end-quiz placement>>
+    <<conditionals end-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -349,7 +368,7 @@ function-and-list aspects of the debugging chapter included.
   "settings": {
     "title": "Topic quiz: repetitions (before)",
     <<start-quiz boilerplate>>
-    <<repetitions start-quiz placement>>
+    <<repetitions start-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -364,8 +383,7 @@ function-and-list aspects of the debugging chapter included.
   "quiz_type": "classic",
   "settings": {
     "title": "Topic quiz: repetitions (after)",
-    <<end-quiz boilerplate>>
-    <<repetitions end-quiz placement>>
+    <<repetitions end-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -382,7 +400,7 @@ function-and-list aspects of the debugging chapter included.
   "settings": {
     "title": "Topic quiz: data types (before)",
     <<start-quiz boilerplate>>
-    <<types start-quiz placement>>
+    <<types start-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -397,8 +415,7 @@ function-and-list aspects of the debugging chapter included.
   "quiz_type": "classic",
   "settings": {
     "title": "Topic quiz: data types (after)",
-    <<end-quiz boilerplate>>
-    <<types end-quiz placement>>
+    <<types end-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -415,7 +432,7 @@ function-and-list aspects of the debugging chapter included.
   "settings": {
     "title": "Topic quiz: classes and dictionaries (before)",
     <<start-quiz boilerplate>>
-    <<classes start-quiz placement>>
+    <<classes start-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -431,8 +448,7 @@ function-and-list aspects of the debugging chapter included.
   "quiz_type": "classic",
   "settings": {
     "title": "Topic quiz: classes and dictionaries (after)",
-    <<end-quiz boilerplate>>
-    <<classes end-quiz placement>>
+    <<classes end-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -450,7 +466,7 @@ function-and-list aspects of the debugging chapter included.
   "settings": {
     "title": "Topic quiz: containers (before)",
     <<start-quiz boilerplate>>
-    <<containers start-quiz placement>>
+    <<containers start-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -467,8 +483,7 @@ function-and-list aspects of the debugging chapter included.
   "quiz_type": "classic",
   "settings": {
     "title": "Topic quiz: containers (after)",
-    <<end-quiz boilerplate>>
-    <<containers end-quiz placement>>
+    <<containers end-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -487,7 +502,7 @@ function-and-list aspects of the debugging chapter included.
   "settings": {
     "title": "Topic quiz: files (before)",
     <<start-quiz boilerplate>>
-    <<files start-quiz placement>>
+    <<files start-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -502,8 +517,7 @@ function-and-list aspects of the debugging chapter included.
   "quiz_type": "classic",
   "settings": {
     "title": "Topic quiz: files (after)",
-    <<end-quiz boilerplate>>
-    <<files end-quiz placement>>
+    <<files end-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -520,7 +534,7 @@ function-and-list aspects of the debugging chapter included.
   "settings": {
     "title": "Topic quiz: reading programs (before)",
     <<start-quiz boilerplate>>
-    <<tracing start-quiz placement>>
+    <<tracing start-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<score-only result view>>
@@ -535,8 +549,7 @@ function-and-list aspects of the debugging chapter included.
   "quiz_type": "classic",
   "settings": {
     "title": "Topic quiz: reading programs (after)",
-    <<end-quiz boilerplate>>
-    <<tracing end-quiz placement>>
+    <<tracing end-quiz deployment>>
     <<scheduling settings>>
     <<interaction settings>>
     <<revealing result view>>
@@ -548,149 +561,70 @@ function-and-list aspects of the debugging chapter included.
 }
 @
 
-The description shown to the students is shared by all before-quizzes
-and by all after-quizzes.
-The after-quiz description deliberately does not claim that the
-quiz mirrors an earlier one: in the first cohort several after-quizzes
-run without their before-quiz (\cref{app:diagnostics-placement}), and
-a description promising a comparison the student never had would
-mislead.
+The before-quizzes share one description.
+The after-quizzes' description is, like the course end quiz's, left to
+the deployment, since it too promises that the student met the same
+questions before the unit.
+The planned one, for a course where the before-quiz ran, makes that
+promise:
 
 <<start-quiz boilerplate>>=
 "description": "<p>This quiz checks what you already know about this topic, before we work on it. You will see your score afterwards, but not the correct answers. The score does not affect your grade. Please answer on your own, without help from others or from tools.</p>",
-<<end-quiz boilerplate>>=
-"description": "<p>This quiz checks what you have learned about this topic. You will see your score and the correct answers afterwards, so you can use the quiz to review the topic. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+<<planned end-quiz description>>=
+"description": "<p>This quiz mirrors the questions from before this topic's unit, so that we can see what the unit taught you. You will see your score and the correct answers afterwards, so you can use the quiz to review the topic. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
 @
 
-\subsection{Placement in the first cohort}
-\label{app:diagnostics-placement}
+\subsection{Deploying the instrument in a course}
+\label{app:diagnostics-deployment}
 
-The quizzes reached the first cohort (the course's autumn 2026
-instance) late: by the time they were deployed, the course had
-already taught functions and variables, conditionals and data types,
-and repetitions, and the course-level start quiz and those topics'
-before-quizzes could no longer run before their units.
-We therefore deploy the cohort's quizzes in three shapes, and each
-quiz's placement lives in its own chunk so that a later cohort
-changes only these chunks.
-
+Everything above is the same in every course that runs the instrument.
+What a course adds is a \emph{deployment}: for each of the eighteen
+quizzes, one chunk named after it ---
+[[<<funcvars start-quiz deployment>>]],
+[[<<funcvars end-quiz deployment>>]], and so on, down to
+[[<<course end-quiz deployment>>]] --- that the quiz's root splices
+into its settings.
+A deployment chunk holds three things:
 \begin{description}
-\item[Catch-up diagnostic] The after-quizzes of the four topics
-  already taught, and of reading programs, which the course practises
-  from the first week, form one module of their own,
-  \enquote{Diagnostiskt prov: det du lärt dig hittills}.
-  It sits right before the classes week, every quiz must be
-  submitted, and the classes module requires it, so every student
-  takes stock of the course so far before continuing.
-  These five topics have no before-measure in this cohort: their
-  after-quizzes measure the level reached, not the gain.
-\item[Bracketing pairs] The remaining three topics --- classes and
-  dictionaries, containers, and files --- get the design as planned:
-  the before-quiz opens the topic's module, and the after-quiz closes
-  it.
-  The after-quiz is locked until the end of the week the unit is
-  taught, so a student cannot take it before the unit; locking the
-  quiz itself is needed because a module's items are open together.
-\item[Course quiz as practice] The course-level end quiz forms a
-  module of its own, \enquote{Repetitionsprov inför datorprovet},
-  right before the course's summative computer exam.
-  It reveals the correct answers afterwards, so it doubles as
-  practice for the exam; the description asks the students to take
-  it \emph{before} they start preparing, and the preparation question
-  flags those who did not.
+\item[When the quiz opens] the [[unlock_at]] time, from the course's
+  calendar.
+\item[Where it sits] the [[modules]] setting of [[canvaslms]]: a
+  regular expression for the module's name, the quiz's position among
+  the module's items, and what completes the item.
+\item[What it promises] for the end quizzes only, the description,
+  normally the planned one ([[<<planned end-quiz description>>]] or
+  [[<<planned course end-quiz description>>]]).
 \end{description}
+Each course's deployment is an appendix of its own, so that it records
+what the course did, and the files it tangles from are this one and
+that appendix together: [[make programs COHORT=prgi26]] tangles the
+first cohort's (\cref{app:prgi26}).
+A deployment that forgets a quiz's chunk makes [[notangle]] report the
+undefined chunk, so no quiz goes out without a decision on where it
+goes.
 
-The placement uses the [[modules]] setting of [[canvaslms]]: a
-regular expression for the module's name, the item's position, and
-what completes the item.
-The positions count the items already in the modules when the quizzes
-were deployed; Canvas renumbers should the modules change.
-The before-quizzes of the five catch-up topics and the course-level
-start quiz keep an empty placement and are not deployed to this
-cohort.
-
-<<funcvars start-quiz placement>>=
-<<not deployed in the first cohort>>
-<<conditionals start-quiz placement>>=
-<<not deployed in the first cohort>>
-<<repetitions start-quiz placement>>=
-<<not deployed in the first cohort>>
-<<types start-quiz placement>>=
-<<not deployed in the first cohort>>
-<<tracing start-quiz placement>>=
-<<not deployed in the first cohort>>
-<<not deployed in the first cohort>>=
-"unlock_at": null,
-@
-
-The catch-up quizzes follow the order in which the course taught
-their topics, with reading programs last, since it draws on all of
-them.
-
-<<funcvars end-quiz placement>>=
-"unlock_at": null,
-"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
-             "position": 1, "completion_requirement": "must_submit"}],
-<<conditionals end-quiz placement>>=
-"unlock_at": null,
-"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
-             "position": 2, "completion_requirement": "must_submit"}],
-<<types end-quiz placement>>=
-"unlock_at": null,
-"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
-             "position": 3, "completion_requirement": "must_submit"}],
-<<repetitions end-quiz placement>>=
-"unlock_at": null,
-"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
-             "position": 4, "completion_requirement": "must_submit"}],
-<<tracing end-quiz placement>>=
-"unlock_at": null,
-"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
-             "position": 5, "completion_requirement": "must_submit"}],
-@
-
-Each bracketing before-quiz comes right after the week's overview
-page, the first thing a student opens in the module; each after-quiz
-is the module's last item and unlocks on the Friday of the teaching
-week, when the week's lecture, exercise and lab are behind the
-students.
-
-<<classes start-quiz placement>>=
-"unlock_at": null,
-"modules": [{"module": "^Klasser och objekt$",
-             "position": 2, "completion_requirement": "must_submit"}],
-<<classes end-quiz placement>>=
-"unlock_at": "2026-10-09T08:00:00+02:00",
-"modules": [{"module": "^Klasser och objekt$",
-             "position": 12, "completion_requirement": "must_submit"}],
-<<containers start-quiz placement>>=
-"unlock_at": null,
-"modules": [{"module": "^Fler behållare och mer om klasser$",
-             "position": 2, "completion_requirement": "must_submit"}],
-<<containers end-quiz placement>>=
-"unlock_at": "2026-10-30T08:00:00+01:00",
-"modules": [{"module": "^Fler behållare och mer om klasser$",
-             "position": 14, "completion_requirement": "must_submit"}],
-<<files start-quiz placement>>=
-"unlock_at": null,
-"modules": [{"module": "^Filhantering$",
-             "position": 2, "completion_requirement": "must_submit"}],
-<<files end-quiz placement>>=
-"unlock_at": "2026-11-06T08:00:00+01:00",
-"modules": [{"module": "^Filhantering$",
-             "position": 11, "completion_requirement": "must_submit"}],
-@
-
-The course-level end quiz is the only item of its module, so the
-module, not the quiz, decides when it opens.
-
-<<course start-quiz placement>>=
-<<not deployed in the first cohort>>
-<<course end-quiz placement>>=
-"unlock_at": null,
-"modules": [{"module": "^Repetitionsprov inför datorprovet$",
-             "position": 1, "completion_requirement": "must_submit"}],
-@
+The planned deployment follows from the design.
+\begin{description}
+\item[The course-level start quiz] runs in the first week, before any
+  topic quiz, because it carries the consent item that every other
+  quiz relies on (\cref{app:diagnostics-ethics}), and because it
+  measures what the students bring to the course.
+\item[Each topic's before-quiz] is the first thing a student meets in
+  the unit's module, so it runs before any of the unit's teaching.
+\item[Each topic's after-quiz] is the unit module's last item and
+  unlocks when the unit's teaching is behind the students; locking
+  the quiz itself is needed because the items of a module open
+  together.
+\item[The course-level end quiz] runs in the last week, after the last
+  topic's after-quiz.
+\item[Every quiz] must be submitted to complete its module, so that
+  taking it is part of the course rather than an extra.
+\end{description}
+All quizzes should be in place before the course starts.
+A quiz that arrives after its unit has begun cannot be a
+before-measure, and a cohort that misses the start quiz also misses
+the consent item and the course-level gain; \cref{app:prgi26} shows
+what that costs.
 
 \subsection{Functions and variables (aspects 11--19)}
 

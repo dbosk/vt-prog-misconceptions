@@ -94,21 +94,37 @@ commented out.
 
 Treat both as upstream: change them in their own repos, not here.
 
-## The instrument (`diagnostics.nw`)
+## The instrument (`diagnostics.nw`) and its deployments (`cohort-*.nw`)
 
-The appendix `diagnostics.tex` is woven, and sixteen quiz JSONs plus
-`analyze_diagnostics.py` are tangled, from `diagnostics.nw` (`make
-programs`): a course-level pre/post pair and seven topic pairs of Classic
-Quizzes for prgi26, each aspect a question group drawing one of two
-parallel forms (A/B) at random.  The course-level start quiz opens with
-the consent question (ungrouped, 0 points, Yes/No); none of the other
-fifteen quizzes asks again.  The analysis identifies students by login ID
-(attached from the roster; name-keyed fallback `prgi26/<name>` for saved
-reports), filters every quiz's rows by the consent collected in the
-course-start report, and `python3 analyze_diagnostics.py --self-test`
-checks the key, identity and consent machinery without Canvas.  As of
-2026-08-29 the quizzes are not yet created in Canvas; the create loop in
-the appendix picks the consent question up when they are.
+The appendix `diagnostics.tex` is woven from `diagnostics.nw`: the
+instrument **as designed**, the same for every course — a course-level
+pre/post pair and eight topic pairs of Classic Quizzes (18 JSONs), each
+aspect a question group drawing one of two parallel forms (A/B) at random,
+plus `analyze_diagnostics.py`.  The course-level start quiz opens with the
+consent question (ungrouped, 0 points, Yes/No).
+
+Everything course-specific — module placement, `unlock_at`, and the
+end-quiz descriptions (they promise a matching before-quiz) — lives in
+per-course **deployment chunks** (`<<STEM start-quiz deployment>>`,
+`<<STEM end-quiz deployment>>`) defined in a deployment appendix
+`cohort-<course>.nw`, woven into the article after `diagnostics.tex`.
+`make programs COHORT=prgi26` tangles the quizzes from both files; a
+missing deployment chunk makes notangle fail.
+
+**Never bend the design in `diagnostics.nw` to how a cohort actually ran**
+(author, 2026-10-22): record the departures in that cohort's appendix, so
+other participating courses can run the plan.
+
+`cohort-prgi26.nw` (DD1317 HT26, Canvas 63874) records the first cohort:
+quizzes created 2026-10-04/05 after four topics were taught, so no course
+start quiz (and no consent item: consent must come from vt-debug's
+"Diagnostic quiz: your programming background", same wording — analysis
+not yet switched), a catch-up module of five after-quizzes, gateway
+modules "Diagnostiskt prov: inför …" holding one unit's after-quiz and the
+next unit's before-quiz, titles suffixed "(obligatorisk)" in Canvas
+(the analysis searches titles, so the suffix is harmless).  Its chunks
+must reproduce Canvas; re-check with `canvaslms modules view -c prgi26
+--show-position` after the teacher changes modules.
 
 ## Ethics
 
