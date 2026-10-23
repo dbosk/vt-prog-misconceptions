@@ -1,0 +1,247 @@
+\mode*
+\subsection{More containers}
+\label{containers}
+
+After lists and dictionaries, an introductory course typically adds the
+containers that answer more specialised questions: the tuple for a fixed
+group of parts, the set for which distinct values occur, and the stack and the
+queue for which element to take next.
+Python writes them alike.
+A tuple is indexed with the same brackets as a list, a dictionary is looked up
+with the same brackets again, and \mintinline{python}{append} adds to a list
+and to a queue alike.
+\textcite{Johnson2020PythonMisconceptions} argue that this uniformity is itself
+a source of misconceptions: in their analysis of Python novices,
+\textcquote{Johnson2020PythonMisconceptions}{[o]verloading hides the complexity
+of algorithms and data structures, often leading students to write code that
+involves mutability, sharing, copying, side effects, coroutines, concurrency,
+and lazy evaluation -- and none of those topics are accessible to students who
+haven't yet mastered basic assignments, conditionals, and looping}.
+When the surface is the same, what a container \emph{does} --- whether it can
+change, what may serve as its key, whether it keeps duplicates, which end it
+gives from --- is not visible in the program text, and must be discerned.
+
+The literature on these containers at the introductory level is thin.
+Documented difficulties with stacks and queues come from data-structures
+courses (\enquote{CS2}), and they concern \emph{choosing} and
+\emph{implementing} a structure more than predicting what one does
+\autocite{Zingaro2018DataStructures}.
+For the tuple's immutability, the requirements on a dictionary key and the
+set's lack of duplicates and order, we found no study of novices'
+misconceptions; the misconceptions analysed below are those our course
+material is designed against, not yet documented in the literature.
+
+\subsubsection{Tuples}
+
+A tuple behaves like a list in every way a novice has used a list so far:
+indexing, \mintinline{python}{len} and \mintinline{python}{for} work the same.
+It is natural, then, to take the tuple to be a list with other brackets ---
+or, having heard that it cannot be changed, a \enquote{frozen list}, a list
+that happens to be locked.
+
+The object of learning is \emph{what a tuple is}. The critical aspect is that
+a tuple is immutable: once made, no element can be replaced, removed or added,
+and an attempt to do so is refused with an error rather than silently ignored.
+Since everything else about the two containers is alike, we hold the program
+invariant and vary only the brackets.
+
+\begin{description}
+  \item[Contrast] The same pair in a list and in a tuple, with the same
+    assignment to each. The list on the left changes; the tuple on the right
+    raises a \mintinline{text}{TypeError} (the tuple \enquote{does not
+    support item assignment}), so the difference lies in the container and
+    not in the assignment.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1}]{python}
+        position = [58.4, 15.6]
+        position[0] = 59.3
+        print(position)
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={1}]{python}
+        position = (58.4, 15.6)
+        position[0] = 59.3
+        print(position)
+      \end{minted}
+    \end{minipage}
+    \newline
+    The contrast alone teaches \emph{that} a tuple cannot be changed, which is
+    compatible with the frozen-list view. What separates the tuple from a
+    locked list is \emph{why} one would choose it: the number of parts is given
+    by what the thing is --- a position has two, a colour three, a date three
+    --- and the parts are not changed one at a time.
+
+  \item[Generalisation] Keeping that criterion invariant, we vary the thing
+    stored: a position, a colour and a date are tuples, whereas a guest list
+    and a course's students grow and shrink, and are lists.
+\end{description}
+
+\subsubsection{Dictionary keys}
+
+The value in a dictionary may be anything, including a list. The key may not:
+it must be immutable, because the dictionary finds the entry from the key's
+value, and a key whose value changed afterwards could not be found again. Two
+beliefs predict otherwise. If a key is as unrestricted as a value, a list
+serves as a key as well as a tuple does. If a dictionary is a list indexed by
+strings, neither does.
+
+The object of learning is \emph{what may serve as a key}, and it fuses two
+aspects the student has met separately: immutability, from the tuple, and
+lookup by value, from the dictionary.
+
+\begin{description}
+  \item[Fusion] We store a distance under a pair of cities, varying only
+    whether the pair is a tuple or a list. The tuple key on the left works; the
+    list key on the right raises \mintinline{text}{TypeError}, because a list
+    is not hashable. The error is a \mintinline{text}{TypeError} and not a
+    \mintinline{text}{KeyError}: the list is not a key that is missing, it
+    cannot be a key at all.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        distance = {}
+        distance[("Lund", "Ystad")] = 63
+        print(distance)
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={2}]{python}
+        distance = {}
+        distance[["Lund", "Ystad"]] = 63
+        print(distance)
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+\subsubsection{Sets}
+
+A set is written like a dictionary without values, and a set made from a list
+looks like the list with its duplicates removed. That invites the view that a
+set \emph{is} such a list --- one that happens to drop duplicates but otherwise
+keeps its elements in order.
+
+The object of learning is \emph{what a set is}. Two features are critical, and
+both must be discerned: a set holds each value once, and it has no order. The
+second is the one the list-without-duplicates view misses, and it shows in
+comparison rather than in printing.
+
+\begin{description}
+  \item[Contrast] The same elements, in the same written order, in a list and
+    in a set, varying only the container. The list has six elements, the set
+    three; and the two comparisons, identical but for the brackets, give
+    opposite answers.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        xs = [1, 2, 2, 3, 3, 3]
+        print(len(xs))  # 6
+        print([1, 2, 3] == [3, 2, 1])
+        # False
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}{python}
+        xs = {1, 2, 2, 3, 3, 3}
+        print(len(xs))  # 3
+        print({1, 2, 3} == {3, 2, 1})
+        # True
+      \end{minted}
+    \end{minipage}
+    \newline
+    Two sets are equal when they hold the same values; two lists are equal
+    only when they hold the same values in the same order. That the set has
+    no positions also means that \mintinline{python}{xs[0]} has nothing to
+    refer to, and that a set of strings may print its elements in a different
+    order from one run to the next.
+\end{description}
+
+\subsubsection{Stacks and queues}
+
+A stack and a queue answer the same question --- which element is taken next?
+--- with opposite answers: the stack gives back the element added last, the
+queue the element added first. In Python the two are written almost alike, a
+list with \mintinline{python}{append} and \mintinline{python}{pop} for the
+stack and a \mintinline{python}{collections.deque} with
+\mintinline{python}{append} and \mintinline{python}{popleft} for the queue, so
+the order must be discerned from the method, not from the shape of the code.
+
+The order itself is not where students in data-structures courses struggle
+most. \textcite[p.~170]{Zingaro2018DataStructures} report an earlier finding
+that students did best on questions about stack and queue interfaces, and in
+their own study only seven per cent chose a structure without the
+last-in-first-out property for an undo function
+\autocite[p.~173]{Zingaro2018DataStructures}. At the introductory level the
+risk is rather that one order is carried over to both containers.
+
+The object of learning is \emph{which element a stack and a queue give next};
+the critical aspect is the end the element is taken from.
+
+\begin{description}
+  \item[Contrast] The same elements added in the same order, varying only the
+    container and therefore the end. The names are deliberately neutral:
+    \mintinline{python}{stack} and \mintinline{python}{queue} would say which
+    order to expect.
+
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={5}]{python}
+        things = []
+        for x in [1, 2, 3]:
+            things.append(x)
+        while things:
+            print(things.pop())
+        # 3 2 1
+      \end{minted}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[highlightlines={6}]{python}
+        import collections
+        things = collections.deque()
+        for x in [1, 2, 3]:
+            things.append(x)
+        while things:
+            print(things.popleft())
+        # 1 2 3
+      \end{minted}
+    \end{minipage}
+\end{description}
+
+\subsubsection{Choosing a container}
+
+The analyses above come together when a container is to be chosen. The choice
+is governed by the operations the program needs --- look a value up by a name,
+ask whether something occurs, keep an order, keep a fixed group of parts, take
+the newest or the oldest next --- and not by what the data is about: the same
+students may be kept in a list, a set or as dictionary keys, depending on
+whether the program enumerates them in order, asks whether someone is
+enrolled, or looks something up for each of them.
+Among the students \textcite[p.~173]{Zingaro2018DataStructures} asked to
+choose an implementation for a generalised array, the twelve per cent who
+included a slow structure justified the choice by what \emph{could} be built
+with it rather than by the cost of the operations needed; in one student's
+words,
+\textcquote{Zingaro2018DataStructures}{[a]ll three data structures should work
+as long as they arrange the elements by subscript}.
+
+\begin{description}
+  \item[Generalisation] Keeping the criterion invariant --- the operations
+    the program needs --- we vary the data: the registered students (asked
+    whether someone is enrolled: a set), their grades (looked up per student:
+    a dictionary), the order the solutions arrived in (graded first come,
+    first served: a queue), the date of a submission (a fixed group of parts:
+    a tuple).
+\end{description}
+
+Because several containers can be defended for the same data, this aspect
+does not lend itself to a single keyed answer; the diagnostic quizzes
+(\cref{app:diagnostics-containers}) therefore probe the four aspects it is
+built from rather than the choice itself.

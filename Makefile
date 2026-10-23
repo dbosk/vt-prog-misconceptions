@@ -21,11 +21,15 @@ SRC+=conditionals.tex
 SRC+=repetitions.tex
 SRC+=types.tex
 SRC+=classes.tex
+SRC+=dictionaries.tex
+SRC+=containers.tex
+SRC+=files.tex
 SRC+=findings.tex
 SRC+=related-work.tex
 SRC+=conclusions.tex
 SRC+=literature-protocol.tex
 SRC+=diagnostics.tex
+SRC+=cohort-prgi26.tex
 
 # The appendix literate program: woven into the article (diagnostics.tex
 # above), tangled into the quiz descriptions that canvaslms pushes to Canvas.
@@ -43,12 +47,15 @@ noweb_lexer.py:
 article.pdf: noweb_lexer.py
 
 QUIZ_TOPICS=	course funcvars conditionals repetitions types classes \
-		debugging tracing
+		containers files tracing
 QUIZZES=	$(foreach t,${QUIZ_TOPICS},quiz-$(t)-start.json quiz-$(t)-end.json)
 
 .PHONY: programs
 programs: ${QUIZZES} analyze_diagnostics.py
-quiz-%.json: diagnostics.nw
+# The quizzes are the instrument (diagnostics.nw) placed in one course by
+# that course's deployment appendix (cohort-$(COHORT).nw).
+COHORT?=	prgi26
+quiz-%.json: diagnostics.nw cohort-${COHORT}.nw
 	${NOTANGLE.json}
 analyze_diagnostics.py: diagnostics.nw
 	${NOTANGLE.py}
@@ -74,7 +81,7 @@ article.pdf slides.pdf: latexmkrc
 clean:
 	latexmk -C
 	${RM} article.bbl article.run.xml
-	${RM} diagnostics.tex noweb_lexer.py
+	${RM} diagnostics.tex cohort-*.tex noweb_lexer.py
 	${RM} ${QUIZZES} analyze_diagnostics.py
 
 INCLUDE_MAKEFILES?=./makefiles

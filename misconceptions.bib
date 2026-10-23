@@ -151,18 +151,30 @@
 }
 
 % === provenance: Prather2017CEM ===
-% CLAIM: Compiler error messages are a major impediment for novices, and
-%   enhanced messages can help them make effective changes.
+% CLAIM: Compiler error messages are a major impediment for novices; novices
+%   do read enhanced messages and make effective changes after them -- but
+%   the study's quantitative comparison showed no substantial gain in
+%   learning outcomes over the control.
 % FOUND-VIA: scholar search "novice programmers IDE error messages introductory
 %   programming" -p s2 -p openalex -p wos -p scopus -p dblp
 % PICKED: a focused human-factors study of how novices interact with compiler
 %   error messages, directly on the tooling question; primary source.
 % QUOTE (abstract): "The difficulty in understanding compiler error messages can
-%   be a major impediment to novice student learning ... most students are
-%   reading enhanced compiler error messages and generally make effective
+%   be a major impediment to novice student learning."
+% QUOTE (abstract): "Quantitative results from a 60 minute one-on-one
+%   think-aloud study with 31 students did not show substantial increase in
+%   student learning outcomes over the control.  However, qualitative results
+%   from the one-on-one thinkaloud study indicated that most students are
+%   reading the enhanced compiler error messages and generally make effective
 %   changes after encountering them."
 % VERIFIED: abstract reconstructed via the OpenAlex API; supports both the
 %   impediment claim and the effectiveness of enhanced messages.
+% VERIFIED (2026-09-04): abstract re-read verbatim on the authors'
+%   institutional-repository record (Abilene Christian University Digital
+%   Commons, info_tech_computing/4); the earlier QUOTE elided the null
+%   quantitative result that sits between the two quoted sentences, and
+%   tools.tex read the source one-sidedly because of it -- both fixed.  Full
+%   text still not read (ACM and the repository PDF are gated).
 % DATE: 2026-06-26
 @inproceedings{Prather2017CEM,
   author    = {Prather, James and Pettit, Raymond and McMurry, Kayla Holcomb and
@@ -350,17 +362,24 @@
 %   source for three cited claims -- variable-name "power" (functions-variables
 %   .tex:547, with MisconceptionsSurvey2017), loop writing/debugging
 %   (repetitions.tex:10), and tracing/execution-order (problem-solving.tex,
-%   locator refined to pp.20--21).
+%   locator refined to p.19 and p.20 -- see VERIFIED).
 % QUOTE (p.11): "Eleven students believed that a READLN statement used with a
 %   me[a]ningful variable name causes the program to select a va[l]ue based on
 %   the name's me[a]ning." [OCR-garbled in the 1984 scan]
 % QUOTE (p.15): "WRITELN adjacent to the loop is included in it ... This error
 %   occurred frequently and was noted with near[l]y half the students
 %   interviewed."
-% QUOTE (pp.20--21): "All statements including those in procedure bodies were
-%   executed in the order they appeared. This was a frequent error." ... "at
-%   least half of the students could not trace through programs systematically."
+% QUOTE (p.19, sec. 2.7 "Errors with procedures"): "All statements
+%   including those in procedure bodies were executed in the order they
+%   appeared. This was a frequent error."
+% QUOTE (p.20): "at least half of the students could not trace through
+%   programs systematically."
 % VERIFIED: full-text; each cited claim is backed by its own quoted passage.
+% VERIFIED (2026-09-04): page locators re-read off the printed folios of the
+%   ERIC scan (pdftotext, form-feed per page): the execution-order sentence
+%   is on p.19 (folio "-19-"), the tracing sentence on p.20; the earlier
+%   "pp.20--21" was off by one for the first.  The WRITELN quote is on p.15
+%   as recorded.
 % DATE: 2026-06-29
 @techreport{Sleeman1984,
   author={Sleeman, D and Putnam, R T and Baxter, J A and Kuspa, L K},
@@ -467,6 +486,13 @@ novices},
 %   right-value refinement in functions-variables.tex]
 % VERIFIED: full-text PDF read (Turku OA copy); all cited passages confirmed
 %   verbatim (re-fetched 2026-07-17 for the right-value passage).
+% VERIFIED (2026-09-04): the page numbers above are those of the accepted
+%   manuscript on utupub (APA running head "NOVICE STUDENT PROGRAMMING
+%   MISCONCEPTIONS n" at the top of each page), re-checked through a
+%   text proxy since utupub now bot-blocks direct fetches: the two list-index
+%   passages and the return-value passage all sit under running head 12.
+%   The journal's own pagination (JETS 45(1), pp. 50--73) has not been
+%   checked; the in-text locators therefore say "manuscript p.".
 % DATE: 2026-07-17
 @article{KumarVeerasamy2016,
   author = {Ashok Kumar Veerasamy and Daryl D'Souza and Mikko-Jussi Laakso},
@@ -575,6 +601,33 @@ Summative Assessments},
 %   functions-variables.tex:1141 (unused return value), mistake I backs :1240
 %   (wrong argument at a call).
 % DATE: 2026-06-29
+% UPDATE 2026-10-04 -- new use, classes.tex equality analysis (aspect 54):
+% CLAIM: In Java, comparing strings with == (identity) instead of .equals
+%   (equality) was made by almost 30,000 of more than 250,000 novices in a
+%   year of Blackbox data, and more than half of its instances took over
+%   1000 s to fix or were never fixed.
+% FOUND-VIA: scholar session bank-dicts-identity (previous agent) query
+%   C1-S4 ((novice OR student OR CS1 OR introductory) AND Java AND
+%   ("string comparison" OR "equals method" OR "reference equality" OR
+%   "== operator") AND (error OR mistake OR misconception)) and redo
+%   lit-dicts-identity I-S7 surfaced the Java ==/equals strand; this paper is
+%   the known item already in the bib. Full text re-fetched 2026-10-04 via
+%   the Wayback copy of kar.kent.ac.uk/46742/1/fp1187-altadmri.pdf (Kent
+%   answered 504) into the scholar PDF cache.
+% PICKED: primary, largest data set on the ==/equals mistake; Hristova et
+%   al. 2003 (doi 10.1145/611892.611956), the origin of the mistake list, is
+%   closed (ACM 403) and an educator survey, so not cited.
+% QUOTE (sec. 3.1): "B: Use of == instead of .equals to compare strings. For
+%   example: if (a == "start") ..."; (Table 1): "B* 121172 29627 >= 1000
+%   Semantic" (frequency, distinct users, median time to fix); (Fig. 3
+%   caption): "Mistakes N, B and D have a median equal to the cap value of
+%   1000, which means that more than half of the instances appeared took
+%   >= 1000 seconds to fix or were not fixed at all."; (abstract): "over
+%   250,000 students".
+% VERIFIED: full text read. Scope: Java, a mistake in code, not an elicited
+%   belief; the prose says "confused in practice" and names Java.
+% COUNTER: lit-dicts-identity I-C4 (see Gama2018PythonAntipatterns) found
+%   nothing contradicting.
 @inproceedings{AltadmriBrown2015,
   author = {Altadmri, Amjad and Brown, Neil C.C.},
   title = {37 Million Compilations: Investigating Novice Programming Mistakes 
@@ -751,6 +804,29 @@ series = {SIGCSE '10}
 %   stored separately; object-as-variable/record at classes.tex:60-62,131,141)
 %   need a full-text pass to quote verbatim.
 % DATE: 2026-06-29
+% UPDATE 2026-10-04 (full text): accepted manuscript from Open Research
+%   Online (oro.open.ac.uk/60134/1/Avoid%20Object%20Miscon%20ms.pdf, listed
+%   as a location by api.openalex.org/works/doi:10.1145/268084.268132; ORO
+%   itself answers 403 to scripts, so retrieved via the Wayback Machine
+%   snapshot 20240415203709) and read in the scholar PDF cache.
+% CLAIM (classes.tex, equality analysis for aspect 54; diagnostics.nw
+%   aspect 54 "True True" distractor): students take two objects with the
+%   same state to be the same object.
+% QUOTE (section "Identity/attribute confusion", manuscript without folios):
+%   "There is a tendency to confuse the name instance variable with the
+%   identity of the object" ... misconceptions "itemized below" include
+%   "two objects of the same class with the same state are the same object;"
+%   and "two objects with the same value for the name attribute are the same
+%   object."
+% QUOTE (qualification, same manuscript): links between practices and
+%   misconceptions "are based on personal experience of teaching and broad
+%   support from the results of developmental tests" -- i.e. teaching
+%   observation, not a controlled study.
+% VERIFIED: full text (accepted manuscript) read; the identity/attribute
+%   items above are now quoted verbatim, closing the 2026-06-29 FLAG for
+%   them. Corroborated by Sorva2012Dissertation, Table A.1 nos. 70 and 76
+%   (p. 363), which list the same two items with Holland et al. (1997) as
+%   source. Page numbers in the published version not checked.
 @inproceedings{Holland1997,
 author = {Holland, Simon and Griffiths, Robert and Woodman, Mark},
 title = {Avoiding Object Misconceptions},
@@ -911,7 +987,11 @@ pitfalls and how to get literature reviews published.}
 %   read from files/terminal is already numeric when it is still a string.
 % FOUND-VIA: original manual review (co-author C. Soori, Google Scholar); full text
 %   re-located via DOI 10.1145/3386527.3406733 and read (P. Guo's hosted copy,
-%   pg.ucsd.edu)
+%   https://pg.ucsd.edu/publications/learnersourcing-at-scale-python-tutor_LAS-2020-WIP.pdf,
+%   the file his homepage links; the same file was for a while also served
+%   without the "-WIP" suffix, and that URL now returns his notice "This
+%   article is no longer available. Do not distribute unauthorized copies
+%   or translations of it ...")
 % PICKED: most specific, verbatim-named learner errors in Guo et al.'s 16,791-
 %   explanation learnersourced corpus; the same catalogue backs the co-cited uses
 %   in types.tex, repetitions.tex:82, and functions-variables.tex:672.
@@ -921,12 +1001,22 @@ pitfalls and how to get literature reviews published.}
 % QUOTE (Findings, Mathematical Misconceptions): "When numerical data is read from
 %   files or terminal input, they often start as strings. If they are not properly
 %   converted to numbers, it is still possible to use math operators like + and >
-%   on them, which will perform string concatenation and comparison."
+%   on them, which will perform string concatenation and comparison,
+%   respectively."
 % VERIFIED: full-text (re-confirmed verbatim against Guo's copy); the corpus lists
 %   each cited misconception as a learner-explanation pattern. NB types.tex:59 says
 %   input is "automatically converted to integers" -- Guo's point is it stays a
 %   string unless converted; the misconception is the students' assumption it is
-%   already numeric (prose nuance flagged for follow-up).
+%   already numeric (prose nuance flagged for follow-up; fixed in types.tex
+%   on 2026-09-04).
+% VERIFIED (2026-09-04): the paper is not retracted (Crossref carries no
+%   update for the DOI) and the "-WIP" copy above still serves a PDF
+%   byte-identical to the one read on 2026-09-03 (4 pp., created
+%   2020-06-17); the copy without the suffix, which the intropy decks had
+%   used, was taken down on 2026-09-03 together with other old self-hosted
+%   PDFs of the author's.  Both quotations re-read verbatim in it; the
+%   "Mathematical Misconceptions" sentence ends ", respectively", which the
+%   earlier transcription dropped.  Cached in scholar's PDF cache.
 % DATE: 2026-06-29
 @inproceedings{GuoMarkelZhang2020,
 author = {Guo, Philip J. and Markel, Julia M. and Zhang, Xiong},
@@ -1351,12 +1441,16 @@ series = {L@S '20}
 %   else branch." [sources column: "Putnam et al. (1986); Sleeman et al.
 %   (1986)"; backs the rescoped conditionals.tex claim, issue #22]
 % QUOTE (Table A.1, no. 30, p. 360): "Adjacent code executes within loop."
-% QUOTE (p. 234): "Another, more generic misconception is some learners'
+% QUOTE (p. 235): "Another, more generic misconception is some learners'
 %   failure to see that a program has a dynamic existence in addition to its
 %   static aspect."
 % VERIFIED: full-text PDF read (aaltodoc OA); the appendix table states each
 %   misconception verbatim with its sources, so it entails the catalogue-level
 %   claims cited to it.
+% VERIFIED (2026-09-04): the "dynamic existence" sentence is on printed
+%   p. 235 (section 15.3.2; the page's own folio, PDF page 243 of the
+%   aaltodoc file), not p. 234 as first recorded; Table A.1 pages 359/360
+%   stand.
 % DATE: 2026-07-17
 @phdthesis{Sorva2012Dissertation,
   author = {Juha Sorva},
@@ -1500,6 +1594,13 @@ series = {L@S '20}
 %   Technical Report No. 31, 1984), of which the JECR 1986 article is the
 %   published version; quotes verbatim from the report scan. FLAG: journal
 %   pagination/wording unverified against the SAGE-gated article (issue #23).
+% VERIFIED (2026-09-04): FLAG resolved -- the journal version read in the
+%   author's own scan of the JECR 2(1) offprint
+%   (https://web.stanford.edu/~roypea/RoyPDF%20folder/A28_Pea_86.pdf, pp.
+%   25--36, running heads carry the folios): the parallelism definition is
+%   on p. 27 under "Parallelism Bugs" (continuing on p. 28), the superbug
+%   sentence in the Conclusions on p. 32; wording as quoted above.  The
+%   in-text locators now give these pages.
 % DATE: 2026-07-19
 @article{Pea1986Superbug,
   author  = {Roy D. Pea},
@@ -1511,3 +1612,468 @@ series = {L@S '20}
   year    = {1986},
   doi     = {10.2190/689T-1R2A-X4W4-29J2},
 }
+
+% === provenance: Etikprovningslagen ===
+% CLAIM: The Swedish Ethics Review Act applies to research that processes
+%   special-category personal data (GDPR Art. 9.1) or data on offences (3 §),
+%   or that involves a physical intervention, a method intended to affect the
+%   research person physically or psychologically, or an obvious risk of harm
+%   (4 §); research outside those criteria needs no approval from the Ethics
+%   Review Authority.
+% FOUND-VIA: primary legal source, Svensk författningssamling on riksdagen.se
+%   (no literature search: the act itself defines its own scope).
+% PICKED: the act is the only authoritative source for its scope; cited in the
+%   Ethics section for the assessment that the data collection falls outside it.
+% QUOTE: 3 §: "Denna lag ska tillämpas på forskning som innefattar behandling
+%   av personuppgifter som avses i artikel 9.1 i EU:s dataskyddsförordning
+%   (känsliga personuppgifter), eller personuppgifter om lagöverträdelser."
+%   4 §: "Utöver vad som följer av 3 § ska lagen tillämpas på forskning som
+%   innebär ett fysiskt ingrepp på en forskningsperson, utförs enligt en metod
+%   som syftar till att påverka forskningspersonen fysiskt eller psykiskt eller
+%   som innebär en uppenbar risk att skada forskningspersonen."
+% VERIFIED: 2-4 §§ read in the consolidated text on riksdagen.se (amendments
+%   Lag (2018:1999) to 3 § and Lag (2008:192) to 4 §) on 2026-09-08.
+% DATE: 2026-09-08
+@legislation{Etikprovningslagen,
+  title={Lag (2003:460) om etikprövning av forskning som avser människor},
+  year={2003},
+  number={SFS 2003:460},
+  url={https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2003460-om-etikprovning-av-forskning-som_sfs-2003-460/},
+  urldate={2026-09-08},
+  langid={swedish},
+  note={Consolidated text; scope in 3--4 §§},
+}
+
+
+% === provenance: Johnson2020PythonMisconceptions ===
+% CLAIM: Python's overloading (one surface for many data structures) hides
+%   their complexity and leads novices into mutability, sharing and copying
+%   before they can understand them -- the framing of the "More containers"
+%   section, where the containers are written alike.
+% FOUND-VIA: scholar session "bank-containers" (2026-10-04), query
+%   "mutability misconceptions novice programmers" -p openalex -p dblp -p wos
+%   -p ieee -p scopus -p arxiv; again by WoS TS=((misconception* OR
+%   difficult*) AND (mutab* OR immutab*) AND (student* OR novice*) AND
+%   programming) and the same TITLE-ABS-KEY on Scopus.
+% PICKED: the only hit, on every provider, that studies Python novices'
+%   misconceptions about mutability and data structures; primary empirical
+%   source (student survey + analysis against a notional machine), not a
+%   survey. Lu & Krishnamurthi 2024 (PACMPL, mutable compound data) is
+%   adjacent (aliasing of mutable data), not about immutable containers.
+% QUOTE (abstract, p. 1): "Overloading hides the complexity of algorithms and
+%   data structures, often leading students to write code that involves
+%   mutability, sharing, copying, side effects, coroutines, concurrency, and
+%   lazy evaluation – and none of those topics are accessible to students
+%   who haven't yet mastered basic assignments, conditionals, and looping."
+% VERIFIED: full text read (author's accepted version, eprints.gla.ac.uk
+%   203059, via scholar's PDF cache); the quote is verbatim. The study's
+%   evidence concerns lists (+ vs += and aliasing), so the containers section
+%   cites it only for the framing, not for tuple, set or key misconceptions.
+% COUNTER: same session, "mutability students understand immutable
+%   correctly" and the field-syntax queries above: no study found that
+%   novices handle immutable containers without difficulty, and none
+%   documenting specific misconceptions about tuples, sets or dictionary
+%   keys either; the section says so plainly.
+% DATE: 2026-10-04
+@inproceedings{Johnson2020PythonMisconceptions,
+  author    = {Johnson, Fionnuala and McQuistin, Stephen and O'Donnell, John},
+  title     = {Analysis of Student Misconceptions using {Python} as an
+               Introductory Programming Language},
+  booktitle = {Proceedings of the 4th Conference on Computing Education
+               Practice},
+  series    = {CEP '20},
+  publisher = {ACM},
+  year      = {2020},
+  pages     = {1--4},
+  doi       = {10.1145/3372356.3372360},
+}
+
+% === provenance: Zingaro2018DataStructures ===
+% CLAIM: (a) In a CS2 study, 7% of students chose structures without the
+%   LIFO property for an undo function; (b) the authors report an earlier
+%   finding (Tenenberg and Murphy) that students did best on stack, queue
+%   and tree interface questions; (c) students who included a slow
+%   structure when choosing an implementation for a generalised array
+%   (12%) justified it by what could be built, not by performance.
+% FOUND-VIA: not returned by the scholar session "bank-containers" (its
+%   stack/queue queries surfaced the companion BDSI paper, Porter et al.
+%   2019, and the 2026 SLR by Tilanterä & Korhonen); retrieved by WebSearch
+%   "Danielsiek Paul Vahrenhold 2012 \"Detecting and understanding
+%   students' misconceptions related to algorithms and data structures\"
+%   pdf" (2026-10-04), which listed the authors' copy at
+%   cs.swarthmore.edu/~kwebb/papers/DataStructuresDifficulties.pdf;
+%   metadata checked against Crossref.
+% PICKED: primary empirical study of student difficulties with basic data
+%   structures (interviews + 249-student questions) that reports stack/LIFO
+%   and choice-of-structure results with percentages; BDSI (Porter et al.
+%   2019) reports no item-level stack/queue misconceptions, and the 2026
+%   SLR is paywalled (not read, not cited).
+% QUOTE (p. 173, sec. 4.6): "The correct answer to this problem is d, to add
+%   and remove from the head, as this will maintain a LIFO ordering [...]
+%   Seven percent chose a or b, choices that do not provide a LIFO
+%   property."
+% QUOTE (p. 170, sec. 2): "Tenenberg and Murphy tested students on data
+%   structures as part of a project on student self-assessment, and found
+%   that students performed best on questions about stack, queue and tree
+%   interfaces, and worst on questions concerning the runtime efficiency of
+%   different searches [24]."
+% QUOTE (p. 173, sec. 4.5.3): "Twelve percent of students' answers included
+%   either of the linked list responses (c or d) [...] The justifications
+%   for these answers generally did not mention performance, and focused on
+%   the fact that an implementation could be built using any of the data
+%   structures. (A sample student answer is "All three data structures
+%   should work as long as they arrange the elements by subscript [...]")"
+% VERIFIED: full-text PDF read (authors' copy, 9 pp.); page numbers mapped
+%   from the proceedings range 169--177 (PDF p. 2 = p. 170, PDF p. 5 =
+%   p. 173). Claim (b) is cited as the authors' report of Tenenberg and
+%   Murphy, whose paper was not read.
+% COUNTER: scholar "bank-containers": "stack queue students understand
+%   correctly no misconceptions" and WoS TS=(misconception* AND (stack* OR
+%   queue*) AND (student* OR novice*) AND (programming OR "data
+%   structure*")) / Scopus TITLE-ABS-KEY(same): hits concern the runtime
+%   (call) stack, recursion and Dijkstra, none refuting; the qualifying
+%   evidence is the source's own (b): stack/queue order is comparatively
+%   easy, so the catalogue says the item may be easy.
+% DATE: 2026-10-04
+@inproceedings{Zingaro2018DataStructures,
+  author    = {Zingaro, Daniel and Taylor, Cynthia and Porter, Leo and
+               Clancy, Michael and Lee, Cynthia and Nam Liao, Soohyun and
+               Webb, Kevin C.},
+  title     = {Identifying Student Difficulties with Basic Data Structures},
+  booktitle = {Proceedings of the 2018 ACM Conference on International
+               Computing Education Research},
+  series    = {ICER '18},
+  publisher = {ACM},
+  year      = {2018},
+  pages     = {169--177},
+  doi       = {10.1145/3230977.3231005},
+}
+
+% === provenance: RashkovitsLavy2012 ===
+% CLAIM: Students commonly fail to grasp that when an exception is thrown,
+%   control leaves the rest of the protected block, jumps to the matching
+%   handler and continues from there; flow of control around exceptions and
+%   handling exceptions further up the calling chain are among the aspects
+%   they find hardest.  (files.tex, closing and missing-file analyses;
+%   diagnostics.nw aspects 91 and 92.)
+% FOUND-VIA: reused from the intropy course's deck "Inmatning och
+%   felhantering" (ltnotes.bib), where it was found as a known document in
+%   scholar session exceptions-novice (2026-09-03).  Re-retrieved here: the
+%   OpenAlex record (api.openalex.org/works?filter=title.search:advanced
+%   properties of java exceptions) gives DOI 10.28945/1726 and the OA copy
+%   http://www.jite.org/documents/Vol11/JITEv11IIPp327-352Rashkovits1157.pdf
+%   (scholar's downloader got HTTP 412; fetched with curl).  Note: the
+%   earlier note that no provider indexes the journal is wrong for OpenAlex.
+% PICKED: the only source found that measures the specific step the items
+%   probe -- what happens to the statements after the failing one inside the
+%   protected block, and propagation to the caller.  Primary study with a
+%   graded questionnaire.
+% QUOTE (p. 343): "They had not assimilated the fact that once an exception
+%   is thrown, the program jumps to the closest catch clause that is
+%   appropriate for the exception and continues from there. They could not
+%   cope properly with try-catch blocks containing more than one command."
+% QUOTE (p. 350): "The students had difficulty exhibiting high levels of
+%   understanding concerning the following: use of multiple exceptions; flow
+%   of control in the context of exceptions; handling exceptions further up
+%   the calling chain; catching and handling hierarchically related
+%   exceptions; and overriding methods that throw exceptions."
+% VERIFIED: full text read 2026-10-04 (pdftotext of the jite.org PDF, 26
+%   pages = pp. 327--352, so PDF page n is p. 326+n; quotes on PDF pages 17
+%   and 24).  Scope caveat stated in files.tex: Java, students near
+%   graduation, not first-year Python; the transfer to Python is our
+%   inference.
+% COUNTER: scholar session bank-files, S5/M2: '("exception handling" OR
+%   exceptions) AND (file OR "resource management" OR "with statement" OR
+%   close) AND (novice OR students OR CS1) AND (misconception OR error OR
+%   difficulties)' and '(newline OR "line break" OR "file mode" OR overwrite
+%   OR "type conversion" OR "exception handling") AND (novice OR students OR
+%   CS1) AND programming AND (slip OR typo OR "not a misconception" OR "no
+%   difficulty" OR overstated OR mastered)' on openalex, ieee, wos (TS=),
+%   scopus (TITLE-ABS-KEY); dblp blocked by a bot check (0, not run).  No
+%   result argues that students master exception flow of control.
+% DATE: 2026-10-04
+@article{RashkovitsLavy2012,
+  author  = {Rashkovits, Rami and Lavy, Ilana},
+  title   = {Students' Understanding of Advanced Properties of Java
+             Exceptions},
+  journal = {Journal of Information Technology Education: Innovations in
+             Practice},
+  volume  = {11},
+  pages   = {327--352},
+  year    = {2012},
+  doi     = {10.28945/1726},
+}
+
+% === provenance: AlzahraniVahid2021 ===
+% CLAIM: A three-decade survey of the CS1 logic-error literature (47
+%   publications, 1985--2018) classifies 166 errors into eleven categories,
+%   none of which concerns files -- evidence, together with our own empty
+%   search, that file handling is scarcely covered by the misconception
+%   literature.  (files.tex, introduction.)
+% FOUND-VIA: scholar session bank-files, counter-query M2 on openalex:
+%   '(newline OR "line break" OR "file mode" OR overwrite OR "type
+%   conversion" OR "exception handling") AND (novice OR students OR CS1) AND
+%   programming AND (slip OR typo OR "not a misconception" OR "no
+%   difficulty" OR overstated OR mastered)'.
+% PICKED: the broadest survey of CS1 error catalogues that surfaced; its
+%   category list is the most direct evidence of what the literature
+%   covers.  Used only for the absence of a file category, not for any
+%   positive claim.
+% QUOTE (abstract): "The publications described 166 common logic errors,
+%   which we classified into 11 error categories: input (2 errors), output
+%   (1 error), variable (7 errors), computation (21 errors), condition (18
+%   errors), branch (14 errors), loop (27 errors), array (5 errors),
+%   function (24 errors), conceptual (43 errors), and miscellaneous (4
+%   errors)."
+% VERIFIED: full text read 2026-10-04 (ASEE PEER PDF via scholar's cache);
+%   the survey excludes exception handling, OOP, recursion and pointers
+%   explicitly, but not files, so the absence of a file category is a
+%   finding of the survey, not of its scope.  Its scope is logic errors,
+%   not misconceptions in general -- the prose says "logic errors".
+% COUNTER: the claim is an absence; its counter-search is the support
+%   search for file misconceptions (session bank-files S1--S4, S6, all live
+%   providers), which found no study of novice conceptions of opening,
+%   reading or writing files.  Grey literature (WebSearch "students
+%   misconceptions \"file handling\" programming \"write mode\" overwrite OR
+%   \"trailing newline\" OR \"closing files\" empirical", 2026-10-04)
+%   returned only tutorials and exam-preparation pages with unsourced
+%   figures; none cited.
+% DATE: 2026-10-04
+@inproceedings{AlzahraniVahid2021,
+  author    = {Alzahrani, Nabeel and Vahid, Frank},
+  title     = {Common Logic Errors for Programming Learners: A Three-decade
+               Literature Survey},
+  booktitle = {2021 ASEE Virtual Annual Conference Content Access},
+  publisher = {ASEE},
+  year      = {2021},
+  doi       = {10.18260/1-2--36814},
+}
+
+% === provenance: PythonTutorialFiles ===
+% CLAIM: Python's tutorial documents that a line read from a file keeps its
+%   newline character, that mode 'w' erases an existing file, and that
+%   `with` closes the file even when an exception is raised.  (files.tex.)
+% FOUND-VIA: primary documentation of the behaviour, the same section the
+%   course's files deck cites (intropy modules/files, ltnotes.bib); fetched
+%   https://docs.python.org/3/tutorial/inputoutput.html on 2026-10-04.
+% PICKED: the language's own tutorial is the authoritative source for what
+%   the operations do, and it is what the course points students to.
+% QUOTE (7.2): "'w' for only writing (an existing file with the same name
+%   will be erased)"
+% QUOTE (7.2.1): "f.readline() reads a single line from the file; a newline
+%   character (\n) is left at the end of the string, and is only omitted on
+%   the last line of the file if the file doesn't end in a newline."
+% QUOTE (7.2): "The advantage is that the file is properly closed after its
+%   suite finishes, even if an exception is raised at some point."
+% VERIFIED: page fetched and searched 2026-10-04.  The newline sentence is
+%   stated for readline; the same section's loop over the file object prints
+%   each line with end='', and our items verify the loop's behaviour by
+%   running it (Python 3.14.4).
+% DATE: 2026-10-04
+@online{PythonTutorialFiles,
+  author  = {{Python Software Foundation}},
+  title   = {The {Python} Tutorial, section 7.2: Reading and Writing Files},
+  year    = {2026},
+  url     = {https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files},
+  urldate = {2026-10-04},
+}
+
+% === provenance: PythonExceptions ===
+% CLAIM: FileNotFoundError is the exception raised when a requested file
+%   does not exist.  (files.tex, missing-file analysis.)
+% FOUND-VIA: primary documentation; fetched
+%   https://docs.python.org/3/library/exceptions.html on 2026-10-04.
+% PICKED: the authoritative definition of the built-in exception.
+% QUOTE: "Raised when a file or directory is requested but doesn't exist.
+%   Corresponds to errno ENOENT."
+% VERIFIED: page fetched and searched 2026-10-04; behaviour also run (items
+%   92A/B, Python 3.14.4).
+% DATE: 2026-10-04
+@online{PythonExceptions,
+  author  = {{Python Software Foundation}},
+  title   = {Built-in Exceptions},
+  year    = {2026},
+  url     = {https://docs.python.org/3/library/exceptions.html},
+  urldate = {2026-10-04},
+}
+
+% === provenance: Stansbury2015Dictionaries ===
+% CLAIM: Students conflate Python lists and dictionaries; in think-aloud
+%   interviews one of two participants treated her dictionary as a list of
+%   two-element lists and accessed it as such (dictionaries.tex: aspect 81,
+%   the dictionary read as a list with positions; the section intro, as the
+%   one study found of students' understanding of dictionaries; and the
+%   aspect-84 remark that the list-of-pairs reading would predict pairs --
+%   stated in the prose as our inference, since the study did not ask about
+%   loops).
+% FOUND-VIA: scholar sessions bank-dicts-dicts (previous agent) and its redo
+%   lit-dicts-dicts (2026-10-04), query D-S1 on openalex, ieee, wos, scopus:
+%   (novice OR student* OR CS1 OR introductory) AND (dictionar* OR
+%   "hash table*" OR "hash map*" OR hashmap* OR "associative array*" OR
+%   "key-value") AND (misconception* OR difficult* OR error* OR mistake*) AND
+%   programming; also returned by D-S4 and D-S9. Text retrieved via
+%   api.openalex.org/works/doi:10.1145/2676723.2691937; metadata via
+%   api.crossref.org.
+% PICKED: the only study surfaced by any dictionary query (8 support and 5
+%   counter queries on the four live providers, plus WebSearch) that examines how
+%   students understand Python dictionaries as used in a program; the
+%   hash-table studies (Karpierz2014HashTables; Patitsas et al. 2013,
+%   doi 10.1145/2445196.2445443) concern implementation.
+% QUOTE (abstract): "This research found that some students conflate Python
+%   lists and dictionaries." ... "When coding, one student treated her
+%   dictionary as if it were a literal list of two-element lists and could be
+%   accessed as such."
+% VERIFIED: the publication is itself an abstract (SIGCSE '15, p. 682,
+%   "Abstract Only"), so its whole text was read. Small scope (two
+%   participants, one showing the model): the prose calls it the "closest
+%   documented case", not a prevalence finding, and says that the model
+%   observed is a list of pairs, not a list indexed by strings.
+% COUNTER: lit-dicts-dicts D-C1 (... AND (understand* OR intuitive OR easy OR
+%   success* OR "no difficult*") ...), D-C3 (misconception/mental model x
+%   data structure/dictionary x list/array/sequence x index/key), D-C4 and
+%   D-C5 on the same four providers: no study reporting that novices find
+%   dictionaries unproblematic or refuting list--dictionary conflation; none
+%   found.
+% DATE: 2026-10-04
+@inproceedings{Stansbury2015Dictionaries,
+  author    = {Stansbury, Emily},
+  title     = {Students' (Mis)Understanding of Dictionaries (Abstract Only)},
+  booktitle = {Proceedings of the 46th ACM Technical Symposium on Computer
+               Science Education},
+  series    = {SIGCSE '15},
+  pages     = {682},
+  year      = {2015},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/2676723.2691937},
+}
+
+% === provenance: Karpierz2014HashTables ===
+% CLAIM: The documented hash-table misconceptions concern implementation
+%   (resizing), not how a program uses a map (dictionaries.tex intro).
+% FOUND-VIA: scholar sessions bank-dicts-dicts and lit-dicts-dicts, query
+%   D-S4: (misconception* OR "mental model*") AND ("data structure*" OR
+%   dictionar* OR "hash table*" OR "associative array*") AND (student* OR
+%   novice*) on openalex, ieee, wos, scopus; author copy located by
+%   WebSearch "Karpierz Wolfman \"Misconceptions and concept inventory
+%   questions for binary search trees and hash tables\" pdf" (2026-10-04),
+%   www.cs.ubc.ca/~wolf/work/tnp/pot-packet/resources/sigcse-2014-dsci.pdf,
+%   fetched into the scholar PDF cache.
+% PICKED: the validated (concept-inventory) hash-table misconceptions; it
+%   represents the hash-table strand and shows that the strand does not
+%   cover dictionary use.
+% QUOTE (sec. 3.3): "NoRehash: The misconception that, when resizing, the hash
+%   table leaves keys at their existing indexes." / "ResizeInPlace: The
+%   misconception that, when resizing, the table is extended in place by
+%   appending slots."
+% VERIFIED: full text (author copy) read; both hash-table misconceptions are
+%   about resizing, i.e. implementation.
+% COUNTER: D-C3, D-C4, D-C5 (above): no hash-table or map study of key
+%   lookup, assignment or iteration from a user's point of view found.
+% DATE: 2026-10-04
+@inproceedings{Karpierz2014HashTables,
+  author    = {Karpierz, Kuba and Wolfman, Steven A.},
+  title     = {Misconceptions and Concept Inventory Questions for Binary
+               Search Trees and Hash Tables},
+  booktitle = {Proceedings of the 45th ACM Technical Symposium on Computer
+               Science Education},
+  series    = {SIGCSE '14},
+  pages     = {109--114},
+  year      = {2014},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/2538862.2538902},
+}
+
+% === provenance: Cosman2020PABLO ===
+% CLAIM: KeyError is one of the five most common uncaught exceptions in
+%   novice Python programs on Python Tutor, at 3% the least common of them
+%   (dictionaries.tex, aspect 83: shows that missing keys stop novices'
+%   programs; explicitly NOT cited for what students expect).
+% FOUND-VIA: WebSearch "\"KeyError\" novice programmers runtime errors Python
+%   frequency study introductory course" (2026-10-04) -> author copy
+%   web.eecs.umich.edu/~weimerw/p/weimer-sigcse2020.pdf (curl; the host's
+%   certificate chain is incomplete); metadata via api.crossref.org
+%   query.bibliographic. The scholar queries D-S6 ((Python OR novice OR
+%   student*) AND (KeyError OR "key error*" OR "missing key*" OR
+%   "nonexistent key*")) and D-C2 did not return it: KeyError is not in its
+%   title or abstract.
+% PICKED: the only source found that gives a frequency for KeyError in
+%   novice Python code, from a large multi-institution data set. Pritchard
+%   2015 (Frequency distribution of error messages, arXiv 1509.07238) was
+%   read and has no KeyError count.
+% QUOTE (sec. 3.5): "the five most common uncaught exceptions: TypeError,
+%   IndexError, AttributeError, ValueError, and KeyError. Together, these five
+%   exceptions are the most common faced by our novices, making up 97% of the
+%   errors in our dataset (54%, 23%, 11%, 7%, and 3%, respectively)."
+%   (sec. 3.1): "the dataset used in this evaluation contains 985,780 usable
+%   program pairs, representing students from dozens of universities".
+% VERIFIED: full text (author copy) read. Scope is crashes, not beliefs; the
+%   prose says so.
+% COUNTER: D-C2 (Python error distributions incl. KeyError) on the four
+%   providers: nothing contradicting. That KeyError is rare next to
+%   TypeError and IndexError is the qualification, stated in the prose.
+% DATE: 2026-10-04
+@inproceedings{Cosman2020PABLO,
+  author    = {Cosman, Benjamin and Endres, Madeline and Sakkas, Georgios and
+               Medvinsky, Leon and Yang, Yao-Yuan and Jhala, Ranjit and
+               Chaudhuri, Kamalika and Weimer, Westley},
+  title     = {{PABLO}: Helping Novices Debug Python Code Through Data-Driven
+               Fault Localization},
+  booktitle = {Proceedings of the 51st ACM Technical Symposium on Computer
+               Science Education},
+  series    = {SIGCSE '20},
+  pages     = {1047--1053},
+  year      = {2020},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/3328778.3366860},
+}
+
+% === provenance: Gama2018PythonAntipatterns ===
+% CLAIM: Comparing two objects with == when their class defines no comparison
+%   method (so the references are compared) was hypothesised as a Python CS1
+%   misconception, but observed only once in 204 exam papers and dropped
+%   (classes.tex, equality analysis for aspect 54: qualifying evidence).
+% FOUND-VIA: the scholar searches surfaced the one-page poster Gama et al.
+%   2019 (doi 10.20396/revpibic262018559; bank-dicts-dicts and
+%   lit-dicts-dicts D-S5), which does not include the list; WebSearch
+%   "Caceffo Gama Python misconceptions CS1 technical report Unicamp list
+%   dictionary" (2026-10-04) -> this technical report,
+%   ic.unicamp.br/~reltech/2018/18-19.pdf, fetched into the scholar PDF
+%   cache.
+% PICKED: the only Python-specific source found that names the
+%   ==-on-objects confusion; primary (exam analysis). Cited for what it
+%   found, including that it was rare.
+% QUOTE (Table 9, p. 12): "X.14 Comparing two referenced objects by their
+%   references when comparison methods have not been defined for that class."
+%   with the example "a = Dog(name = "Fido") / b = Dog(name = "Fido") /
+%   if a == b: # returns False". (p. 12): candidates kept only with "a count
+%   greater than or equal to 2 (out of 204)". (Table 10, p. 13): "X.14 1
+%   Rejected". (sec. 3.3.2.1, p. 15): "Misconception hypotheses X.8, X.10,
+%   X.11, X.12, X.14, X.16 were excluded from further consideration."
+% VERIFIED: full text read; the prose reports the single observation and the
+%   exclusion. The report lists no dictionary misconception (full text
+%   searched for dict/key).
+% COUNTER: lit-dicts-identity I-C4 ((novice OR student* OR CS1 OR
+%   introductory) AND ("string comparison" OR "equals method" OR
+%   "== operator" OR "is operator" OR "reference equality" OR
+%   "object equality" OR "object identity") AND (understand* OR correct* OR
+%   easy OR "no difficult*" OR rare)) on the four providers: no study
+%   reporting that novices do not confuse the two comparisons; this report's
+%   rarity count is itself the qualifying evidence and is cited as such.
+% DATE: 2026-10-04
+@techreport{Gama2018PythonAntipatterns,
+  author      = {Gama, Guilherme and Caceffo, Ricardo and Souza, Renan and
+                 Benatti, Raysa and Aparecida, Tales and Garcia, Islene and
+                 Azevedo, Rodolfo},
+  title       = {An Antipattern Documentation about Misconceptions related to
+                 an Introductory Programming Course in {Python}},
+  institution = {Institute of Computing, University of Campinas},
+  type        = {Technical Report},
+  number      = {IC-18-19},
+  year        = {2018},
+  month       = nov,
+  url         = {https://ic.unicamp.br/~reltech/2018/18-19.pdf},
+}
+

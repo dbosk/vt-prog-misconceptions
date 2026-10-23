@@ -29,6 +29,7 @@ didactic_output_*.txt
 
 # woven and tangled from the appendix literate program (diagnostics.nw)
 diagnostics.tex
+cohort-*.tex
 quiz-*.json
 noweb_lexer.py
 analyze_diagnostics.py

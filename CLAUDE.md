@@ -93,3 +93,62 @@ commented out.
   in this repo builds `didactic.sty` from it.
 
 Treat both as upstream: change them in their own repos, not here.
+
+## The instrument (`diagnostics.nw`) and its deployments (`cohort-*.nw`)
+
+The appendix `diagnostics.tex` is woven from `diagnostics.nw`: the
+instrument **as designed**, the same for every course — a course-level
+pre/post pair and eight topic pairs of Classic Quizzes (18 JSONs), each
+aspect a question group drawing one of two parallel forms (A/B) at random,
+plus `analyze_diagnostics.py`.  The course-level start quiz opens with the
+consent question (ungrouped, 0 points, Yes/No).
+
+Everything course-specific — module placement, `unlock_at`, and the
+end-quiz descriptions (they promise a matching before-quiz) — lives in
+per-course **deployment chunks** (`<<STEM start-quiz deployment>>`,
+`<<STEM end-quiz deployment>>`) defined in a deployment appendix
+`cohort-<course>.nw`, woven into the article after `diagnostics.tex`.
+`make programs COHORT=prgi26` tangles the quizzes from both files; a
+missing deployment chunk makes notangle fail.
+
+**Never bend the design in `diagnostics.nw` to how a cohort actually ran**
+(author, 2026-10-22): record the departures in that cohort's appendix, so
+other participating courses can run the plan.
+
+`cohort-prgi26.nw` (DD1317 HT26, Canvas 63874) records the first cohort:
+quizzes created 2026-10-04/05 after four topics were taught, so no course
+start quiz (and no consent item: consent must come from vt-debug's
+"Diagnostic quiz: your programming background", same wording — analysis
+not yet switched), a catch-up module of five after-quizzes, gateway
+modules "Diagnostiskt prov: inför …" holding one unit's after-quiz and the
+next unit's before-quiz (containers before-quiz withdrawn 2026-10-23,
+containers after-quiz last in its unit, files after-quiz in the revision
+module with the course end quiz), titles suffixed "(obligatorisk)" in Canvas
+(the analysis searches titles, so the suffix is harmless).  Its chunks
+must reproduce Canvas; re-check with `canvaslms modules view -c prgi26
+--show-position` after the teacher changes modules.
+
+## Ethics
+
+The method section has a short `\subsection{Ethics}` (the study proper is
+a literature review; the deployed instruments are the part that collects
+personal data — see `diagnostics.nw`, subsection "The consent and
+preparation items").  `ethics-application-prgi26.md` in the repo root is
+the ethics assessment of the prgi26 data collection: assessed 2026-09-01
+as **not subject to the Ethics Review Act** (nothing is filed; no
+reference number will ever exist), kept as the internal self-assessment
+and data-protection documentation.  `participant-information-prgi26.md`
+(students; Swedish + English; YAML front matter for `canvaslms pages edit
+-f`) is the Canvas page "Information om forskningsstudien" in DD1317 HT26,
+placed in the Python-part overview module right before the consent quiz
+and linked from the consent item; the file carries no `published` key, so
+the page is created unpublished and the teacher publishes it;
+`participant-information-prgi26-staff.md` is the teacher/TA variant.  All
+three files are byte-identical synchronised copies shared with vt-debug:
+edit one copy, propagate to the other in the same round, and verify with
+`md5sum ../vt-{debug,prog-misconceptions}/{ethics-application,participant-information,participant-information-*-staff}-prgi26.md`
+(or simply `md5sum ../vt-{debug,prog-misconceptions}/*prgi26*.md`).
+The consent wording is deliberately identical to vt-debug's background
+quiz (the fuller wording of §6 of the assessment, with the information
+page's URL) — never change it unilaterally; it differs from the datintro26
+quizzes' frozen wording on purpose.

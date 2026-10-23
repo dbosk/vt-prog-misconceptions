@@ -1,0 +1,267 @@
+\section{The first cohort: DD1317 in autumn 2026}
+\label{app:prgi26}
+
+The instrument of \cref{app:diagnostics} first ran in DD1317, autumn
+2026 (Canvas course prgi26).
+It did not run as planned: the quizzes were ready only when the course
+had taught four of its topics, and the course's teacher then arranged
+them to fit the course as it stood.
+This appendix records what the cohort did instead, for two readers.
+The analysis of this cohort needs to know which measures exist and
+what they mean; and the next course to run the instrument should run
+it as planned (\cref{app:diagnostics-deployment}), which this record
+shows the reason for.
+It is also the cohort's deployment: tangled together with
+\cref{app:diagnostics}, its chunks reproduce the quizzes as they stand
+in Canvas.
+
+\subsection{What ran, and where}
+
+The Python part of the course started in week~37.
+The quizzes were created in Canvas on 4--5 October 2026, at the end of
+week~40, when the course had taught functions and variables,
+conditionals, data types and repetitions and was about to teach
+dictionaries and classes in week~41.
+Three things follow from that date.
+\begin{description}
+\item[No course-level start quiz] The start of the course had passed,
+  so the course-level start quiz was never deployed, and with it went
+  the consent item that the other quizzes rely on.
+\item[A catch-up module instead of four before-quizzes] The
+  before-quizzes of the four taught topics, and of reading programs,
+  which the course practises from the first week, could no longer run
+  before their units.
+  Their after-quizzes were collected in a module of their own,
+  \enquote{Diagnostiskt prov: det du lärt dig hittills}, placed right
+  before the classes week; the teacher decided to make it a
+  prerequisite of that week's module, so every student takes stock of
+  the course so far before continuing.
+\item[Bracketing pairs for the rest] The remaining three topics ---
+  classes and dictionaries (week~41), containers (week~44) and files
+  (week~45) --- got their before- and after-quizzes.
+  The containers before-quiz was later withdrawn (see below), so only
+  classes and dictionaries and files kept both.
+\end{description}
+
+The teacher then changed the placement in Canvas, and the chunks below
+follow those changes.
+First, every quiz title got the suffix \enquote{(obligatorisk)}, as
+every compulsory item in the course has; the analysis finds the quizzes
+by searching for the planned title, so the suffix does not disturb it.
+Second, the after-quiz of one unit and the before-quiz of the next were
+moved out of the units' modules into a \emph{gateway} module between
+the two, named \enquote{Diagnostiskt prov: inför \ldots} after the
+unit that follows.
+Third, on 23 October, three days before the containers unit, the
+teacher withdrew the containers before-quiz, which had not yet been
+published, and moved the containers after-quiz back to where the
+planned deployment puts it, last in its unit's module.
+The files after-quiz went to the revision module before the computer
+exam, next to the course-level end quiz, which left the gateway module
+\enquote{Diagnostiskt prov: inför projektet} empty.
+The classes before-quiz and the containers after-quiz are thus the
+only quizzes where the planned deployment puts them.
+\Cref{tab:prgi26-placement} shows the result.
+
+\begin{table}
+  \caption{Where the quizzes sit in prgi26, in the order of the
+    course's modules, as of 23 October 2026.
+    Opens is the quiz's own unlock time; the modules from
+    \enquote{inför Fler behållare} on are themselves locked until the
+    evening of 22 or 23 October.
+    The course-level start quiz and the before-quizzes of the first
+    five topics were never deployed, and the containers before-quiz
+    was withdrawn.}
+  \label{tab:prgi26-placement}
+  \begin{tabular}{lll}
+    \toprule
+    Module & Quiz & Opens \\
+    \midrule
+    Diagnostiskt prov: det du lärt dig hittills
+      & functions and variables (after) & --- \\
+      & conditionals (after) & --- \\
+      & data types (after) & --- \\
+      & repetitions (after) & --- \\
+      & reading programs (after) & --- \\
+    Klasser och objekt
+      & classes and dictionaries (before) & --- \\
+    Diagnostiskt prov: inför Fler behållare
+      & classes and dictionaries (after) & 9 Oct \\
+    Fler behållare och mer om klasser
+      & containers (after) & 30 Oct \\
+    Diagnostiskt prov: inför Filhantering
+      & files (before) & --- \\
+    Repetitionsprov inför datorprovet
+      & files (after) & 6 Nov \\
+      & course-level end quiz & --- \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The course-level end quiz got a module of its own,
+\enquote{Repetitionsprov inför datorprovet}, right before the course's
+summative computer exam.
+It reveals the correct answers afterwards, as planned, and the cohort
+uses that: the quiz doubles as practice for the exam, and its
+description asks the students to take it before they start preparing,
+which the preparation question checks.
+
+\subsection{What the cohort's data can and cannot show}
+
+The departures change what the analysis
+(\cref{app:diagnostics-analysis}) can say about this cohort.
+\begin{description}
+\item[Level, not gain, for six topics] Functions and variables,
+  conditionals, data types, repetitions and reading programs have only
+  an after-measure, open from week~41, one to three weeks after their
+  units; containers has only its after-measure, at the end of its
+  unit.
+  These measure the level the students had reached, not what the units
+  added.
+\item[Gain for two topics, with longer gaps] Classes and dictionaries
+  and files have both measures, but their after-quizzes come later
+  than planned: the classes after-quiz cannot be taken before its
+  gateway module opens on 22 October, after the two-week examination
+  period, and the files after-quiz sits in the revision module, so
+  most students will take it after the week on graphical interfaces,
+  when they start preparing for the computer exam.
+  The time from teaching to after-quiz is recorded per submission and
+  belongs in the analysis of these gains.
+\item[No course-level gain] Without the start quiz, the course-level end
+  quiz is a level measure only.
+\item[Consent from the sibling study] The consent item was to open the
+  course-level start quiz.
+  Its wording is identical to that of the parallel debugging study's
+  background quiz, \enquote{Diagnostic quiz: your programming
+  background}, which the cohort answered in the first week of the
+  Python part; for this cohort the analysis must therefore take consent
+  from that quiz's report instead of the start quiz's.
+\end{description}
+
+The after-quizzes' description changed for the same reason as the
+course-level one.
+The planned description promises that the quiz mirrors the questions
+from before the unit, which is false for the five catch-up quizzes; one
+description serves all after-quizzes in Canvas, so all of them got a
+description without the promise.
+
+<<review end-quiz description>>=
+"description": "<p>This quiz checks what you have learned about this topic. You will see your score and the correct answers afterwards, so you can use the quiz to review the topic. The score does not affect your grade. Please answer on your own, without preparation, help or tools.</p>",
+<<practice course end-quiz description>>=
+"description": "<p>This quiz covers the programming concepts of the whole course, so that we can see what you have learned. Take it before you start preparing for the computer exam, on your own and without help or tools. Afterwards you will see your score and the correct answers, so you can use the quiz to practise for the exam. The score does not affect your grade.</p>",
+@
+
+\subsection{The cohort's deployment}
+
+The chunks below are the deployment of \cref{app:diagnostics-deployment}
+for prgi26.
+The quizzes that were never deployed, or were withdrawn, still need a
+chunk, since their roots tangle regardless; it gives them no module,
+and the cohort's creation loop leaves their files out:
+\begin{minted}{bash}
+make programs COHORT=prgi26
+for f in quiz-*-end.json quiz-classes-start.json quiz-files-start.json; do
+  canvaslms quizzes create -c prgi26 -f "$f"
+done
+\end{minted}
+
+<<course start-quiz deployment>>=
+<<not deployed in prgi26>>
+<<funcvars start-quiz deployment>>=
+<<not deployed in prgi26>>
+<<conditionals start-quiz deployment>>=
+<<not deployed in prgi26>>
+<<types start-quiz deployment>>=
+<<not deployed in prgi26>>
+<<repetitions start-quiz deployment>>=
+<<not deployed in prgi26>>
+<<tracing start-quiz deployment>>=
+<<not deployed in prgi26>>
+<<containers start-quiz deployment>>=
+<<not deployed in prgi26>>
+<<not deployed in prgi26>>=
+"unlock_at": null,
+@
+
+The catch-up module lists its quizzes in the order the course taught
+the topics, with reading programs last, since it draws on all of them.
+The module was created by hand before the quizzes, as were the gateway
+modules and the revision module; the positions count the items in the
+modules as they stand.
+
+<<funcvars end-quiz deployment>>=
+<<review end-quiz description>>
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 1, "completion_requirement": "must_submit"}],
+<<conditionals end-quiz deployment>>=
+<<review end-quiz description>>
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 2, "completion_requirement": "must_submit"}],
+<<types end-quiz deployment>>=
+<<review end-quiz description>>
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 3, "completion_requirement": "must_submit"}],
+<<repetitions end-quiz deployment>>=
+<<review end-quiz description>>
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 4, "completion_requirement": "must_submit"}],
+<<tracing end-quiz deployment>>=
+<<review end-quiz description>>
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: det du lärt dig hittills$",
+             "position": 5, "completion_requirement": "must_submit"}],
+@
+
+The classes before-quiz and the containers after-quiz follow the plan:
+the one right after the week overview, the first thing a student opens
+in the module, the other last.
+Each after-quiz unlocks at 08:00 on the Friday of its teaching week,
+when the week's lecture, exercises and lab are behind the students;
+the gateway and revision modules keep their own, later, unlock times
+on top of that.
+
+<<classes start-quiz deployment>>=
+"unlock_at": null,
+"modules": [{"module": "^Klasser och objekt$",
+             "position": 2, "completion_requirement": "must_submit"}],
+<<classes end-quiz deployment>>=
+<<review end-quiz description>>
+"unlock_at": "2026-10-09T08:00:00+02:00",
+"modules": [{"module": "^Diagnostiskt prov: inför Fler behållare$",
+             "position": 1, "completion_requirement": "must_submit"}],
+<<containers end-quiz deployment>>=
+<<review end-quiz description>>
+"unlock_at": "2026-10-30T08:00:00+01:00",
+"modules": [{"module": "^Fler behållare och mer om klasser$",
+             "position": 10, "completion_requirement": "must_submit"}],
+<<files start-quiz deployment>>=
+"unlock_at": null,
+"modules": [{"module": "^Diagnostiskt prov: inför Filhantering$",
+             "position": 1, "completion_requirement": "must_submit"}],
+@
+
+The revision module holds the files after-quiz first and the
+course-level end quiz second, so a student finishes the last unit's
+measure before the measure of the whole course.
+The end quiz has no unlock time of its own.
+The module opens on 23 October, before the containers and files units;
+as of that day the quiz is unpublished, so when the students can take
+it is decided by when it is published.
+The files after-quiz keeps its own unlock time, so it cannot be taken
+before the files unit is done.
+
+<<files end-quiz deployment>>=
+<<review end-quiz description>>
+"unlock_at": "2026-11-06T08:00:00+01:00",
+"modules": [{"module": "^Repetitionsprov inför datorprovet$",
+             "position": 1, "completion_requirement": "must_submit"}],
+<<course end-quiz deployment>>=
+<<practice course end-quiz description>>
+"unlock_at": null,
+"modules": [{"module": "^Repetitionsprov inför datorprovet$",
+             "position": 2, "completion_requirement": "must_submit"}],
+@
