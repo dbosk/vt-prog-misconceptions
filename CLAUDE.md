@@ -121,7 +121,9 @@ start quiz (and no consent item: consent must come from vt-debug's
 "Diagnostic quiz: your programming background", same wording — analysis
 not yet switched), a catch-up module of five after-quizzes, gateway
 modules "Diagnostiskt prov: inför …" holding one unit's after-quiz and the
-next unit's before-quiz, titles suffixed "(obligatorisk)" in Canvas
+next unit's before-quiz (containers before-quiz withdrawn 2026-10-23,
+containers after-quiz last in its unit, files after-quiz in the revision
+module with the course end quiz), titles suffixed "(obligatorisk)" in Canvas
 (the analysis searches titles, so the suffix is harmless).  Its chunks
 must reproduce Canvas; re-check with `canvaslms modules view -c prgi26
 --show-position` after the teacher changes modules.
